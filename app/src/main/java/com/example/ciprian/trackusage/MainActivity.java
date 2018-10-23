@@ -1,16 +1,9 @@
 package com.example.ciprian.trackusage;
 
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 
 
 public class MainActivity extends AppCompatActivity {

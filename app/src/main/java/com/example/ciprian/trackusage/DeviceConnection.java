@@ -8,11 +8,11 @@ public class DeviceConnection {
 
     private String ConType;
 
-    public DeviceConnection(){
+    DeviceConnection(){
         this.ConType = "";
     }
 
-    public void WhichConnection(ConnectivityManager connManager) {
+    void WhichConnection(ConnectivityManager connManager) {
         //Create Connectivity Manager and Network types
         NetworkInfo activeNetwork = connManager.getActiveNetworkInfo();
         if ((activeNetwork != null) && (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)) {
@@ -25,7 +25,7 @@ public class DeviceConnection {
     }
 
 
-    public String getConType() {
+    String getConType() {
         return ConType;
     }
 }
