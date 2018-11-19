@@ -10,19 +10,16 @@ import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.TextView;
-//import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-//import java.util.HashMap;
-//import java.util.Map;
+
 
 public class MainActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -108,9 +105,16 @@ public class MainActivity extends AppCompatActivity
                 PreferenceManager.getDefaultSharedPreferences(mContext)
                         .getString(DETECTED_ACTIVITY, ""));
         String s = temp.get(0).toString();
+        String c = temp.get(0).toString();
         s = s.replaceAll("type=", "");
         s = s.split(",")[0];
         s = s.substring(s.lastIndexOf("[")+1);
         tv1.setText(String.format("The Most Likely Activity Is : %s", s));
+
+
+        //Policy aPolicy = new Policy(s, 0);
+        //s = aPolicy.StillActivity();
+
+        //Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT).show();
     }
 }
