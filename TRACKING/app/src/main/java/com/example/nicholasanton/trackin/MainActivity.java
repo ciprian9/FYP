@@ -104,12 +104,13 @@ public class MainActivity extends AppCompatActivity
 
     public void dosomething(){
         TextView tv1 = (TextView) findViewById(R.id.myTextView);
-        ArrayList temp = ActivityIntentService.detectedActivitiesFromJson(PreferenceManager.getDefaultSharedPreferences(mContext).getString(DETECTED_ACTIVITY, ""));
+        ArrayList temp = ActivityIntentService.detectedActivitiesFromJson(
+                PreferenceManager.getDefaultSharedPreferences(mContext)
+                        .getString(DETECTED_ACTIVITY, ""));
         String s = temp.get(0).toString();
         s = s.replaceAll("type=", "");
         s = s.split(",")[0];
         s = s.substring(s.lastIndexOf("[")+1);
         tv1.setText(String.format("The Most Likely Activity Is : %s", s));
-        //final TextView mTextView = (TextView) findViewById(R.id.myTextView);
     }
 }
