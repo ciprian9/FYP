@@ -1,4 +1,4 @@
-package com.example.ciprian.myapplication;
+package com.example.nicholasanton.myapplication;
 
 import android.app.PendingIntent;
 import android.content.Intent;
