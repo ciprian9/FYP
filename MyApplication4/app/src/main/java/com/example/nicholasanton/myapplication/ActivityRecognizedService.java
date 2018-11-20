@@ -2,6 +2,7 @@ package com.example.nicholasanton.myapplication;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -56,6 +57,10 @@ public class ActivityRecognizedService extends IntentService {
                     Log.e( "ActivityRecogition", "Still: " + activity.getConfidence() );
                     if( activity.getConfidence() >= 75 ) {
                         MakeNotifications("Are you Still?", "still");
+                        WalkingPolicy wp = new WalkingPolicy();
+                        AudioManager au = (AudioManager)getSystemService(getApplicationContext().AUDIO_SERVICE);
+                        au.isWiredHeadsetOn();
+                        wp.StartMusic(au.isWiredHeadsetOn());
                     }
                     break;
                 }
