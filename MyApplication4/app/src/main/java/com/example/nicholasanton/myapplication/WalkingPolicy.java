@@ -6,6 +6,11 @@ import android.os.AsyncTask;
 
 import java.io.IOException;
 
+/*
+After looking at the walking option need to be able to handle any of the options being turned on, or off. Need to consider better options and handle different scenarios.
+Consider implemenating the music player here. If most policies wil have a music player consider creating a super class Policy that will have the player and have classes inherit from that when the player is needed
+ */
+
 public class WalkingPolicy {
 
     MediaPlayer mediaPlayer;
