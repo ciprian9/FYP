@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WalkingOptions">
+
+    <Button
+        android:id="@+id/walkingPlaylist"
+        android:layout_width="297dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="43dp"
+        android:layout_marginBottom="427dp"
+        android:text="Playlist"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="293dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="47dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="44dp"
+        android:text="Play Music When Headphones In"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/walkingPlaylist" />
+
+    <Switch
+        android:id="@+id/switch2"
+        android:layout_width="293dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="47dp"
+        android:layout_marginTop="88dp"
+        android:layout_marginEnd="44dp"
+        android:text="Track Usage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/walkingPlaylist" />
+
+    <Switch
+        android:id="@+id/switch3"
+        android:layout_width="293dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="47dp"
+        android:layout_marginTop="148dp"
+        android:layout_marginEnd="44dp"
+        android:text="Save Resources"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/walkingPlaylist" />
+
+    <Switch
+        android:id="@+id/switch4"
+        android:layout_width="293dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="47dp"
+        android:layout_marginTop="208dp"
+        android:layout_marginEnd="44dp"
+        android:text="Notification Text-to-speech"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/walkingPlaylist" />
+
+</android.support.constraint.ConstraintLayout>
