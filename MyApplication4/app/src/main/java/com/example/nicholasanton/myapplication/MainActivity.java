@@ -8,25 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.view.View;
-import android.widget.ImageButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.ActivityRecognitionClient;
-import com.google.android.gms.location.ActivityTransition;
-import com.google.android.gms.location.ActivityTransitionRequest;
-import com.google.android.gms.location.DetectedActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     public GoogleApiClient mApiClient;
-    private PendingIntent myPendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        final Button StartBtn = (Button) findViewById(R.id.StartBtn);
+        final Button StartBtn = findViewById(R.id.StartBtn);
         StartBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 mApiClient.connect();
@@ -47,26 +37,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
 
 
-        final Button StopBtn = (Button) findViewById(R.id.StopBtn);
+        final Button StopBtn = findViewById(R.id.StopBtn);
         StopBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 mApiClient.disconnect();
             }
         });
 
-        final Button ListBtn = (Button) findViewById(R.id.ListMusic);
+        final Button ListBtn = findViewById(R.id.ListMusic);
         ListBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 openListMusic();
             }
         });
 
-        final Button walkingPolicy = (Button) findViewById(R.id.walkingPolicy);
+        final Button walkingPolicy =  findViewById(R.id.walkingPolicy);
         walkingPolicy.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 openWalkingOptions();
             }
         });
+
+//        DataHandler dataHandler = new DataHandler(this);
+//        boolean isInserted = dataHandler.insertData("playHeadphones", false);
+//        dataHandler.insertData("trackUsage", false);
+//        dataHandler.insertData("saveResources", false);
+//        dataHandler.insertData("notificationTTS", false);
+//
+//        Toast.makeText(MainActivity.this, String.valueOf(isInserted), Toast.LENGTH_SHORT);
     }
 
     public void openListMusic(){
@@ -97,47 +95,5 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    }
-
-    public void Transition(){
-        List<ActivityTransition> transitions = new ArrayList<>();
-
-        transitions.add(
-                new ActivityTransition.Builder().setActivityType(DetectedActivity.WALKING)
-                .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER).build());
-
-        transitions.add(
-                new ActivityTransition.Builder().setActivityType(DetectedActivity.WALKING)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT).build());
-
-        transitions.add(
-                new ActivityTransition.Builder().setActivityType(DetectedActivity.STILL)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_ENTER).build());
-
-        transitions.add(
-                new ActivityTransition.Builder().setActivityType(DetectedActivity.STILL)
-                        .setActivityTransition(ActivityTransition.ACTIVITY_TRANSITION_EXIT).build());
-
-        ActivityTransitionRequest request = new ActivityTransitionRequest(transitions);
-
-        Task<Void> task = ActivityRecognition.getClient(getApplicationContext()).requestActivityTransitionUpdates(request, myPendingIntent);
-
-        task.addOnSuccessListener(
-                new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-
-                    }
-                }
-        );
-
-        task.addOnFailureListener(
-                new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                }
-        );
     }
 }

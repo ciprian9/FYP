@@ -10,9 +10,11 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
     <permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
     <application
         android:allowBackup="true"
@@ -42,7 +44,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".WalkingOptions"></activity>
+        <activity android:name=".WalkingOptions" />
+
+        <service
+            android:name=".WalkingPolicy"
+            android:exported="false" />
+
+        <activity android:name=".PlayLists"></activity>
     </application>
 
 </manifest>

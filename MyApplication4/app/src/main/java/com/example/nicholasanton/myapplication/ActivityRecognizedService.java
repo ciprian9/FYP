@@ -1,7 +1,10 @@
 package com.example.nicholasanton.myapplication;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -13,6 +16,10 @@ import com.google.android.gms.location.DetectedActivity;
 import java.util.List;
 
 public class ActivityRecognizedService extends IntentService {
+
+    private DataHandler db;
+
+    private String ServiceName = "";
 
     public ActivityRecognizedService() {
         super("ActivityRecognizedService");
@@ -55,12 +62,15 @@ public class ActivityRecognizedService extends IntentService {
                 }
                 case DetectedActivity.STILL: {
                     Log.e( "ActivityRecogition", "Still: " + activity.getConfidence() );
+
                     if( activity.getConfidence() >= 75 ) {
                         MakeNotifications("Are you Still?", "still");
-                        WalkingPolicy wp = new WalkingPolicy();
-                        AudioManager au = (AudioManager)getSystemService(getApplicationContext().AUDIO_SERVICE);
-                        au.isWiredHeadsetOn();
-                        wp.StartMusic(au.isWiredHeadsetOn());
+                        //WalkingPolicy wp = new WalkingPolicy(cursor);
+                        //wp.StartMusic(au.isWiredHeadsetOn());
+                        //if(ServiceName == ""){
+                        StartWalkingService();
+                        // }
+                        //Need to make a call to a function such as SaveResources() here to find out if battery level is low and if needs to
                     }
                     break;
                 }
@@ -83,6 +93,12 @@ public class ActivityRecognizedService extends IntentService {
                 }
             }
         }
+    }
+
+    public void StartWalkingService(){
+        Intent intent = new Intent(this, WalkingPolicy.class);
+        startService(intent);
+        ServiceName = "Walking";
     }
 
     public void MakeNotifications(String str, String chanelID){
