@@ -13,11 +13,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "FYP.db";
     private static final String SETTINGS_TABLE_NAME = "Settings";
     private static final String COLUMN_ID = "Id";
     private static final String COLUMN_NAME = "Name";
+    private static final String COLUMN_DONE = "Done";
     private static final String COLUMN_STATUS = "Status";
 
     private static final String PLAYLIST_TABLE_NAME = "Playlist";
@@ -25,7 +26,7 @@ public class DataHandler extends SQLiteOpenHelper {
     private static final String COLUMN_LOCATION = "Location";
 
     private static final String SETTINGS_CREATE = "CREATE TABLE " + SETTINGS_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMN_NAME + " TEXT, " + COLUMN_STATUS + " BIT)";
+            COLUMN_NAME + " TEXT, " + COLUMN_STATUS + " BIT, " + COLUMN_DONE + "BIT)";
 
     private static final String PLAYLIST_TABLE = "CREATE TABLE " + PLAYLIST_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " +
             COLUMN_POLICY_ID + " INTEGER, " + COLUMN_LOCATION + " TEXT)";
@@ -82,6 +83,7 @@ public class DataHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + SETTINGS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PLAYLIST_TABLE_NAME);
         onCreate(db);
     }
 

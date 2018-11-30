@@ -90,7 +90,7 @@ public class WalkingPolicy extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        DataHandler db = new DataHandler(this);
+        DataHandler db = new DataHandler(getApplicationContext());
         cursor = db.SelectSettingsQuery();
         getApplicationContext();
         AudioManager au = (AudioManager)getSystemService(AUDIO_SERVICE);

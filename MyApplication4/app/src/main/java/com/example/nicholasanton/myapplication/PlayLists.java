@@ -72,12 +72,12 @@ public class PlayLists extends Activity {
     public void saveSelectedItems(View view){
         String selItems="";
         int i = 0;
-        db.DeletePlaylists();
-        selectedItemsShow.clear();
-        locationToSaveShow.clear();
+        //db.DeletePlaylists();
+//        selectedItemsShow.clear();
+//        locationToSaveShow.clear();
         for(String item:locationToSave){
             db.insertPlaylistData(selectedItems.get(i), 1, item);
-            selItems = selItems + selectedItems.get(i) + " : " + item;
+            selItems = selItems + selectedItems.get(i) + "\n";
             i++;
         }
     }
@@ -111,17 +111,26 @@ public class PlayLists extends Activity {
             String name = c.getString(1);
             selectedItemsShow.add(name);
             locationToSaveShow.add(loc);
+            c.moveToNext();
         }
     }
 
     public void showDbItems(View v){
         getSelected();
         String str="";
-        for (int i = 0; i < selectedItems.size(); i++){
-            str = str + selectedItems.get(i) + " : " + locationToSave.get(i) + "\n";
+        for (int i = 0; i < selectedItemsShow.size(); i++){
+            str = str + selectedItemsShow.get(i) + "\n";
         }
 
         Toast.makeText(this, str, Toast.LENGTH_LONG).show();
+        selectedItemsShow.clear();
+        locationToSaveShow.clear();
 
+    }
+
+    public void clearDB(View v){
+        db.DeletePlaylists();
+        selectedItemsShow.clear();
+        locationToSaveShow.clear();
     }
 }

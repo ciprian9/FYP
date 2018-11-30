@@ -58,12 +58,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
-//        DataHandler dataHandler = new DataHandler(this);
-//        boolean isInserted = dataHandler.insertData("playHeadphones", false);
-//        dataHandler.insertData("trackUsage", false);
-//        dataHandler.insertData("saveResources", false);
-//        dataHandler.insertData("notificationTTS", false);
-//
+
 //        Toast.makeText(MainActivity.this, String.valueOf(isInserted), Toast.LENGTH_SHORT);
     }
 

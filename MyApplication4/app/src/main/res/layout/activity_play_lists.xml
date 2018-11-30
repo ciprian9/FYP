@@ -37,4 +37,14 @@
         android:text="Show Playlist"
         />
 
+    <Button
+        android:id="@+id/btClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="clearDB"
+        android:layout_alignParentRight="true"
+        android:text="Clear Playlist"
+        />
+
+
 </LinearLayout>

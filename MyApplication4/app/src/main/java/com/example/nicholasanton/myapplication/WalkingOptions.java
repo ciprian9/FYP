@@ -50,6 +50,15 @@ public class WalkingOptions extends AppCompatActivity {
         saveResources =  findViewById(R.id.swSaveResources);
         notificationTTS =  findViewById(R.id.swNotificationTTS);
         VarsToForm();
+        db = new DataHandler(WalkingOptions.this);
+        Cursor set = db.SelectSettingsQuery();
+        if(set.getCount() == 0) {
+            DataHandler dataHandler = new DataHandler(this);
+            boolean isInserted = dataHandler.insertSettingsData("playHeadphones", false);
+            dataHandler.insertSettingsData("trackUsage", false);
+            dataHandler.insertSettingsData("saveResources", false);
+            dataHandler.insertSettingsData("notificationTTS", false);
+        }
 
         final Button WalkingPlaylist = findViewById(R.id.walkingPlaylist);
         WalkingPlaylist.setOnClickListener(new View.OnClickListener(){
