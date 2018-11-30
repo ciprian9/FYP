@@ -65,12 +65,7 @@ public class ActivityRecognizedService extends IntentService {
 
                     if( activity.getConfidence() >= 75 ) {
                         MakeNotifications("Are you Still?", "still");
-                        //WalkingPolicy wp = new WalkingPolicy(cursor);
-                        //wp.StartMusic(au.isWiredHeadsetOn());
-                        //if(ServiceName == ""){
                         StartWalkingService();
-                        // }
-                        //Need to make a call to a function such as SaveResources() here to find out if battery level is low and if needs to
                     }
                     break;
                 }
@@ -98,7 +93,6 @@ public class ActivityRecognizedService extends IntentService {
     public void StartWalkingService(){
         Intent intent = new Intent(this, WalkingPolicy.class);
         startService(intent);
-        ServiceName = "Walking";
     }
 
     public void MakeNotifications(String str, String chanelID){

@@ -5,6 +5,22 @@ package com.example.nicholasanton.myapplication;
     the following boolean values will be used to store the value of the options. This together with the playlist button will be used to config this policy
     This class needs to implement a datahandler class that will write each of these settings to the database, the values will then be read and set again when the user will reopen the page
     functions needed are VarsToForm and FormToVars
+
+
+    TODO
+    Add a battery percent level for the save resources
+    Add Pedometer count the ammount of steps made
+    possibly add distance walked aswell
+    add a map that will record the route walked so you can view it on a map
+
+    Issues to be fixed
+    Database connection lost need to fix it
+    Need to add the media player to the Policy.class
+    Need to inherit walking policy from policy to use the media player
+    Need a loop to play each song (need to figure out how to only play once the audio file is finished playing)
+    Need to start tracking usage (for now the ammount of time spent on each app according to android and record how many times we have opened the app)
+    need to find a way to block incoming notifications e.g. text messages and turn the message to text-to-speech
+    possibly allow the user to respond using voice
  */
 
 import android.content.Intent;
