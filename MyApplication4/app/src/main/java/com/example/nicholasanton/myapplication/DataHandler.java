@@ -12,6 +12,7 @@ Need to create a Policy Table
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.ContentObservable;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -19,20 +20,22 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_NAME = "FYP.db";
     private static final String SETTINGS_TABLE_NAME = "Settings";
     private static final String COLUMN_ID = "Id";
     private static final String COLUMN_NAME = "Name";
     private static final String COLUMN_DONE = "Done";
     private static final String COLUMN_STATUS = "Status";
+    private static final String COLUMN_BATTERY_PERCENT = "Battery";
 
     private static final String PLAYLIST_TABLE_NAME = "Playlist";
     private static final String COLUMN_POLICY_ID = "PolicyID";
     private static final String COLUMN_LOCATION = "Location";
 
+
     private static final String SETTINGS_CREATE = "CREATE TABLE " + SETTINGS_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            COLUMN_NAME + " TEXT, " + COLUMN_STATUS + " BIT, " + COLUMN_DONE + "BIT)";
+            COLUMN_NAME + " TEXT, " + COLUMN_BATTERY_PERCENT + " INTEGER, " + COLUMN_STATUS + " BIT, " + COLUMN_DONE + " BIT)";
 
     private static final String PLAYLIST_TABLE = "CREATE TABLE " + PLAYLIST_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " +
             COLUMN_POLICY_ID + " INTEGER, " + COLUMN_LOCATION + " TEXT)";
@@ -74,6 +77,15 @@ public class DataHandler extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateSettingsIntData(String id, int aBatteryLvl){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_ID, id);
+        contentValues.put(COLUMN_BATTERY_PERCENT, aBatteryLvl);
+        db.update(SETTINGS_TABLE_NAME, contentValues, "id = ?", new String[]{id});
+        return true;
+    }
+
     public void DeletePlaylists(){
         //Need it just in case, we shouldnt have to delete anything but for example if using the music on the device the user might delete a song so we cannot play it in that case delete it from the playlist
         SQLiteDatabase db = this.getWritableDatabase();
@@ -105,11 +117,21 @@ public class DataHandler extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public boolean insertSettingsData(String name, boolean status){
+    public boolean insertSettingsData(String name, boolean status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_NAME, name);
         contentValues.put(COLUMN_STATUS, status);
+        long result = db.insert(SETTINGS_TABLE_NAME, null, contentValues);
+        db.close();
+        return result != -1;
+    }
+
+    public boolean insertSettingsDataNumbers(String name, int Number){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_NAME, name);
+        contentValues.put(COLUMN_BATTERY_PERCENT, Number);
         long result = db.insert(SETTINGS_TABLE_NAME, null, contentValues);
         db.close();
         return result != -1;

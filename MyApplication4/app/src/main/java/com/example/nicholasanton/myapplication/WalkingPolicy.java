@@ -32,7 +32,7 @@ Consider implementing the music player here. If most policies wil have a music p
 
  */
 
-public class WalkingPolicy extends IntentService {
+public class  WalkingPolicy extends IntentService {
 
     MediaPlayer mediaPlayer;
     boolean prepared = false;
@@ -71,7 +71,7 @@ public class WalkingPolicy extends IntentService {
     public void StartMusic(){
         cursor = db.SelectSettingsQuery(Constants.HEADPHONE_SETTING);
         if(cursor.moveToFirst()) {
-            int temp = cursor.getInt(2);
+            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
             if (isHeadsetOn && temp == 1) {
                 mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -115,7 +115,7 @@ public class WalkingPolicy extends IntentService {
     public void SaveResources(){
         cursor = db.SelectSettingsQuery(Constants.SAVE_RESOURCE_SETTING);
         if (cursor.moveToFirst()) {
-            int temp = cursor.getInt(2);
+            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
             if (temp == 1) {
                 IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
                 Intent batteryStatus = this.registerReceiver(null, iFilter);
@@ -124,7 +124,9 @@ public class WalkingPolicy extends IntentService {
 
                 Toast.makeText(this, "BATTERY", Toast.LENGTH_SHORT).show();
 
-                if (level <= 97) {
+                cursor = db.SelectSettingsQuery(Constants.BATTERY_LEVEL);
+                cursor.moveToFirst();
+                if (level <= cursor.getInt(Constants.COLUMN_SETTINGS_BATTERY)) {
                     List<ApplicationInfo> packages;
                     PackageManager pm;
                     pm = getPackageManager();
@@ -161,7 +163,7 @@ public class WalkingPolicy extends IntentService {
         if (sender != "" && smsMessage != ""){
             cursor = db.SelectSettingsQuery(Constants.TEXT_TO_SPEECH_SETTING);
             if (cursor.moveToFirst()) {
-                int temp = cursor.getInt(2);
+                int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
                 if (temp == 1) {
                     TextMessage = TextMessage + sender + " says " + smsMessage;
                     SetSpeaker();
@@ -171,7 +173,7 @@ public class WalkingPolicy extends IntentService {
 
         cursor = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
         if (cursor.moveToFirst()) {
-            int temp = cursor.getInt(2);
+            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
             if (temp == 1 && sender != "") {
                 autoReply();
             }

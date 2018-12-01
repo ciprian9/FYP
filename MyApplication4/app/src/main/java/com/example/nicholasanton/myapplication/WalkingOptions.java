@@ -24,10 +24,10 @@ package com.example.nicholasanton.myapplication;
 
 
     TODO
-    battery percent field
+    battery percent field ✓
     if we get track usage done we need a button to view the usage
     we need to rearage the window
-    need to move to new policy 
+    need to move to new policy
  */
 
 import android.content.Intent;
@@ -38,6 +38,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class WalkingOptions extends AppCompatActivity {
 
@@ -46,6 +48,7 @@ public class WalkingOptions extends AppCompatActivity {
     private Switch saveResources;
     private Switch notificationTTS;
     private Switch autoReply;
+    private TextView BatteryMaxLevel;
     private DataHandler db;
     private Cursor results;
 
@@ -59,6 +62,8 @@ public class WalkingOptions extends AppCompatActivity {
         saveResources =  findViewById(R.id.swSaveResources);
         notificationTTS =  findViewById(R.id.swNotificationTTS);
         autoReply = findViewById(R.id.swAutoReply);
+        BatteryMaxLevel = findViewById(R.id.batteryPercent);
+
         VarsToForm();
         db = new DataHandler(WalkingOptions.this);
         Cursor set = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
@@ -69,6 +74,7 @@ public class WalkingOptions extends AppCompatActivity {
             dataHandler.insertSettingsData("saveResources", false);
             dataHandler.insertSettingsData("notificationTTS", false);
             dataHandler.insertSettingsData("autoReply", false);
+            dataHandler.insertSettingsDataNumbers("battery", 20);
         }
 
         final Button WalkingPlaylist = findViewById(R.id.walkingPlaylist);
@@ -118,6 +124,14 @@ public class WalkingOptions extends AppCompatActivity {
                 db.updateSettingsData("5", isChecked);
             }
         });
+
+        final Button btnSave = findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                SetBatteryLevel();
+            }
+        });
+
     }
 
     public void VarsToForm(){
@@ -125,7 +139,7 @@ public class WalkingOptions extends AppCompatActivity {
         db = new DataHandler(WalkingOptions.this);
         results = db.SelectSettingsQuery(Constants.HEADPHONE_SETTING);
         if(results.moveToFirst()){
-            int temp = results.getInt(2);
+            int temp = results.getInt(3);
             if(temp == 0) {
                 playHeadphones.setChecked(false);
             } else {
@@ -135,7 +149,7 @@ public class WalkingOptions extends AppCompatActivity {
 
         results = db.SelectSettingsQuery(Constants.USAGE_SETTING);
         if(results.moveToFirst()){
-            int temp = results.getInt(2);
+            int temp = results.getInt(3);
             if(temp == 0) {
                 trackUsage.setChecked(false);
             } else {
@@ -145,7 +159,7 @@ public class WalkingOptions extends AppCompatActivity {
 
         results = db.SelectSettingsQuery(Constants.SAVE_RESOURCE_SETTING);
         if(results.moveToFirst()){
-            int temp = results.getInt(2);
+            int temp = results.getInt(3);
             if(temp == 0) {
                 saveResources.setChecked(false);
             } else {
@@ -155,7 +169,7 @@ public class WalkingOptions extends AppCompatActivity {
 
         results = db.SelectSettingsQuery(Constants.TEXT_TO_SPEECH_SETTING);
         if(results.moveToFirst()){
-            int temp = results.getInt(2);
+            int temp = results.getInt(3);
             if(temp == 0) {
                 notificationTTS.setChecked(false);
             } else {
@@ -165,7 +179,7 @@ public class WalkingOptions extends AppCompatActivity {
 
         results = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
         if(results.moveToFirst()){
-            int temp = results.getInt(2);
+            int temp = results.getInt(3);
             if(temp == 0) {
                 autoReply.setChecked(false);
             } else {
@@ -173,10 +187,29 @@ public class WalkingOptions extends AppCompatActivity {
             }
         }
 
+        results = db.SelectSettingsQuery(Constants.BATTERY_LEVEL);
+        if(results.moveToFirst()){
+            int temp = results.getInt(2);
+            BatteryMaxLevel.setText(Integer.toString(temp));
+        }
     }
 
     public void openPlaylists(){
         Intent intent = new Intent(this, PlayLists.class);
         startActivity(intent);
+    }
+
+    public void SetBatteryLevel(){
+
+        String s = BatteryMaxLevel.getText().toString();
+        int level =  Integer.parseInt(s);
+
+       if (level < 1){
+           Toast.makeText(this, "Number is too small try again", Toast.LENGTH_SHORT).show();
+       } else if (level > 100){
+           Toast.makeText(this, "Number is too high try again", Toast.LENGTH_SHORT).show();
+       } else{
+           db.updateSettingsIntData("6", level);
+       }
     }
 }

@@ -10,4 +10,12 @@ public interface Constants {
     String SAVE_RESOURCE_SETTING = "saveResources";
     String TEXT_TO_SPEECH_SETTING = "notificationTTS";
     String AUTO_REPLY_SETTING = "autoReply";
+    String BATTERY_LEVEL = "battery";
+
+
+    int COLUMN_SETTINGS_ID = 0;
+    int COLUMN_SETTINGS_NAME = 1;
+    int COLUMN_SETTINGS_BATTERY  = 2;
+    int COLUMN_SETTINGS_STATUS = 3;
+    int COLUMN_SETTINGS_DONE = 4;
 }
