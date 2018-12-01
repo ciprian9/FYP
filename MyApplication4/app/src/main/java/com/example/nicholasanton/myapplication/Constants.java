@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication;
 
+/*
+If a value is hard to remember or is over used stick it in here
+ */
+
 public interface Constants {
     String HEADPHONE_SETTING = "playHeadphones";
     String USAGE_SETTING = "trackUsage";

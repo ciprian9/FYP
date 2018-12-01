@@ -15,6 +15,16 @@ import android.widget.Toast;
 import android.widget.ListView;
 import android.view.View;
 
+
+/*
+Look at the interim report on the desktop
+need to rearage buttons
+need to open an activity when clicking show which shows all songs in database
+need to make sure the selected songs are either checked or not visible in this window
+
+Gave you 2 options pick whichever you want
+ */
+
 public class PlayLists extends Activity {
     private ArrayList<String> arrayList;
     ArrayList<String> selectedItems;

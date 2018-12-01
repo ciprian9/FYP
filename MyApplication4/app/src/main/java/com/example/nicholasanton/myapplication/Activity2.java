@@ -21,6 +21,10 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/*
+   Need to get rid of this activity not being used anymore   P.S. don't deleted until you move the media player
+ */
+
 public class Activity2 extends AppCompatActivity {
 
     private static final int MY_PERMISSION_REQUEST = 1;

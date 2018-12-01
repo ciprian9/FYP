@@ -2,6 +2,12 @@ package com.example.nicholasanton.myapplication;/*
 Need to implemeant a dataHandler that will create a SQLite database
 This will be used to store settings and any other data we may require
 functions below may require more or less parameters and different return types this is just a mock up
+
+
+TODO
+Need to add PolicyID to the Settings Table
+Need to create a Policy Table
+
  */
 
 import android.content.ContentValues;

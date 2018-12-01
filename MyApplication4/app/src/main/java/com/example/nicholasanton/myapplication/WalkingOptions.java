@@ -14,13 +14,20 @@ package com.example.nicholasanton.myapplication;
     add a map that will record the route walked so you can view it on a map
 
     Issues to be fixed
-    Database connection lost need to fix it
+    Database connection lost need to fix it ✓
     Need to add the media player to the Policy.class
     Need to inherit walking policy from policy to use the media player
     Need a loop to play each song (need to figure out how to only play once the audio file is finished playing)
     Need to start tracking usage (for now the ammount of time spent on each app according to android and record how many times we have opened the app)
     need to find a way to block incoming notifications e.g. text messages and turn the message to text-to-speech
     possibly allow the user to respond using voice
+
+
+    TODO
+    battery percent field
+    if we get track usage done we need a button to view the usage
+    we need to rearage the window
+    need to move to new policy 
  */
 
 import android.content.Intent;

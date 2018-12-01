@@ -15,6 +15,10 @@ import com.google.android.gms.location.DetectedActivity;
 
 import java.util.List;
 
+/*
+Need to start working on Transition either with Transition or with Fence API ( Fence and Snapshot are more useful since we can detect beacons)
+ */
+
 public class ActivityRecognizedService extends IntentService {
 
     private DataHandler db;

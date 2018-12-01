@@ -24,6 +24,12 @@ import java.util.Locale;
 /*
 After looking at the walking option need to be able to handle any of the options being turned on, or off. Need to consider better options and handle different scenarios.
 Consider implementing the music player here. If most policies wil have a music player consider creating a super class Policy that will have the player and have classes inherit from that when the player is needed
+
+ TODO
+ //Service ends too early not given the chance to speak we need to keep the service running until the whole run is over
+ //Try creating code for tracking usage / screen time is enough for now
+
+
  */
 
 public class WalkingPolicy extends IntentService {
