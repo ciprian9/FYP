@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "FYP.db";
     private static final String SETTINGS_TABLE_NAME = "Settings";
     private static final String COLUMN_ID = "Id";
@@ -40,12 +40,13 @@ public class DataHandler extends SQLiteOpenHelper {
         //Need to research if this function is possible
     }
 
-    public Cursor SelectSettingsQuery(){
+    public Cursor SelectSettingsQuery(String aString){
         //This will most likely need to be thought out since we don't knwo what we will return, could be anything
         //Posibly pass in the query
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "Select * from " + SETTINGS_TABLE_NAME;
-        Cursor result = db.rawQuery(query, null);
+        String[] params = new String[]{ aString };
+        String query = "Select * from " + SETTINGS_TABLE_NAME + " WHERE " + COLUMN_NAME + " = ?";
+        Cursor result = db.rawQuery(query, params);
         return result;
     }
 

@@ -13,14 +13,10 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
-import android.os.Build;
-import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
-import android.support.annotation.RequiresApi;
-import android.telephony.SmsMessage;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -39,8 +35,9 @@ public class WalkingPolicy extends IntentService {
     private boolean isHeadsetOn;
     private String TextMessage = "";
     private TextToSpeech repeatTTS;
-    private String sender;
-    private String smsMessage;
+    private String sender="";
+    private String smsMessage ="";
+    private DataHandler db;
 
     public WalkingPolicy(){
         super("My_Walking_Policy");
@@ -66,6 +63,7 @@ public class WalkingPolicy extends IntentService {
     }
 
     public void StartMusic(){
+        cursor = db.SelectSettingsQuery(Constants.HEADPHONE_SETTING);
         if(cursor.moveToFirst()) {
             int temp = cursor.getInt(2);
             if (isHeadsetOn && temp == 1) {
@@ -77,65 +75,40 @@ public class WalkingPolicy extends IntentService {
         }
     }
 
-//    @RequiresApi(api = Build.VERSION_CODES.M)
-//    public void SpeakTextMessage() {
-//        Toast.makeText(this, "Voice started", Toast.LENGTH_SHORT).show();
-//        if (cursor.moveToLast()) {
-//            int temp = cursor.getInt(2);
-//            if (temp == 1) {
-//                Intent intent = new Intent(getApplicationContext(), WalkingPolicy.class);
-//                Bundle bundle = intent.getBundleExtra("mySMS");
-//
-//                if (bundle != null) {
-//                    Object[] pdus = (Object[]) bundle.get("pdus");
-//                    SmsMessage sms = SmsMessage.createFromPdu((byte[]) pdus[0]);
-//                    Log.i("mobile.cs.fsu.edu", "smsActivity : SMS is <" + sms.getMessageBody() + ">");
-//
-//                    //strip flag
-//                    String message = sms.getMessageBody();
-//                    while (message.contains("FLAG"))
-//                        message = message.replace("FLAG", "");
-//
-//                    TextMessage = message;
-//                } else
-//                    Log.i("mobile.cs.fsu.edu", "smsActivity : NULL SMS bundle");
-//
-//                repeatTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-//                    @Override
-//                    public void onInit(int status) {
-//                        if (status == TextToSpeech.SUCCESS) {
-//                            int result = repeatTTS.setLanguage(Locale.ENGLISH);
-//
-//                            if (result == TextToSpeech.LANG_MISSING_DATA
-//                                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-//                                Log.e("TTS", "Language Not Supported");
-//                            } else {
-//                                speak();
-//                            }
-//                        } else {
-//                            Log.e("TTS", "Initialization Failed");
-//                        }
-//                    }
-//                });
-//            }
-//        }
-//        Toast.makeText(this, "Voice finished", Toast.LENGTH_SHORT).show();
-//    }
+    public void SetSpeaker(){
+        repeatTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS){
+                    int result = repeatTTS.setLanguage(Locale.GERMAN);
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+                        Log.e("tts", "Language not supported");
+                    }
+                    else{
+                        speak();
+                    }
+                }
+                else{
+                    Log.e("tts", "Initialisation Failed");
+                }
+            }
+        });
+    }
 
+
+    //Service ends too early not given the chance to speak we need to keep the service running until the whole run is over
+    //Notifications seem to be unable to be stoped need to do more research
     private void speak(){
-        if (TextMessage.equals("")) {
-            float pitchOfVoice = (float) 0.7;
-            repeatTTS.setPitch(pitchOfVoice);
-            int speedOfVoice = 1;
-            repeatTTS.setSpeechRate(speedOfVoice);
-            repeatTTS.speak(TextMessage, TextToSpeech.QUEUE_FLUSH, null);
-        }
+        float pitchOfVoice = (float) 0.7;
+        repeatTTS.setPitch(pitchOfVoice);
+        int speedOfVoice = 1;
+        repeatTTS.setSpeechRate(speedOfVoice);
+        repeatTTS.speak(TextMessage, TextToSpeech.QUEUE_FLUSH, null);
     }
 
     public void SaveResources(){
+        cursor = db.SelectSettingsQuery(Constants.SAVE_RESOURCE_SETTING);
         if (cursor.moveToFirst()) {
-            cursor.moveToNext();
-            cursor.moveToNext();
             int temp = cursor.getInt(2);
             if (temp == 1) {
                 IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
@@ -168,11 +141,9 @@ public class WalkingPolicy extends IntentService {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onHandleIntent(Intent intent) {
-        DataHandler db = new DataHandler(getApplicationContext());
-        cursor = db.SelectSettingsQuery();
+        db = new DataHandler(getApplicationContext());
         getApplicationContext();
         AudioManager au = (AudioManager)getSystemService(AUDIO_SERVICE);
         isHeadsetOn = au.isWiredHeadsetOn();
@@ -181,7 +152,29 @@ public class WalkingPolicy extends IntentService {
         }
 
         SaveResources();
-        //SpeakTextMessage();
+        if (sender != "" && smsMessage != ""){
+            cursor = db.SelectSettingsQuery(Constants.TEXT_TO_SPEECH_SETTING);
+            if (cursor.moveToFirst()) {
+                int temp = cursor.getInt(2);
+                if (temp == 1) {
+                    TextMessage = TextMessage + sender + " says " + smsMessage;
+                    SetSpeaker();
+                }
+            }
+        }
+
+        cursor = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
+        if (cursor.moveToFirst()) {
+            int temp = cursor.getInt(2);
+            if (temp == 1 && sender != "") {
+                autoReply();
+            }
+        }
+    }
+
+    public void autoReply(){
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(sender, null, "Sorry I'm kind of busy", null, null);
     }
 
     @SuppressLint("StaticFieldLeak")

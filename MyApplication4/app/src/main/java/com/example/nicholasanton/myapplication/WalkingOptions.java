@@ -38,7 +38,9 @@ public class WalkingOptions extends AppCompatActivity {
     private Switch trackUsage;
     private Switch saveResources;
     private Switch notificationTTS;
+    private Switch autoReply;
     private DataHandler db;
+    private Cursor results;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,15 +51,17 @@ public class WalkingOptions extends AppCompatActivity {
         trackUsage =  findViewById(R.id.swTrackUsage);
         saveResources =  findViewById(R.id.swSaveResources);
         notificationTTS =  findViewById(R.id.swNotificationTTS);
+        autoReply = findViewById(R.id.swAutoReply);
         VarsToForm();
         db = new DataHandler(WalkingOptions.this);
-        Cursor set = db.SelectSettingsQuery();
+        Cursor set = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
         if(set.getCount() == 0) {
             DataHandler dataHandler = new DataHandler(this);
             boolean isInserted = dataHandler.insertSettingsData("playHeadphones", false);
             dataHandler.insertSettingsData("trackUsage", false);
             dataHandler.insertSettingsData("saveResources", false);
             dataHandler.insertSettingsData("notificationTTS", false);
+            dataHandler.insertSettingsData("autoReply", false);
         }
 
         final Button WalkingPlaylist = findViewById(R.id.walkingPlaylist);
@@ -99,12 +103,20 @@ public class WalkingOptions extends AppCompatActivity {
                 db.updateSettingsData("4", isChecked);
             }
         });
+
+        autoReply.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                db = new DataHandler(WalkingOptions.this);
+                db.updateSettingsData("5", isChecked);
+            }
+        });
     }
 
     public void VarsToForm(){
         //Read the database values and update the activity to reflect those values
         db = new DataHandler(WalkingOptions.this);
-        Cursor results = db.SelectSettingsQuery();
+        results = db.SelectSettingsQuery(Constants.HEADPHONE_SETTING);
         if(results.moveToFirst()){
             int temp = results.getInt(2);
             if(temp == 0) {
@@ -113,7 +125,9 @@ public class WalkingOptions extends AppCompatActivity {
                 playHeadphones.setChecked(true);
             }
         }
-        if(results.moveToNext()){
+
+        results = db.SelectSettingsQuery(Constants.USAGE_SETTING);
+        if(results.moveToFirst()){
             int temp = results.getInt(2);
             if(temp == 0) {
                 trackUsage.setChecked(false);
@@ -121,7 +135,9 @@ public class WalkingOptions extends AppCompatActivity {
                 trackUsage.setChecked(true);
             }
         }
-        if(results.moveToNext()){
+
+        results = db.SelectSettingsQuery(Constants.SAVE_RESOURCE_SETTING);
+        if(results.moveToFirst()){
             int temp = results.getInt(2);
             if(temp == 0) {
                 saveResources.setChecked(false);
@@ -129,12 +145,24 @@ public class WalkingOptions extends AppCompatActivity {
                 saveResources.setChecked(true);
             }
         }
-        if(results.moveToLast()){
+
+        results = db.SelectSettingsQuery(Constants.TEXT_TO_SPEECH_SETTING);
+        if(results.moveToFirst()){
             int temp = results.getInt(2);
             if(temp == 0) {
                 notificationTTS.setChecked(false);
             } else {
                 notificationTTS.setChecked(true);
+            }
+        }
+
+        results = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
+        if(results.moveToFirst()){
+            int temp = results.getInt(2);
+            if(temp == 0) {
+                autoReply.setChecked(false);
+            } else {
+                autoReply.setChecked(true);
             }
         }
 

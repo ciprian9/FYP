@@ -9,9 +9,17 @@ import android.telephony.SmsMessage;
 import android.widget.Toast;
 
 public class SmsReceiver extends BroadcastReceiver {
+
+    public static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+
     @Override
     public void onReceive(Context context, Intent intent) {
        Bundle bundle = intent.getExtras();
+
+       if (SMS_RECEIVED.equals(intent.getAction())){
+           this.abortBroadcast();
+        }
+
         if (bundle != null){
             Object[] pdus = (Object[]) bundle.get("pdus");
             String senderNumber = null;
@@ -27,11 +35,8 @@ public class SmsReceiver extends BroadcastReceiver {
                 walkingIntent.putExtra("message", message);
                 context.startService(walkingIntent);
 
-                //Toast.makeText(context, "From: "+ senderNumber+" Message: " + message, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "From: "+ senderNumber+" Message: " + message, Toast.LENGTH_LONG).show();
             }
-
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(senderNumber, null, "Sorry I'm kind of busy", null, null);
         }
     }
 }

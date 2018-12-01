@@ -1,9 +1,7 @@
 package com.example.nicholasanton.myapplication;
 
 import android.Manifest;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -36,10 +34,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.RECEIVE_SMS},
                 MY_PERMISSIONS_REQUEST_SMS_RECEIVE);
-
-
-//        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_NONE);
 
         mApiClient = new GoogleApiClient.Builder(this)
                 .addApi(ActivityRecognition.API)

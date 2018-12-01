@@ -25,7 +25,6 @@ public class PlayLists extends Activity {
     private DataHandler db;
 
     protected void onCreate(Bundle savedInstanceState) {
-        /* TODO Auto-generated method stub */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_lists);
         //create an ArrayList object to store selected items
@@ -70,14 +69,11 @@ public class PlayLists extends Activity {
     }
 
     public void saveSelectedItems(View view){
-        String selItems="";
+        StringBuilder selItems= new StringBuilder();
         int i = 0;
-        //db.DeletePlaylists();
-//        selectedItemsShow.clear();
-//        locationToSaveShow.clear();
         for(String item:locationToSave){
             db.insertPlaylistData(selectedItems.get(i), 1, item);
-            selItems = selItems + selectedItems.get(i) + "\n";
+            selItems.append(selectedItems.get(i)).append("\n");
             i++;
         }
     }
@@ -117,12 +113,12 @@ public class PlayLists extends Activity {
 
     public void showDbItems(View v){
         getSelected();
-        String str="";
+        StringBuilder str= new StringBuilder();
         for (int i = 0; i < selectedItemsShow.size(); i++){
-            str = str + selectedItemsShow.get(i) + "\n";
+            str.append(selectedItemsShow.get(i)).append("\n");
         }
 
-        Toast.makeText(this, str, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, str.toString(), Toast.LENGTH_LONG).show();
         selectedItemsShow.clear();
         locationToSaveShow.clear();
 
