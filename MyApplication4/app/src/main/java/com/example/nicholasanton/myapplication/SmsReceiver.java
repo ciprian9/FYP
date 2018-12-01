@@ -11,8 +11,7 @@ import android.widget.Toast;
 public class SmsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Bundle bundle = intent.getExtras();
-
+       Bundle bundle = intent.getExtras();
         if (bundle != null){
             Object[] pdus = (Object[]) bundle.get("pdus");
             String senderNumber = null;
@@ -23,12 +22,16 @@ public class SmsReceiver extends BroadcastReceiver {
 
                 String message = sms.getDisplayMessageBody();
 
-                Toast.makeText(context, "From: "+ senderNumber+" Message: " + message, Toast.LENGTH_LONG).show();
+                Intent walkingIntent = new Intent(context, WalkingPolicy.class);
+                walkingIntent.putExtra("sender", senderNumber);
+                walkingIntent.putExtra("message", message);
+                context.startService(walkingIntent);
+
+                //Toast.makeText(context, "From: "+ senderNumber+" Message: " + message, Toast.LENGTH_LONG).show();
             }
 
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(senderNumber, null, "Sorry I'm kind of busy", null, null);
-
         }
     }
 }

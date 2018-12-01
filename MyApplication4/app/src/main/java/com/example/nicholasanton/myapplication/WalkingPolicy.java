@@ -39,6 +39,8 @@ public class WalkingPolicy extends IntentService {
     private boolean isHeadsetOn;
     private String TextMessage = "";
     private TextToSpeech repeatTTS;
+    private String sender;
+    private String smsMessage;
 
     public WalkingPolicy(){
         super("My_Walking_Policy");
@@ -47,6 +49,13 @@ public class WalkingPolicy extends IntentService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
+        if (intent.getStringExtra("sender") != null){
+            sender = intent.getStringExtra("sender");
+        }
+
+        if (intent.getStringExtra("message") != null){
+            smsMessage = intent.getStringExtra("message");
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
