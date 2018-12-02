@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,58 +8,45 @@
 
     <Button
         android:id="@+id/StartBtn"
-        android:layout_width="250dp"
-        android:layout_height="83dp"
-        android:layout_marginStart="58dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="76dp"
-        android:layout_marginBottom="23dp"
-        android:text="Start"
-        app:layout_constraintBottom_toTopOf="@+id/StopBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ListMusic" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/drivingPolicy"
+        android:text="Start" />
 
     <Button
         android:id="@+id/StopBtn"
-        android:layout_width="106dp"
-        android:layout_height="81dp"
-        android:layout_marginStart="125dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="153dp"
-        android:layout_marginBottom="61dp"
-        android:text="Stop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/StartBtn" />
-
-    <Button
-        android:id="@+id/ListMusic"
-        android:layout_width="wrap_content"
-        android:layout_height="49dp"
-        android:layout_marginStart="131dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="154dp"
-        android:layout_marginBottom="38dp"
-        android:text="List Music"
-        app:layout_constraintBottom_toTopOf="@+id/StartBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/walkingPolicy" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/StartBtn"
+        android:layout_alignParentEnd="true"
+        android:text="Stop" />
 
     <Button
         android:id="@+id/walkingPolicy"
-        android:layout_width="wrap_content"
-        android:layout_height="80dp"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="34dp"
-        android:layout_marginEnd="137dp"
-        android:layout_marginBottom="13dp"
-        android:text="Walking Policy"
-        app:layout_constraintBottom_toTopOf="@+id/ListMusic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Walking Policy" />
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/runningPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/walkingPolicy"
+        android:text="Running Policy" />
+
+    <Button
+        android:id="@+id/cyclingPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/runningPolicy"
+        android:text="Cycling Policy" />
+
+    <Button
+        android:id="@+id/drivingPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cyclingPolicy"
+        android:text="Driving Policy" />
+
+
+</RelativeLayout>

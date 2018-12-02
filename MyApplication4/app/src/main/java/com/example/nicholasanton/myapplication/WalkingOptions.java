@@ -190,7 +190,7 @@ public class WalkingOptions extends AppCompatActivity {
         results = db.SelectSettingsQuery(Constants.BATTERY_LEVEL);
         if(results.moveToFirst()){
             int temp = results.getInt(2);
-            BatteryMaxLevel.setText(Integer.toString(temp));
+            BatteryMaxLevel.setHint(Integer.toString(temp));
         }
     }
 

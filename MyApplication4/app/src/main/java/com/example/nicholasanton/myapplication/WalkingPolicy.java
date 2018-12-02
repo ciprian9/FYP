@@ -72,7 +72,7 @@ public class  WalkingPolicy extends IntentService {
         cursor = db.SelectSettingsQuery(Constants.HEADPHONE_SETTING);
         if(cursor.moveToFirst()) {
             int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
-            if (isHeadsetOn && temp == 1) {
+            if (!isHeadsetOn && temp == 1) {
                 mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 

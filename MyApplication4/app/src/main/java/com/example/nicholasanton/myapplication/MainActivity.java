@@ -53,13 +53,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         StopBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 mApiClient.disconnect();
-            }
-        });
-
-        final Button ListBtn = findViewById(R.id.ListMusic);
-        ListBtn.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                openListMusic();
+                StopApp();
             }
         });
 
@@ -69,11 +63,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 openWalkingOptions();
             }
         });
-    }
-
-    public void openListMusic(){
-        Intent intent = new Intent(this, Activity2.class);
-        startActivity(intent);
     }
 
 
@@ -108,5 +97,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             // YES!!
             Log.i("TAG", "MY_PERMISSIONS_REQUEST_SMS_RECEIVE --> YES");
         }
+    }
+
+    public void StopApp(){
+        stopService(new Intent(this, WalkingPolicy.class));
     }
 }

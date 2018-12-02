@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,135 +8,78 @@
 
     <Button
         android:id="@+id/walkingPlaylist"
-        android:layout_width="297dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="43dp"
-        android:layout_marginBottom="427dp"
         android:text="Playlist"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="10dp"/>
 
     <Switch
         android:id="@+id/swPlayHeadphones"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="47dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginBottom="17dp"
+        android:layout_below="@+id/walkingPlaylist"
         android:text="Play Music When Headphones In"
-        app:layout_constraintBottom_toTopOf="@+id/swTrackUsage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/walkingPlaylist" />
+        android:layout_marginBottom="10dp"/>
 
     <Switch
         android:id="@+id/swTrackUsage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="47dp"
-        android:layout_marginTop="88dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginBottom="14dp"
+        android:layout_below="@+id/swPlayHeadphones"
         android:text="Track Usage"
-        app:layout_constraintBottom_toTopOf="@+id/swSaveResources"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/walkingPlaylist"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_marginBottom="10dp"/>
 
     <Switch
         android:id="@+id/swSaveResources"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="47dp"
-        android:layout_marginTop="148dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginBottom="14dp"
+        android:layout_below="@+id/swTrackUsage"
         android:text="Save Resources"
-        app:layout_constraintBottom_toTopOf="@+id/swNotificationTTS"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/walkingPlaylist"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_marginBottom="10dp"/>
 
     <Switch
         android:id="@+id/swNotificationTTS"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="47dp"
-        android:layout_marginTop="208dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginBottom="173dp"
+        android:layout_below="@id/swSaveResources"
         android:text="Notification Text-to-speech"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.487"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/walkingPlaylist"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_marginBottom="10dp"/>
 
     <Switch
         android:id="@+id/swAutoReply"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="87dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="86dp"
-        android:layout_marginBottom="127dp"
+        android:layout_below="@+id/swNotificationTTS"
         android:text="AutoReply to SMS"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swNotificationTTS" />
+        android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/BatteryPercentText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="39dp"
-        android:layout_marginEnd="25dp"
-        android:text="Battery Level"
-        app:layout_constraintEnd_toStartOf="@+id/batteryPercent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swAutoReply" />
+        android:layout_below="@id/swAutoReply"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="26dp"
+        android:layout_marginBottom="10dp"
+        android:text="Battery Level" />
 
     <EditText
         android:id="@+id/batteryPercent"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginBottom="54dp"
+        android:layout_below="@id/swAutoReply"
+        android:layout_marginBottom="20dp"
+        android:layout_toRightOf="@id/BatteryPercentText"
         android:ems="10"
         android:inputType="numberDecimal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/BatteryPercentText"
-        app:layout_constraintTop_toBottomOf="@+id/swAutoReply"
-        app:layout_constraintVertical_bias="0.0" />
+        android:singleLine="true"
+        android:textDirection="rtl"/>
 
     <Button
         android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="33dp"
-        android:layout_marginStart="280dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/batteryPercent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/BatteryPercentText"
+        android:text="Save Settings" />
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
