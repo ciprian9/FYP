@@ -3,6 +3,7 @@ package com.example.nicholasanton.myapplication;
 import java.util.ArrayList;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.provider.MediaStore;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ListView;
@@ -86,10 +88,13 @@ public class PlayLists extends Activity {
             selItems.append(selectedItems.get(i)).append("\n");
             i++;
         }
+        selectedItems.clear();
+        locationToSave.clear();
     }
 
 
     public void getMusic(){
+        arrayList.clear();
         ContentResolver contentResolver = getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor songCursor = contentResolver.query(songUri, null, null, null, null);
@@ -105,16 +110,26 @@ public class PlayLists extends Activity {
                 MusicLocation.add(currentLocation);
             } while (songCursor.moveToNext());
         }
+        removeInSelected();
         assert songCursor != null;
             songCursor.close();
     }
 
-    public void getSelected(){
-        Cursor c = db.SelectPlaylistQuery(1);
+    private void removeInSelected() {
+        Cursor c = db.SelectPlaylistQuery(Constants.COLUMN_PLAYLIST_NAME);
         c.moveToFirst();
         for (int i=0; i< c.getCount(); i++ ) {
-            String loc = c.getString(3);
-            String name = c.getString(1);
+            arrayList.remove(c.getString(Constants.COLUMN_PLAYLIST_NAME));
+            c.moveToNext();
+        }
+    }
+
+    public void getSelected(){
+        Cursor c = db.SelectPlaylistQuery(Constants.COLUMN_PLAYLIST_NAME);
+        c.moveToFirst();
+        for (int i=0; i< c.getCount(); i++ ) {
+            String loc = c.getString(Constants.COLUMN_PLAYLIST_LOCATION);
+            String name = c.getString(Constants.COLUMN_PLAYLIST_NAME);
             selectedItemsShow.add(name);
             locationToSaveShow.add(loc);
             c.moveToNext();
@@ -122,21 +137,7 @@ public class PlayLists extends Activity {
     }
 
     public void showDbItems(View v){
-        getSelected();
-        StringBuilder str= new StringBuilder();
-        for (int i = 0; i < selectedItemsShow.size(); i++){
-            str.append(selectedItemsShow.get(i)).append("\n");
-        }
-
-        Toast.makeText(this, str.toString(), Toast.LENGTH_LONG).show();
-        selectedItemsShow.clear();
-        locationToSaveShow.clear();
-
-    }
-
-    public void clearDB(View v){
-        db.DeletePlaylists();
-        selectedItemsShow.clear();
-        locationToSaveShow.clear();
+        Intent intent = new Intent(this, Playlist_View.class);
+        startActivity(intent);
     }
 }

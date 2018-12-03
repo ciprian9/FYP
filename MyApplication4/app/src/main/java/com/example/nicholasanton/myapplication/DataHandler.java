@@ -12,7 +12,6 @@ Need to create a Policy Table
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.ContentObservable;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -86,10 +85,10 @@ public class DataHandler extends SQLiteOpenHelper {
         return true;
     }
 
-    public void DeletePlaylists(){
+    public void DeletePlaylists(String name){
         //Need it just in case, we shouldnt have to delete anything but for example if using the music on the device the user might delete a song so we cannot play it in that case delete it from the playlist
         SQLiteDatabase db = this.getWritableDatabase();
-        int temp = db.delete(PLAYLIST_TABLE_NAME, "1", null);
+        int temp = db.delete(PLAYLIST_TABLE_NAME, COLUMN_NAME + " =?", new String[]{name});
     }
 
 

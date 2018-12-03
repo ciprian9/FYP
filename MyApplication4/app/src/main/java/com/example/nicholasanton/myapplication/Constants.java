@@ -18,4 +18,9 @@ public interface Constants {
     int COLUMN_SETTINGS_BATTERY  = 2;
     int COLUMN_SETTINGS_STATUS = 3;
     int COLUMN_SETTINGS_DONE = 4;
+
+    int COLUMN_PLAYLIST_ID = 0;
+    int COLUMN_PLAYLIST_NAME = 1;
+    int COLUMN_PLAYLIST_POLICYID = 2;
+    int COLUMN_PLAYLIST_LOCATION = 3;
 }
