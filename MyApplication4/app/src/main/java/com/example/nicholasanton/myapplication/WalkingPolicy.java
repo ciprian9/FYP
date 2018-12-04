@@ -81,36 +81,36 @@ public class  WalkingPolicy extends IntentService {
         }
     }
 
-    public void SetSpeaker(){
-        repeatTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS){
-                    int result = repeatTTS.setLanguage(Locale.GERMAN);
-                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
-                        Log.e("tts", "Language not supported");
-                    }
-                    else{
-                        speak();
-                    }
-                }
-                else{
-                    Log.e("tts", "Initialisation Failed");
-                }
-            }
-        });
-    }
+//    public void SetSpeaker(){
+//        repeatTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+//            @Override
+//            public void onInit(int status) {
+//                if (status == TextToSpeech.SUCCESS){
+//                    int result = repeatTTS.setLanguage(Locale.GERMAN);
+//                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+//                        Log.e("tts", "Language not supported");
+//                    }
+//                    else{
+//                        speak();
+//                    }
+//                }
+//                else{
+//                    Log.e("tts", "Initialisation Failed");
+//                }
+//            }
+//        });
+//    }
 
 
     //Service ends too early not given the chance to speak we need to keep the service running until the whole run is over
     //Notifications seem to be unable to be stoped need to do more research
-    private void speak(){
-        float pitchOfVoice = (float) 0.7;
-        repeatTTS.setPitch(pitchOfVoice);
-        int speedOfVoice = 1;
-        repeatTTS.setSpeechRate(speedOfVoice);
-        repeatTTS.speak(TextMessage, TextToSpeech.QUEUE_FLUSH, null);
-    }
+//    private void speak(){
+//        float pitchOfVoice = (float) 0.7;
+//        repeatTTS.setPitch(pitchOfVoice);
+//        int speedOfVoice = 1;
+//        repeatTTS.setSpeechRate(speedOfVoice);
+//        repeatTTS.speak(TextMessage, TextToSpeech.QUEUE_FLUSH, null);
+//    }
 
     public void SaveResources(){
         cursor = db.SelectSettingsQuery(Constants.SAVE_RESOURCE_SETTING);
@@ -160,30 +160,31 @@ public class  WalkingPolicy extends IntentService {
         }
 
         SaveResources();
-        if (sender != "" && smsMessage != ""){
-            cursor = db.SelectSettingsQuery(Constants.TEXT_TO_SPEECH_SETTING);
-            if (cursor.moveToFirst()) {
-                int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
-                if (temp == 1) {
-                    TextMessage = TextMessage + sender + " says " + smsMessage;
-                    SetSpeaker();
-                }
-            }
-        }
+//        if (sender != "" && smsMessage != ""){
+//            cursor = db.SelectSettingsQuery(Constants.TEXT_TO_SPEECH_SETTING);
+//            if (cursor.moveToFirst()) {
+//                int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
+//                if (temp == 1) {
+//                    TextMessage = TextMessage + sender + " says " + smsMessage;
+//                    SetSpeaker();
+//                }
+//            }
+//        }
+//
+//        cursor = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
+//        if (cursor.moveToFirst()) {
+//            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
+//            if (temp == 1 && sender != "") {
+//                autoReply();
+//            }
+//        }
 
-        cursor = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
-        if (cursor.moveToFirst()) {
-            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
-            if (temp == 1 && sender != "") {
-                autoReply();
-            }
-        }
     }
 
-    public void autoReply(){
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(sender, null, "Sorry I'm kind of busy", null, null);
-    }
+//    public void autoReply(){
+//        SmsManager smsManager = SmsManager.getDefault();
+//        smsManager.sendTextMessage(sender, null, "Sorry I'm kind of busy", null, null);
+//    }
 
     @SuppressLint("StaticFieldLeak")
     class PlayerTask extends AsyncTask<String, Void, Boolean> {

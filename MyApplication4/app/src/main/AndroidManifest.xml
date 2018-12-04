@@ -70,6 +70,7 @@
         </receiver>
 
         <activity android:name=".Playlist_View"></activity>
+        <service android:name=".TextToSpeechService"></service>
     </application>
 
 </manifest>

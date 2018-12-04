@@ -35,9 +35,10 @@ public class SmsReceiver extends BroadcastReceiver {
                 String message = sms.getDisplayMessageBody();
 
                 //START THE walking service and pass an intendt with extra data
-                Intent walkingIntent = new Intent(context, WalkingPolicy.class);
+                Intent walkingIntent = new Intent(context, TextToSpeechService.class);
                 walkingIntent.putExtra("sender", senderNumber);
                 walkingIntent.putExtra("message", message);
+                //context.startService(walkingIntent);
                 context.startService(walkingIntent);
 
                 Toast.makeText(context, "From: "+ senderNumber+" Message: " + message, Toast.LENGTH_LONG).show();
