@@ -2,6 +2,7 @@ package com.example.nicholasanton.myapplication;
 
 /*
 If a value is hard to remember or is over used stick it in here
+Values that are used in different parts of the code will be added here
  */
 
 public interface Constants {

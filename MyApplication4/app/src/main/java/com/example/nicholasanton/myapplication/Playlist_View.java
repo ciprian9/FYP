@@ -35,6 +35,7 @@ public class Playlist_View extends AppCompatActivity {
     }
 
     private void SetItems(){
+        //Retrieve all audio files in the database for policy with ID 1
         list.clear();
         DataHandler db = new DataHandler(this);
         Cursor c = db.SelectPlaylistQuery(1);

@@ -31,16 +31,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //request runtime permisson to access Received SMS messages
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.RECEIVE_SMS},
                 MY_PERMISSIONS_REQUEST_SMS_RECEIVE);
 
+        //create the GoogleApiClient and bulid it so that it will detect activities
         mApiClient = new GoogleApiClient.Builder(this)
                 .addApi(ActivityRecognition.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
 
+
+        //Listener for the Start Button
         final Button StartBtn = findViewById(R.id.StartBtn);
         StartBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
-
+        //Listener for the stop button
         final Button StopBtn = findViewById(R.id.StopBtn);
         StopBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -57,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
+
+        //Listener for the walkingPolicy button
         final Button walkingPolicy =  findViewById(R.id.walkingPolicy);
         walkingPolicy.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -65,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
     }
 
-
+    //Open Walking options activity
     public void openWalkingOptions(){
         Intent intent = new Intent(this, WalkingOptions.class);
         startActivity(intent);
@@ -73,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        //Use a pending intent and a task to start the Intent service ActivityRecognitionService
         Intent intent = new Intent( this, ActivityRecognizedService.class );
         PendingIntent pendingIntent = PendingIntent.getService( this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT );
         //ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates( mApiClient, 3000, pendingIntent );
@@ -90,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     }
 
+    //Check if permission was granted for SMS
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

@@ -24,7 +24,7 @@ need to rearage buttons
 need to open an activity when clicking show which shows all songs in database
 need to make sure the selected songs are either checked or not visible in this window
 
-Gave you 2 options pick whichever you want
+
  */
 
 public class PlayLists extends Activity {
@@ -80,6 +80,7 @@ public class PlayLists extends Activity {
         });
     }
 
+    //save the checked items to the database
     public void saveSelectedItems(View view){
         StringBuilder selItems= new StringBuilder();
         int i = 0;
@@ -92,7 +93,7 @@ public class PlayLists extends Activity {
         locationToSave.clear();
     }
 
-
+    //Check the device for audio files
     public void getMusic(){
         arrayList.clear();
         ContentResolver contentResolver = getContentResolver();
@@ -115,6 +116,8 @@ public class PlayLists extends Activity {
             songCursor.close();
     }
 
+
+    //clear the items already added to the database as they should not be reselected
     private void removeInSelected() {
         Cursor c = db.SelectPlaylistQuery(Constants.COLUMN_PLAYLIST_NAME);
         c.moveToFirst();
@@ -124,6 +127,7 @@ public class PlayLists extends Activity {
         }
     }
 
+    //save the selected audio files to ArrayLists to save them to the database
     public void getSelected(){
         Cursor c = db.SelectPlaylistQuery(Constants.COLUMN_PLAYLIST_NAME);
         c.moveToFirst();
@@ -136,6 +140,8 @@ public class PlayLists extends Activity {
         }
     }
 
+
+    //Start the activity to display audio files already in playlist
     public void showDbItems(View v){
         Intent intent = new Intent(this, Playlist_View.class);
         startActivity(intent);

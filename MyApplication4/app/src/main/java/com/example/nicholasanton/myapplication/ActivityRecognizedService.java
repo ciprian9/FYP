@@ -22,7 +22,6 @@ Need to start working on Transition either with Transition or with Fence API ( F
 public class ActivityRecognizedService extends IntentService {
 
     private DataHandler db;
-
     private String ServiceName = "";
 
     public ActivityRecognizedService() {
@@ -33,55 +32,65 @@ public class ActivityRecognizedService extends IntentService {
         super(name);
     }
 
+
+    //Start the service and check which activity takes place
     @Override
     protected void onHandleIntent(Intent intent) {
         if(ActivityRecognitionResult.hasResult(intent)) {
+            //get data from passed in intent
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
+            //pass most likely activity to the handleDetected Activities
             handleDetectedActivities( result.getProbableActivities() );
         }
     }
 
     private void handleDetectedActivities(List<DetectedActivity> probableActivities) {
+        /*
+        This method will loop around all probable activities and it will use the type to access each case in the switch statement
+        confidence will be used in order to decide which activity is taking place
+         */
         for( DetectedActivity activity : probableActivities ) {
             switch( activity.getType() ) {
                 case DetectedActivity.IN_VEHICLE: {
                     Log.e( "ActivityRecogition", "In Vehicle: " + activity.getConfidence() );
-                    MakeNotifications("Are you In Vehicle?", "In Vehicle");
+                    MakeNotifications("In Vehicle", "In Vehicle");
                     break;
                 }
                 case DetectedActivity.ON_BICYCLE: {
                     Log.e( "ActivityRecogition", "On Bicycle: " + activity.getConfidence() );
-                    MakeNotifications("Are you on Foot?", "on Foot");
+                    MakeNotifications("on Foot", "on Foot");
                     break;
                 }
                 case DetectedActivity.ON_FOOT: {
                     Log.e( "ActivityRecogition", "On Foot: " + activity.getConfidence() );
-                    MakeNotifications("Are you on Bicycle?", "on Bicycle");
+                    MakeNotifications("on Bicycle", "on Bicycle");
                     break;
                 }
                 case DetectedActivity.RUNNING: {
                     Log.e( "ActivityRecogition", "Running: " + activity.getConfidence() );
-                    MakeNotifications("Are you Running?", "Running");
+                    MakeNotifications("Running", "Running");
                     break;
                 }
                 case DetectedActivity.STILL: {
                     Log.e( "ActivityRecogition", "Still: " + activity.getConfidence() );
-
+                    //for testing purposes still is the only activity that has the confidence until transition will be implemented
                     if( activity.getConfidence() >= 75 ) {
-                        MakeNotifications("Are you Still?", "still");
+                        //method to create a notification will let the user know the activity for testing purposes
+                        MakeNotifications("Still?", "still");
+                        //begin the walking service
                         StartWalkingService();
                     }
                     break;
                 }
                 case DetectedActivity.TILTING: {
                     Log.e( "ActivityRecogition", "Tilting: " + activity.getConfidence() );
-                    MakeNotifications("Are you TILTING?", "TILTING");
+                    MakeNotifications("TILTING?", "TILTING");
                     break;
                 }
                 case DetectedActivity.WALKING: {
                     Log.e( "ActivityRecogition", "Walking: " + activity.getConfidence() );
                     if( activity.getConfidence() >= 75 ) {
-                        MakeNotifications("Are you walking?", "walking");
+                        MakeNotifications("walking?", "walking");
                     }
                     break;
                 }
@@ -95,10 +104,13 @@ public class ActivityRecognizedService extends IntentService {
     }
 
     public void StartWalkingService(){
+        //create a new intent that will start walkingPolicy service
         Intent intent = new Intent(this, WalkingPolicy.class);
         startService(intent);
     }
 
+
+    //Create a notification and add it to the android device
     public void MakeNotifications(String str, String chanelID){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanelID);
         builder.setContentText(str);

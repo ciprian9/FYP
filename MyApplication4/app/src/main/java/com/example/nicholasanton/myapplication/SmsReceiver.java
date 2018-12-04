@@ -14,21 +14,27 @@ public class SmsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
        Bundle bundle = intent.getExtras();
-
+        //attempt to stop the notification from the default sms application
+        //android blocked access to do this todo look for new method to block notfications
        if (SMS_RECEIVED.equals(intent.getAction())){
            this.abortBroadcast();
         }
 
+        //if the bundle is not null
         if (bundle != null){
-            Object[] pdus = (Object[]) bundle.get("pdus");
+           //we attepmt to take the pdus from the bundle as it contains the SMS data
+           Object[] pdus = (Object[]) bundle.get("pdus");
             String senderNumber = null;
+            //we will loop throguh the pdus as an object can only hold the first 126 characters of the text
             for (int i = 0; i < pdus.length; i++){
                 SmsMessage sms = SmsMessage.createFromPdu((byte[]) pdus[i]);
 
+                //retrieving the sender number
                 senderNumber = sms.getOriginatingAddress();
-
+                //retrieving the message
                 String message = sms.getDisplayMessageBody();
 
+                //START THE walking service and pass an intendt with extra data
                 Intent walkingIntent = new Intent(context, WalkingPolicy.class);
                 walkingIntent.putExtra("sender", senderNumber);
                 walkingIntent.putExtra("message", message);

@@ -3,6 +3,7 @@ package com.example.nicholasanton.myapplication;
 /*
 Code coming from
 https://stackoverflow.com/questions/17525886/listview-with-add-and-delete-buttons-in-each-row-in-android
+Creates a Custom Adapter to allow buttons and textviews to be displayed on a listview component
  */
 
 
@@ -45,6 +46,7 @@ public class My_Delete_Playlist_Adapter extends BaseAdapter implements ListAdapt
         return list.indexOf(list.get(pos));
         //just return 0 if your list items do not have an Id variable.
     }
+
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
