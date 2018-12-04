@@ -202,6 +202,9 @@ public class WalkingOptions extends AppCompatActivity {
     public void SetBatteryLevel(){
 
         String s = BatteryMaxLevel.getText().toString();
+        if (s.equals("")){
+            s = BatteryMaxLevel.getHint().toString();
+        }
         int level =  Integer.parseInt(s);
 
        if (level < 1){
