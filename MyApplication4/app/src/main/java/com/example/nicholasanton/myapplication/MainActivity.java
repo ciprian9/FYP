@@ -1,13 +1,18 @@
 package com.example.nicholasanton.myapplication;
 
 import android.Manifest;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +28,7 @@ import com.google.android.gms.tasks.Task;
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private int MY_PERMISSIONS_REQUEST_SMS_RECEIVE = 10;
+    private int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
     public GoogleApiClient mApiClient;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -30,6 +36,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+        }
+
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{Manifest.permission.KILL_BACKGROUND_PROCESSES},
+                1);
+
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                1);
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                1);
+
+        NotificationManager n = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if(!n.isNotificationPolicyAccessGranted()) {
+            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+            startActivity(intent);
+        }
 
         //request runtime permisson to access Received SMS messages
         ActivityCompat.requestPermissions(this,
@@ -109,5 +137,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     public void StopApp(){
         stopService(new Intent(this, WalkingPolicy.class));
+        MusicPlayerService.mediaPlayer.stop();
     }
 }

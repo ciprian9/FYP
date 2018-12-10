@@ -3,6 +3,7 @@ package com.example.nicholasanton.myapplication;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
@@ -16,9 +17,6 @@ public class SmsReceiver extends BroadcastReceiver {
        Bundle bundle = intent.getExtras();
         //attempt to stop the notification from the default sms application
         //android blocked access to do this todo look for new method to block notfications
-       if (SMS_RECEIVED.equals(intent.getAction())){
-           this.abortBroadcast();
-        }
 
         //if the bundle is not null
         if (bundle != null){

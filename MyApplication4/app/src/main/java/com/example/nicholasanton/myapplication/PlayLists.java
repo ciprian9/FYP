@@ -96,7 +96,7 @@ public class PlayLists extends Activity {
     //Check the device for audio files
     public void getMusic(){
         arrayList.clear();
-        ContentResolver contentResolver = getContentResolver();
+        ContentResolver contentResolver = PlayLists.this.getContentResolver();
         Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         Cursor songCursor = contentResolver.query(songUri, null, null, null, null);
 

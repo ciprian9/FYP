@@ -1,8 +1,11 @@
 package com.example.nicholasanton.myapplication;
 
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.telephony.SmsManager;
@@ -59,6 +62,14 @@ public class TextToSpeechService extends Service {
     }
 
     private void speakTheText() {
+        //FOR API 24 USER HAS TO GRANT ACCESS TO THIS
+        AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+        if (MusicPlayerService.mediaPlayer != null) {
+            MusicPlayerService.mediaPlayer.pause();
+        }
+
+
         if (sender != "" && smsMessage != ""){
             cursor = db.SelectSettingsQuery(Constants.TEXT_TO_SPEECH_SETTING);
             if (cursor.moveToFirst()) {
@@ -74,14 +85,11 @@ public class TextToSpeechService extends Service {
         if (cursor.moveToFirst()) {
             int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
             if (temp == 1 && sender != "") {
-                autoReply();
+                Intent i = new Intent(this, AutoReplyService.class);
+                i = i.putExtra("sender", sender);
+                startService(i);
             }
         }
-    }
-
-    public void autoReply(){
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(sender, null, "Sorry I'm kind of busy", null, null);
     }
 
     private void speak(){
@@ -95,6 +103,11 @@ public class TextToSpeechService extends Service {
         }
         if (!repeatTTS.isSpeaking()){
             Toast.makeText(this, "Stop Talking", Toast.LENGTH_SHORT).show();
+            AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            //audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            if (MusicPlayerService.mediaPlayer != null) {
+                MusicPlayerService.mediaPlayer.start();
+            }
             stopSelf();
         }
     }
