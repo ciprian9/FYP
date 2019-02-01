@@ -4,18 +4,6 @@
     android:layout_height="match_parent">
 
 
-    <TextView
-        android:id="@+id/loginText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="false"
-        android:text="Login"
-        android:textAlignment="center"
-        android:textSize="36sp" />
-
     <EditText
         android:id="@+id/Username"
         android:layout_width="wrap_content"
@@ -34,13 +22,12 @@
 
     <Button
         android:id="@+id/NextButton"
-        android:layout_width="110dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
         android:layout_marginBottom="15dp"
         android:background="@color/colorPrimaryDark"
         android:elevation="10dp"
@@ -50,13 +37,13 @@
         android:text="Login"
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
 
     <Button
         android:id="@+id/RegisterButton"
-        android:layout_width="110dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/saveLoginCheckBox"
         android:layout_alignLeft="@+id/saveLoginCheckBox"
@@ -72,7 +59,7 @@
         android:text="Register"
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
     <CheckBox
