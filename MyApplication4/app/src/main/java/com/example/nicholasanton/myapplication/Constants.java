@@ -12,7 +12,7 @@ public interface Constants {
     String TEXT_TO_SPEECH_SETTING = "notificationTTS";
     String AUTO_REPLY_SETTING = "autoReply";
     String BATTERY_LEVEL = "battery";
-
+    String PEDOMETER_SETTING = "startPedometer";
 
     int COLUMN_SETTINGS_ID = 0;
     int COLUMN_SETTINGS_NAME = 1;

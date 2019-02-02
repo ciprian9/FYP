@@ -44,6 +44,7 @@ import android.widget.Toast;
 public class WalkingOptions extends AppCompatActivity {
 
     private Switch playHeadphones;
+    private Switch startPedometer;
     private Switch trackUsage;
     private Switch saveResources;
     private Switch notificationTTS;
@@ -58,11 +59,12 @@ public class WalkingOptions extends AppCompatActivity {
         setContentView(R.layout.activity_walking_options);
 
         playHeadphones =  findViewById(R.id.swPlayHeadphones);
-        trackUsage =  findViewById(R.id.swTrackUsage);
-        saveResources =  findViewById(R.id.swSaveResources);
-        notificationTTS =  findViewById(R.id.swNotificationTTS);
-        autoReply = findViewById(R.id.swAutoReply);
-        BatteryMaxLevel = findViewById(R.id.batteryPercent);
+        startPedometer = findViewById(R.id.swStartPedometer);
+//        trackUsage =  findViewById(R.id.swTrackUsage);
+//        saveResources =  findViewById(R.id.swSaveResources);
+//        notificationTTS =  findViewById(R.id.swNotificationTTS);
+//        autoReply = findViewById(R.id.swAutoReply);
+//        BatteryMaxLevel = findViewById(R.id.batteryPercent);
 
         VarsToForm();
         db = new DataHandler(WalkingOptions.this);
@@ -70,11 +72,12 @@ public class WalkingOptions extends AppCompatActivity {
         if(set.getCount() == 0) {
             DataHandler dataHandler = new DataHandler(this);
             boolean isInserted = dataHandler.insertSettingsData("playHeadphones", false);
-            dataHandler.insertSettingsData("trackUsage", false);
-            dataHandler.insertSettingsData("saveResources", false);
-            dataHandler.insertSettingsData("notificationTTS", false);
-            dataHandler.insertSettingsData("autoReply", false);
-            dataHandler.insertSettingsDataNumbers("battery", 20);
+            dataHandler.insertSettingsData("startPedometer", false);
+//            dataHandler.insertSettingsData("trackUsage", false);
+//            dataHandler.insertSettingsData("saveResources", false);
+//            dataHandler.insertSettingsData("notificationTTS", false);
+//            dataHandler.insertSettingsData("autoReply", false);
+//            dataHandler.insertSettingsDataNumbers("battery", 20);
         }
 
         final Button WalkingPlaylist = findViewById(R.id.walkingPlaylist);
@@ -85,6 +88,15 @@ public class WalkingOptions extends AppCompatActivity {
             }
         });
 
+        final Button PedometerBtn = findViewById(R.id.btnPedometer);
+        PedometerBtn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                //mApiClient.disconnect();
+                openPedometer();
+            }
+        });
+
+
         playHeadphones.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -93,7 +105,7 @@ public class WalkingOptions extends AppCompatActivity {
             }
         });
 
-        trackUsage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        startPedometer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 db = new DataHandler(WalkingOptions.this);
@@ -101,36 +113,44 @@ public class WalkingOptions extends AppCompatActivity {
             }
         });
 
-        saveResources.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                db = new DataHandler(WalkingOptions.this);
-                db.updateSettingsData("3", isChecked);
-            }
-        });
-
-        notificationTTS.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                db = new DataHandler(WalkingOptions.this);
-                db.updateSettingsData("4", isChecked);
-            }
-        });
-
-        autoReply.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                db = new DataHandler(WalkingOptions.this);
-                db.updateSettingsData("5", isChecked);
-            }
-        });
-
-        final Button btnSave = findViewById(R.id.btnSave);
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                SetBatteryLevel();
-            }
-        });
+//        trackUsage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                db = new DataHandler(WalkingOptions.this);
+//                db.updateSettingsData("2", isChecked);
+//            }
+//        });
+//
+//        saveResources.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                db = new DataHandler(WalkingOptions.this);
+//                db.updateSettingsData("3", isChecked);
+//            }
+//        });
+//
+//        notificationTTS.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                db = new DataHandler(WalkingOptions.this);
+//                db.updateSettingsData("4", isChecked);
+//            }
+//        });
+//
+//        autoReply.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                db = new DataHandler(WalkingOptions.this);
+//                db.updateSettingsData("5", isChecked);
+//            }
+//        });
+//
+//        final Button btnSave = findViewById(R.id.btnSave);
+//        btnSave.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                SetBatteryLevel();
+//            }
+//        });
 
     }
 
@@ -147,51 +167,61 @@ public class WalkingOptions extends AppCompatActivity {
             }
         }
 
-        results = db.SelectSettingsQuery(Constants.USAGE_SETTING);
+        results = db.SelectSettingsQuery(Constants.PEDOMETER_SETTING);
         if(results.moveToFirst()){
             int temp = results.getInt(3);
             if(temp == 0) {
-                trackUsage.setChecked(false);
+                startPedometer.setChecked(false);
             } else {
-                trackUsage.setChecked(true);
+                startPedometer.setChecked(true);
             }
         }
 
-        results = db.SelectSettingsQuery(Constants.SAVE_RESOURCE_SETTING);
-        if(results.moveToFirst()){
-            int temp = results.getInt(3);
-            if(temp == 0) {
-                saveResources.setChecked(false);
-            } else {
-                saveResources.setChecked(true);
-            }
-        }
-
-        results = db.SelectSettingsQuery(Constants.TEXT_TO_SPEECH_SETTING);
-        if(results.moveToFirst()){
-            int temp = results.getInt(3);
-            if(temp == 0) {
-                notificationTTS.setChecked(false);
-            } else {
-                notificationTTS.setChecked(true);
-            }
-        }
-
-        results = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
-        if(results.moveToFirst()){
-            int temp = results.getInt(3);
-            if(temp == 0) {
-                autoReply.setChecked(false);
-            } else {
-                autoReply.setChecked(true);
-            }
-        }
-
-        results = db.SelectSettingsQuery(Constants.BATTERY_LEVEL);
-        if(results.moveToFirst()){
-            int temp = results.getInt(2);
-            BatteryMaxLevel.setHint(Integer.toString(temp));
-        }
+//        results = db.SelectSettingsQuery(Constants.USAGE_SETTING);
+//        if(results.moveToFirst()){
+//            int temp = results.getInt(3);
+//            if(temp == 0) {
+//                trackUsage.setChecked(false);
+//            } else {
+//                trackUsage.setChecked(true);
+//            }
+//        }
+//
+//        results = db.SelectSettingsQuery(Constants.SAVE_RESOURCE_SETTING);
+//        if(results.moveToFirst()){
+//            int temp = results.getInt(3);
+//            if(temp == 0) {
+//                saveResources.setChecked(false);
+//            } else {
+//                saveResources.setChecked(true);
+//            }
+//        }
+//
+//        results = db.SelectSettingsQuery(Constants.TEXT_TO_SPEECH_SETTING);
+//        if(results.moveToFirst()){
+//            int temp = results.getInt(3);
+//            if(temp == 0) {
+//                notificationTTS.setChecked(false);
+//            } else {
+//                notificationTTS.setChecked(true);
+//            }
+//        }
+//
+//        results = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
+//        if(results.moveToFirst()){
+//            int temp = results.getInt(3);
+//            if(temp == 0) {
+//                autoReply.setChecked(false);
+//            } else {
+//                autoReply.setChecked(true);
+//            }
+//        }
+//
+//        results = db.SelectSettingsQuery(Constants.BATTERY_LEVEL);
+//        if(results.moveToFirst()){
+//            int temp = results.getInt(2);
+//            BatteryMaxLevel.setHint(Integer.toString(temp));
+//        }
     }
 
     public void openPlaylists(){
@@ -199,20 +229,27 @@ public class WalkingOptions extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void SetBatteryLevel(){
-
-        String s = BatteryMaxLevel.getText().toString();
-        if (s.equals("")){
-            s = BatteryMaxLevel.getHint().toString();
-        }
-        int level =  Integer.parseInt(s);
-
-       if (level < 1){
-           Toast.makeText(this, "Number is too small try again", Toast.LENGTH_SHORT).show();
-       } else if (level > 100){
-           Toast.makeText(this, "Number is too high try again", Toast.LENGTH_SHORT).show();
-       } else{
-           db.updateSettingsIntData("6", level);
-       }
+    public void openPedometer(){
+        Intent intent = new Intent(this, PedometerActivity.class);
+        intent.putExtra("where", "Options");
+        startActivity(intent);
     }
+
+
+//    public void SetBatteryLevel(){
+//
+//        String s = BatteryMaxLevel.getText().toString();
+//        if (s.equals("")){
+//            s = BatteryMaxLevel.getHint().toString();
+//        }
+//        int level =  Integer.parseInt(s);
+//
+//       if (level < 1){
+//           Toast.makeText(this, "Number is too small try again", Toast.LENGTH_SHORT).show();
+//       } else if (level > 100){
+//           Toast.makeText(this, "Number is too high try again", Toast.LENGTH_SHORT).show();
+//       } else{
+//           db.updateSettingsIntData("6", level);
+//       }
+//    }
 }

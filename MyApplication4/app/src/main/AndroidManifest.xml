@@ -33,6 +33,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".Register"></activity>
+        <activity android:name=".PedometerActivity">
+        </activity>
 
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
