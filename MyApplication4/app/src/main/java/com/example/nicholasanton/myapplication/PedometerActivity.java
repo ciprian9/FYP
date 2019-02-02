@@ -19,44 +19,48 @@ public class PedometerActivity extends AppCompatActivity implements SensorEventL
     private int numSteps;
     private TextView TvSteps;
     private String where;
+    private WalkingPolicy walkingPolicy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pedometer);
         Intent intent = getIntent();
         where = intent.getStringExtra("where");
+        walkingPolicy = new WalkingPolicy();
 
-        if (where.equals("Policy")) {
-            moveTaskToBack(true);
-        }
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pedometer);
+
         StartPedometer();
     }
 
     public void StartPedometer(){
         // Get an instance of the SensorManager
         try {
-            sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-            accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            simpleStepDetector = new StepDectector();
-            simpleStepDetector.registerListener(this);
+            if (where.equals("Policy")) {
+                try {
+                    sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+                    accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                    simpleStepDetector = new StepDectector();
+                    simpleStepDetector.registerListener(this);
+                    TvSteps = (TextView) findViewById(R.id.textView);
 
-            TvSteps = (TextView) findViewById(R.id.textView);
+                } catch (Exception e) {
+                    System.out.printf(e.toString());
+                }
+
+                //
+                try {
+                    numSteps = 0;
+                    sensorManager.registerListener((SensorEventListener) PedometerActivity.this, accel, SensorManager.SENSOR_DELAY_FASTEST);
+                } catch (Exception e) {
+                    System.out.printf(e.toString());
+                }
+                startActivity(new Intent(PedometerActivity.this, ActivitesListeners.class));
+            }
         } catch (Exception e){
             System.out.printf(e.toString());
         }
-
-        if (where.equals("Policy")) {
-            try {
-                numSteps = 0;
-                sensorManager.registerListener((SensorEventListener) PedometerActivity.this, accel, SensorManager.SENSOR_DELAY_FASTEST);
-            } catch (Exception e) {
-                System.out.printf(e.toString());
-            }
-        }
     }
-
-
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
