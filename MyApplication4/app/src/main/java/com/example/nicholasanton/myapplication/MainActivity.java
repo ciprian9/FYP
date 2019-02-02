@@ -7,6 +7,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 //import android.os.Build;
+import android.database.Cursor;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 //import android.support.annotation.RequiresApi;
@@ -17,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //    public GoogleApiClient mApiClient;
     private TextView Username;
     private TextView Password;
+    private CheckBox chkRemember;
     private String uName;
     private String Pass;
     private boolean LoggedIn;
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         Username = findViewById(R.id.Username);
         Password = findViewById(R.id.Password);
+        chkRemember = findViewById(R.id.saveLoginCheckBox);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -80,6 +85,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.RECEIVE_SMS},
                 MY_PERMISSIONS_REQUEST_SMS_RECEIVE);
+
+        DataHandler db = new DataHandler(this);
+        Cursor cursor = db.SelectUser();
+        int temp = cursor.getCount();
+        cursor.moveToFirst();
+        if(temp > 0){
+            try {
+                Username.setText(cursor.getString(Constants.COLUMN_USERNAME));
+                Password.setText(cursor.getString(Constants.COLUMN_PASSWORD));
+                chkRemember.setChecked(true);
+            }catch (Exception e){
+                System.out.print(e);
+            }
+        }
 //
 //        //create the GoogleApiClient and bulid it so that it will detect activities
 ////        mApiClient = new GoogleApiClient.Builder(this)
@@ -138,6 +157,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
     public void GoToMenu(){
+        DataHandler db = new DataHandler(this);
+        if (chkRemember.isChecked()){
+            if (db.SelectUser().getCount() == 0) {
+                db.insertUser(uName, Pass);
+                Cursor c = db.SelectUser();
+                int temp = c.getCount();
+            }else{
+                Cursor cursor = db.SelectUser();
+                cursor.moveToFirst();
+                if(cursor.getString(Constants.COLUMN_USERNAME) != uName){
+                    db.updateUser(uName, Pass);
+                }
+            }
+        }else{
+            db.DeleteUser();
+        }
         Intent i = new Intent(this, ActivitesListeners.class);
         try {
             startActivity(i);
