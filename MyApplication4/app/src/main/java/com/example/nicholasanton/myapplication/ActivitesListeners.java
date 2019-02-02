@@ -28,6 +28,13 @@ public class ActivitesListeners extends AppCompatActivity {
                 StartWalkingOptions();
             }
         });
+
+        final Button runningPolicy =  findViewById(R.id.runningPolicy);
+        runningPolicy.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                StartRunningPolicy();
+            }
+        });
     }
 
     public void MakeNotifications(String str, String chanelID){
@@ -53,5 +60,13 @@ public class ActivitesListeners extends AppCompatActivity {
         } catch (Exception e){
             System.out.printf(e.toString());
         }
+    }
+
+    public void StartRunningPolicy(){
+        //create a new intent that will start walkingPolicy service
+        MakeNotifications("Running", "Running");
+        //Running Policy class
+        //Intent intent = new Intent(this, WalkingPolicy.class);
+        //startService(intent);
     }
 }
