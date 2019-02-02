@@ -24,4 +24,7 @@ public interface Constants {
     int COLUMN_PLAYLIST_NAME = 1;
     int COLUMN_PLAYLIST_POLICYID = 2;
     int COLUMN_PLAYLIST_LOCATION = 3;
+
+    String ROOT_URL = "http://192.168.0.10/Android/v1/";
+    String URL_REGISTER = ROOT_URL+"registerUser.php";
 }

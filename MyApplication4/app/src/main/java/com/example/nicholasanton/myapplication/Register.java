@@ -1,12 +1,27 @@
 package com.example.nicholasanton.myapplication;
 
-import android.content.Intent;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class Register extends AppCompatActivity {
 
@@ -18,6 +33,7 @@ public class Register extends AppCompatActivity {
     private TextView E_mail;
     private TextView Password;
     private TextView ConfPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +69,8 @@ public class Register extends AppCompatActivity {
         if (!uName.equals("")) {
             if (CheckPassword) {
                 if (verifyEmailFormat(Email)) {
-                    //allow register
+                    registerUser();
+                    finish();
                 } else {
                     Toast.makeText(this, "Invalid Email Address", Toast.LENGTH_LONG).show();
                 }
@@ -63,6 +80,41 @@ public class Register extends AppCompatActivity {
         } else{
             Toast.makeText(this, "Need to add a username", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void registerUser(){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.URL_REGISTER,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                        }catch(JSONException e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+        @Override
+        protected Map<String, String> getParams() throws AuthFailureError {
+            Map<String, String> params = new HashMap<>();
+            params.put("username", uName);
+            params.put("password", Pass);
+            params.put("email", Email);
+            return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
     private boolean verifyPassword(String Pass, String ConfPass){
