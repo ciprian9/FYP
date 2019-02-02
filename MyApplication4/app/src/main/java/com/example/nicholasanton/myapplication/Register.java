@@ -70,7 +70,6 @@ public class Register extends AppCompatActivity {
             if (CheckPassword) {
                 if (verifyEmailFormat(Email)) {
                     registerUser();
-                    finish();
                 } else {
                     Toast.makeText(this, "Invalid Email Address", Toast.LENGTH_LONG).show();
                 }
@@ -112,9 +111,7 @@ public class Register extends AppCompatActivity {
             return params;
             }
         };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+        RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
     private boolean verifyPassword(String Pass, String ConfPass){

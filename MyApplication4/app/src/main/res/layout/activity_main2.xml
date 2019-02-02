@@ -31,7 +31,7 @@
         android:id="@+id/runningPolicy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/walkingPolicy"
+        android:layout_below="@+id/walkingOptions"
         android:text="Running Policy" />
 
     <Button
@@ -47,6 +47,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/cyclingPolicy"
         android:text="Driving Policy" />
+
+    <Button
+        android:id="@+id/walkingOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/walkingPolicy"
+        android:text="Walking Options" />
 
 
 </RelativeLayout>

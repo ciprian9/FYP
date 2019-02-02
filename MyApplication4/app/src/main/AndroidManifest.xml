@@ -73,6 +73,7 @@
         </receiver>
 
         <activity android:name=".Playlist_View" />
+        <activity android:name=".ActivitesListeners"></activity>
 
         <service android:name=".TextToSpeechService" />
         <service android:name=".MusicPlayerService" />

@@ -27,4 +27,5 @@ public interface Constants {
 
     String ROOT_URL = "http://192.168.0.10/Android/v1/";
     String URL_REGISTER = ROOT_URL+"registerUser.php";
+    String URL_LOGIN = ROOT_URL+"userLogin.php";
 }

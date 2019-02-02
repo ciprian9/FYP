@@ -17,21 +17,42 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private int MY_PERMISSIONS_REQUEST_SMS_RECEIVE = 10;
     private int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
 //    public GoogleApiClient mApiClient;
+    private TextView Username;
+    private TextView Password;
+    private String uName;
+    private String Pass;
+    private boolean LoggedIn;
 //
 //    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Username = findViewById(R.id.Username);
+        Password = findViewById(R.id.Password);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -83,6 +104,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 OpenRegisterScreen();
             }
         });
+
+        final Button LoginBtn = findViewById(R.id.NextButton);
+        LoginBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                LogUserIn();
+            }
+        });
 //
 ////        //Listener for the stop button
 ////        final Button StopBtn = findViewById(R.id.StopBtn);
@@ -103,9 +131,61 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 ////        });
 ////    }
     }
+
         public void OpenRegisterScreen(){
             Intent i = new Intent(this, Register.class);
             startActivity(i);
+        }
+
+    public void GoToMenu(){
+        Intent i = new Intent(this, ActivitesListeners.class);
+        try {
+            startActivity(i);
+        }catch (Exception e){
+            System.out.print(e);
+        }
+    }
+
+        public void LogUserIn(){
+            uName    = Username.getText().toString();
+            Pass     = Password.getText().toString();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                    Constants.URL_LOGIN,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if(!jsonObject.getBoolean("error")){
+                                    LoggedIn = true;
+                                    Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                    GoToMenu();
+                                }else{
+                                    Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                }
+
+                            }catch(JSONException e){
+                                e.printStackTrace();
+                            }
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("username", uName);
+                    params.put("password", Pass);
+                    return params;
+                }
+            };
+            RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
         }
 //    //Open Walking options activity
 ////    public void openWalkingOptions(){
