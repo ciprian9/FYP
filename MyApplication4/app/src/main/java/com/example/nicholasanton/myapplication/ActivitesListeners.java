@@ -48,6 +48,10 @@ public class ActivitesListeners extends AppCompatActivity {
     public void StartWalkingOptions(){
         //create a new intent that will start walkingOptions class
         Intent intent = new Intent(this, WalkingOptions.class);
-        startActivity(intent);
+        try {
+            startActivity(intent);
+        } catch (Exception e){
+            System.out.printf(e.toString());
+        }
     }
 }

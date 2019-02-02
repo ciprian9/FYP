@@ -14,7 +14,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
 import android.speech.tts.TextToSpeech;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -85,6 +87,21 @@ public class WalkingPolicy extends Service {
         db = new DataHandler(getApplicationContext());
         getApplicationContext();
         AudioManager au = (AudioManager) getSystemService(AUDIO_SERVICE);
+
+        cursor = db.SelectSettingsQuery(Constants.PEDOMETER_SETTING);
+        if (cursor.moveToFirst()) {
+            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
+            if (temp == 1) {
+                try {
+                    Intent i = new Intent(this, PedometerActivity.class);
+                    i.putExtra("where", "Policy");
+                    startActivity(i);
+                } catch (Exception e){
+                    System.out.printf(e.toString());
+                }
+            }
+        }
+
         isHeadsetOn = au.isWiredHeadsetOn();
         cursor = db.SelectSettingsQuery(Constants.HEADPHONE_SETTING);
         if (cursor.moveToFirst()) {
@@ -96,14 +113,15 @@ public class WalkingPolicy extends Service {
             }
         }
 
-        db = new DataHandler(getApplicationContext());
-        cursor = db.SelectSettingsQuery(Constants.SAVE_RESOURCE_SETTING);
-        if (cursor.moveToFirst()) {
-            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
-            if (temp == 1) {
-                Intent i = new Intent(this, SaveResourcesService.class);
-                startService(i);
-            }
-        }
+//        db = new DataHandler(getApplicationContext());
+//        cursor = db.SelectSettingsQuery(Constants.SAVE_RESOURCE_SETTING);
+//        if (cursor.moveToFirst()) {
+//            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
+//            if (temp == 1) {
+//                Intent i = new Intent(this, SaveResourcesService.class);
+
+//                startService(i);
+//            }
+//        }
     }
 }

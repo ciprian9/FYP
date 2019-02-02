@@ -19,7 +19,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataHandler extends SQLiteOpenHelper {
     //constants for DataHandler tables
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
     private static final String DATABASE_NAME = "FYP.db";
     private static final String SETTINGS_TABLE_NAME = "Settings";
     private static final String COLUMN_ID = "Id";

@@ -22,6 +22,16 @@
         android:layout_marginBottom="10dp"/>
 
     <Switch
+        android:id="@+id/swStartPedometer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/swPlayHeadphones"
+        android:text="Pedometer On/Off"
+        android:layout_marginBottom="10dp"/>
+
+
+    <!--
+    <Switch
         android:id="@+id/swTrackUsage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -74,12 +84,19 @@
         android:inputType="numberDecimal"
         android:singleLine="true"
         android:textDirection="rtl"/>
-
+-->
     <Button
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/BatteryPercentText"
+        android:layout_below="@id/swStartPedometer"
         android:text="Save Settings" />
+
+    <Button
+        android:id="@+id/btnPedometer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnSave"
+        android:text="Open Pedometer" />
 
 </RelativeLayout>
