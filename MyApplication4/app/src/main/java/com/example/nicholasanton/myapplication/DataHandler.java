@@ -19,7 +19,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataHandler extends SQLiteOpenHelper {
     //constants for DataHandler tables
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 9;
     private static final String DATABASE_NAME = "FYP.db";
     private static final String SETTINGS_TABLE_NAME = "Settings";
     private static final String COLUMN_ID = "Id";
@@ -32,12 +32,19 @@ public class DataHandler extends SQLiteOpenHelper {
     private static final String COLUMN_POLICY_ID = "PolicyID";
     private static final String COLUMN_LOCATION = "Location";
 
+    private static final String USER_TABLE_NAME = "user";
+    private static final String COLUMN_USERID = "id";
+    private static final String COLUMN_USERNAME = "username";
+    private static final String COLUMN_PASSWORD = "password";
+
     //Create queries for the tables
-    private static final String SETTINGS_CREATE = "CREATE TABLE " + SETTINGS_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    private static final String SETTINGS_CREATE = "CREATE TABLE " + SETTINGS_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
             COLUMN_NAME + " TEXT, " + COLUMN_BATTERY_PERCENT + " INTEGER, " + COLUMN_STATUS + " BIT, " + COLUMN_DONE + " BIT)";
 
     private static final String PLAYLIST_TABLE = "CREATE TABLE " + PLAYLIST_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " +
             COLUMN_POLICY_ID + " INTEGER, " + COLUMN_LOCATION + " TEXT)";
+
+    private static final String REMEMBER_ME_TABLE = "CREATE TABLE " + USER_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_USERNAME + " TEXT, " + COLUMN_PASSWORD + " TEXT)";
 
 
     DataHandler(Context context) {
@@ -56,6 +63,46 @@ public class DataHandler extends SQLiteOpenHelper {
         Cursor result = db.rawQuery(query, params);
         //return the cursor
         return result;
+    }
+
+    //Settings Table select statement with a where clause
+    public Cursor SelectUser(){
+        //create a sqlite database object
+        SQLiteDatabase db = this.getWritableDatabase();
+        //select query
+        String query = "Select * from " + USER_TABLE_NAME + " WHERE " + COLUMN_USERID + " = " + 1;
+        //run the query and receive the cursor filled with data
+        Cursor result = db.rawQuery(query, null);
+        //return the cursor
+        return result;
+    }
+
+    //Update Settings record
+    public boolean updateUser(String username, String password){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_USERNAME, username);
+        contentValues.put(COLUMN_PASSWORD, password);
+        //The id of the setting is used, settings are added only once and updated thereafter
+        db.update(USER_TABLE_NAME, contentValues, "id = ?", new String[]{"1"});
+        return true;
+    }
+
+    public boolean insertUser(String username, String password){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_USERID, 1);
+        contentValues.put(COLUMN_USERNAME, username);
+        contentValues.put(COLUMN_PASSWORD, password);
+        long result = db.insert(USER_TABLE_NAME, null, contentValues);
+        db.close();
+        return result != -1;
+    }
+
+    public void DeleteUser(){
+        //The name passed in is the name of a certain audio file the user chooses to delete from the DataBase
+        SQLiteDatabase db = this.getWritableDatabase();
+        int temp = db.delete(USER_TABLE_NAME, COLUMN_USERID + " =?", new String[]{"1"});
     }
 
     //Similar to the settings select
@@ -100,6 +147,7 @@ public class DataHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SETTINGS_CREATE);
         db.execSQL(PLAYLIST_TABLE);
+        db.execSQL(REMEMBER_ME_TABLE);
     }
 
     //remove existing tables when schema changes
@@ -107,6 +155,7 @@ public class DataHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + SETTINGS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PLAYLIST_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         onCreate(db);
     }
 
