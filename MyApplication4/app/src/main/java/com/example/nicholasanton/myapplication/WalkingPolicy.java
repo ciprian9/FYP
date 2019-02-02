@@ -53,15 +53,9 @@ public class WalkingPolicy extends Service {
         }
     }
 
-    MediaPlayer mediaPlayer;
-    boolean prepared = false;
-    String stream = "http://stream.radioreklama.bg:80/radio1rock128";
+
     private Cursor cursor;
     private boolean isHeadsetOn;
-    private String TextMessage = "";
-    private TextToSpeech repeatTTS;
-    private String sender="";
-    private String smsMessage ="";
     private DataHandler db;
 
     @Override

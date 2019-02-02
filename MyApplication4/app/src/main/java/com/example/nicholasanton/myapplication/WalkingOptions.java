@@ -53,6 +53,7 @@ public class WalkingOptions extends AppCompatActivity {
     private DataHandler db;
     private Cursor results;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +93,7 @@ public class WalkingOptions extends AppCompatActivity {
         PedometerBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 //mApiClient.disconnect();
+                //System.out.printf(steps);
                 openPedometer();
             }
         });
