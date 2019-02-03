@@ -19,7 +19,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataHandler extends SQLiteOpenHelper {
     //constants for DataHandler tables
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
     private static final String DATABASE_NAME = "FYP.db";
     private static final String SETTINGS_TABLE_NAME = "Settings";
     private static final String COLUMN_ID = "Id";
@@ -37,6 +37,12 @@ public class DataHandler extends SQLiteOpenHelper {
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
 
+    private static final String PEDOMETER_TABLE_NAME = "pedometer";
+    private static final String COLUMN_RECORD_ID = "id";
+    private static final String COLUMN_START_DATETIME = "startdate";
+    private static final String COLUMN_END_DATETIME = "enddate";
+    private static final String COLUMN_STEP_COUNT = "steps";
+
     //Create queries for the tables
     private static final String SETTINGS_CREATE = "CREATE TABLE " + SETTINGS_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
             COLUMN_NAME + " TEXT, " + COLUMN_BATTERY_PERCENT + " INTEGER, " + COLUMN_STATUS + " BIT, " + COLUMN_DONE + " BIT)";
@@ -44,8 +50,10 @@ public class DataHandler extends SQLiteOpenHelper {
     private static final String PLAYLIST_TABLE = "CREATE TABLE " + PLAYLIST_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT, " +
             COLUMN_POLICY_ID + " INTEGER, " + COLUMN_LOCATION + " TEXT)";
 
-    private static final String REMEMBER_ME_TABLE = "CREATE TABLE " + USER_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_USERNAME + " TEXT, " + COLUMN_PASSWORD + " TEXT)";
+    private static final String REMEMBER_ME_TABLE = "CREATE TABLE " + USER_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY, " + COLUMN_USERNAME + " TEXT, " + COLUMN_PASSWORD + " TEXT)";
 
+    private static final String STEPS_TABLE = "CREATE TABLE " + PEDOMETER_TABLE_NAME + " (" + COLUMN_RECORD_ID + " INTEGER PRIMARY KEY, " + COLUMN_START_DATETIME + " TEXT, " + COLUMN_END_DATETIME + " TEXT, "
+        + COLUMN_STEP_COUNT + " INTEGER)";
 
     DataHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -148,6 +156,7 @@ public class DataHandler extends SQLiteOpenHelper {
         db.execSQL(SETTINGS_CREATE);
         db.execSQL(PLAYLIST_TABLE);
         db.execSQL(REMEMBER_ME_TABLE);
+        db.execSQL(STEPS_TABLE);
     }
 
     //remove existing tables when schema changes
@@ -156,6 +165,7 @@ public class DataHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + SETTINGS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PLAYLIST_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PEDOMETER_TABLE_NAME);
         onCreate(db);
     }
 
