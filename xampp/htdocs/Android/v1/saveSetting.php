@@ -5,17 +5,19 @@ $response = array();
 
 if($_SERVER['REQUEST_METHOD']=='POST'){
 	if(
-		isset($_POST['username']) and 
-	         isset($_POST['password']) and 
-	              isset($_POST['email']))	
+		isset($_POST['accountid']) and 
+	         isset($_POST['policyid']) and 
+	              isset($_POST['name']) and
+	           		   isset($_POST['status']))	
 	    {
 		
 		$db = new DbOperation();
 
-		$result = $db->createUser(
-			 $_POST['username'],
-			 $_POST['password'],
-			 $_POST['email']
+		$result = $db->createSetting(
+			 $_POST['accountid'],
+			 $_POST['policyid'],
+			 $_POST['name'],
+			 $_POST['status']
 			 );
 
 		if($result == 1){
