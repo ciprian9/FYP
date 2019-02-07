@@ -58,6 +58,7 @@ public class WalkingOptions extends AppCompatActivity {
 
     private Switch playHeadphones;
     private Switch startPedometer;
+
     private DataHandler db;
     private Cursor results;
     private int accountid;
