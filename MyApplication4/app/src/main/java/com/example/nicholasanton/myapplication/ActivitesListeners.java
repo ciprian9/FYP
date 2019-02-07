@@ -9,11 +9,20 @@ import android.view.View;
 import android.widget.Button;
 
 public class ActivitesListeners extends AppCompatActivity {
-
+    private int accountid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                accountid= 0;
+            } else {
+                accountid= extras.getInt("accountid");
+            }
+        }
 
         final Button walkingPolicy =  findViewById(R.id.walkingPolicy);
         walkingPolicy.setOnClickListener(new View.OnClickListener(){
@@ -55,6 +64,7 @@ public class ActivitesListeners extends AppCompatActivity {
     public void StartWalkingOptions(){
         //create a new intent that will start walkingOptions class
         Intent intent = new Intent(this, WalkingOptions.class);
+        intent.putExtra("accountid", accountid);
         try {
             startActivity(intent);
         } catch (Exception e){
