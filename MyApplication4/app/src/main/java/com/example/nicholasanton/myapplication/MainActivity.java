@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             startActivity(i);
         }
 
-    public void GoToMenu(){
+    public void GoToMenu(int accountid){
         DataHandler db = new DataHandler(this);
         if (chkRemember.isChecked()){
             if (db.SelectUser().getCount() == 0) {
@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             db.DeleteUser();
         }
         Intent i = new Intent(this, ActivitesListeners.class);
+        i.putExtra("accountid", accountid);
         try {
             startActivity(i);
         }catch (Exception e){
@@ -195,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                 if(!jsonObject.getBoolean("error")){
                                     LoggedIn = true;
                                     Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
-                                    GoToMenu();
+                                    GoToMenu(jsonObject.getInt("id"));
                                 }else{
                                     Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                                 }
