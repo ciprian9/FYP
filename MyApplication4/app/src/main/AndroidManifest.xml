@@ -74,6 +74,16 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".NotificationBroadcast" >
+            <intent-filter>
+                <action android:name="com.example.nicholasanton.myapplication.previous" />
+                <action android:name="com.example.nicholasanton.myapplication.delete" />
+                <action android:name="com.example.nicholasanton.myapplication.pause" />
+                <action android:name="com.example.nicholasanton.myapplication.next" />
+                <action android:name="com.example.nicholasanton.myapplication.play" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".Playlist_View" />
         <activity android:name=".ActivitesListeners"></activity>
 
