@@ -55,5 +55,11 @@
         android:layout_below="@id/walkingPolicy"
         android:text="Walking Options" />
 
+    <ListView
+        android:id="@+id/song_list"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"></ListView>
+
 
 </RelativeLayout>
