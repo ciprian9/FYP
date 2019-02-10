@@ -53,16 +53,10 @@ public class WalkingPolicy extends Service {
         }
     }
 
-
-    private Cursor cursor;
-    private boolean isHeadsetOn;
-    private DataHandler db;
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
         Thread theThread = new Thread(new TheThread(startId));
-        //NotificationGenerator.customBigNotification(getApplicationContext());
         theThread.start();
         return START_STICKY;
     }
@@ -90,27 +84,5 @@ public class WalkingPolicy extends Service {
         } catch (Exception e){
             System.out.printf(e.toString());
         }
-
-//        isHeadsetOn = au.isWiredHeadsetOn();
-//        cursor = db.SelectSettingsQuery(Constants.HEADPHONE_SETTING);
-//        if (cursor.moveToFirst()) {
-//            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
-//            if (temp == 1 && !isHeadsetOn) {
-//                Intent i = new Intent(this, MusicPlayerService.class);
-//                i = i.putExtra("stop", 0);
-//                startService(i);
-//            }
-//        }
-
-//        db = new DataHandler(getApplicationContext());
-//        cursor = db.SelectSettingsQuery(Constants.SAVE_RESOURCE_SETTING);
-//        if (cursor.moveToFirst()) {
-//            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
-//            if (temp == 1) {
-//                Intent i = new Intent(this, SaveResourcesService.class);
-
-//                startService(i);
-//            }
-//        }
     }
 }

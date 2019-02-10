@@ -28,7 +28,6 @@ public class Register extends AppCompatActivity {
     private String uName;
     private String Pass;
     private String Email;
-    private String ConfPass;
     private TextView Username;
     private TextView E_mail;
     private TextView Password;
@@ -62,10 +61,10 @@ public class Register extends AppCompatActivity {
     public void GatherData(){
         uName    = Username.getText().toString();
         Pass     = Password.getText().toString();
-        ConfPass = ConfPassword.getText().toString();
+        String confPass = ConfPassword.getText().toString();
         Email    = E_mail.getText().toString();
 
-        boolean CheckPassword = verifyPassword(Pass, ConfPass);
+        boolean CheckPassword = verifyPassword(Pass, confPass);
         if (!uName.equals("")) {
             if (CheckPassword) {
                 if (verifyEmailFormat(Email)) {
@@ -123,18 +122,10 @@ public class Register extends AppCompatActivity {
             return false;
         }
 
-        if (Pass.equals(ConfPass)){
-            return true;
-        } else{
-            return false;
-        }
+        return Pass.equals(ConfPass);
     }
 
     private boolean verifyEmailFormat(String Email){
-        if(Email.contains("@") && Email.contains(".")){
-            return true;
-        } else{
-            return false;
-        }
+        return Email.contains("@") && Email.contains(".");
     }
 }

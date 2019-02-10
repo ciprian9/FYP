@@ -57,13 +57,6 @@
 
         <service android:name=".ActivityRecognizedService" />
 
-        <activity
-            android:name=".Activity2"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
         <activity android:name=".WalkingOptions"
             android:launchMode="singleTask"/>
 
@@ -98,7 +91,6 @@
             android:launchMode="singleTop"></activity>
 
         <service android:name=".TextToSpeechService" />
-        <service android:name=".MusicPlayerService" />
         <service android:name=".AutoReplyService" />
         <service android:name=".SaveResourcesService" />
         <service android:name=".musicService"/>

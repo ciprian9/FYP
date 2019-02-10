@@ -58,9 +58,6 @@ public class WalkingOptions extends AppCompatActivity {
 
     private Switch playHeadphones;
     private Switch startPedometer;
-
-    private DataHandler db;
-    private Cursor results;
     private int accountid;
 
 
@@ -87,6 +84,7 @@ public class WalkingOptions extends AppCompatActivity {
             db.registerSetting(Constants.URL_SAVE_SETTING);
             SaveSettings db1 = new SaveSettings(accountid, 1, "Pedometer", false, this);
             db1.registerSetting(Constants.URL_SAVE_SETTING);
+
         };
 
 
@@ -139,7 +137,6 @@ public class WalkingOptions extends AppCompatActivity {
                             if (aSwitch != null) {
                                 aSwitch.setChecked(Boolean.valueOf(jsonObject.getString("status")));
                             }
-                            //startPedometer.setChecked(Boolean.valueOf(jsonObject.getString("status")));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -180,31 +177,7 @@ public class WalkingOptions extends AppCompatActivity {
     }
 
     public void openPedometer(){
-//        Intent i = new Intent(this, PedometerActivity.class);
-//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        i.putExtra("where", "options");
-//        startActivity(i);
-
         startActivity(new Intent(WalkingOptions.this, PedometerActivity.class));
     }
 
-
-//    public void SetBatteryLevel(){
-//
-//        String s = BatteryMaxLevel.getText().toString();
-//        if (s.equals("")){
-//            s = BatteryMaxLevel.getHint().toString();
-//        }
-//        int level =  Integer.parseInt(s);
-//
-//       if (level < 1){
-//           Toast.makeText(this, "Number is too small try again", Toast.LENGTH_SHORT).show();
-//       } else if (level > 100){
-//           Toast.makeText(this, "Number is too high try again", Toast.LENGTH_SHORT).show();
-//       } else{
-//           db.updateSettingsIntData("6", level);
-//       }
-//    }
 }

@@ -13,10 +13,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.MediaController.MediaPlayerControl;
 
 import java.util.ArrayList;
@@ -26,7 +24,6 @@ import java.util.Comparator;
 public class ActivitesListeners extends AppCompatActivity implements MediaPlayerControl {
     private int accountid;
     private ArrayList<song> songList;
-    private ListView songView;
     private musicService musicSrv;
     private Intent playIntent;
     private boolean musicBound = false;
@@ -58,8 +55,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        songView = findViewById(R.id.song_list);
-        songList = new ArrayList<song>();
+        songList = new ArrayList<>();
 
         getSongList();
 
