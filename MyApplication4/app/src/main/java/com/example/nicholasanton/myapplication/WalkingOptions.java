@@ -47,6 +47,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.nearby.messages.Distance;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,9 +88,9 @@ public class WalkingOptions extends AppCompatActivity {
             SaveSettings db1 = new SaveSettings(accountid, 1, "Pedometer", false, this);
             db1.registerSetting(Constants.URL_SAVE_SETTING);
             SaveSettings db2 = new SaveSettings(accountid, 1, "Time", false, this);
-            db1.registerSetting(Constants.URL_SAVE_SETTING);
+            db2.registerSetting(Constants.URL_SAVE_SETTING);
             SaveSettings db3 = new SaveSettings(accountid, 1, "Distance_Speed", false, this);
-            db1.registerSetting(Constants.URL_SAVE_SETTING);
+            db3.registerSetting(Constants.URL_SAVE_SETTING);
 
         };
 
@@ -190,8 +191,8 @@ public class WalkingOptions extends AppCompatActivity {
 
         readSettings("MusicPlayer", playHeadphones);
         readSettings("Pedometer", startPedometer);
-        readSettings("Time", playHeadphones);
-        readSettings("Distance_Speed", startPedometer);
+        readSettings("Time", Time);
+        readSettings("Distance_Speed", Rest);
     }
 
     public void openPlaylists(){

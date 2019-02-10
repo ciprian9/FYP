@@ -16,10 +16,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.Switch;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ActivitesListeners extends AppCompatActivity implements MediaPlayerControl {
     private int accountid;
@@ -29,6 +41,11 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     private boolean musicBound = false;
     private MusicController controller;
     private boolean paused = false, playbackPaused=false;
+    private boolean musicPlayer = false;
+    private boolean pedometer = false;
+    private boolean timeRecord = false;
+    private boolean dist_speed = false;
+
 
     @Override
     protected void onPause(){
@@ -66,6 +83,8 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
             }
         });
 
+        getSettings();
+
         //SongAdapter songAdt = new SongAdapter(this, songList);
         //songView.setAdapter(songAdt);
 
@@ -100,6 +119,54 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                 StartRunningPolicy();
             }
         });
+    }
+
+    private void getSettings() {
+        readSettings("MusicPlayer");
+        readSettings("Pedometer");
+        readSettings("Time");
+        readSettings("Distance_Speed");
+    }
+
+    public void readSettings(final String aName) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.URL_READ_SETTING,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if(aName.equals("MusicPlayer")) {
+                                musicPlayer = Boolean.valueOf(jsonObject.getString("status"));
+                            } else if(aName.equals("Pedometer")){
+                                pedometer = Boolean.valueOf(jsonObject.getString("status"));
+                            }else if(aName.equals("Time")){
+                                timeRecord = Boolean.valueOf(jsonObject.getString("status"));
+                            }else if(aName.equals("Distance_Speed")){
+                                dist_speed= Boolean.valueOf(jsonObject.getString("status"));
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("accountid", String.valueOf(accountid));
+                params.put("policyid", String.valueOf(1));
+                params.put("name", aName);
+                return params;
+            }
+        };
+        RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
 
@@ -179,14 +246,19 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         //create a new intent that will start walkingPolicy service
         //MakeNotifications("on Foot", "on Foot");
         Intent intent = new Intent(this, WalkingPolicy.class);
+        intent.putExtra("Pedometer", pedometer);
+        intent.putExtra("time", timeRecord);
+        intent.putExtra("distance", dist_speed);
         startService(intent);
-        musicSrv.setSong(0);
-        musicSrv.playSong();
-        if(playbackPaused){
-            setController();
-            playbackPaused=false;
+        if(musicPlayer) {
+            musicSrv.setSong(0);
+            musicSrv.playSong();
+            if (playbackPaused) {
+                setController();
+                playbackPaused = false;
+            }
+            controller.show(0);
         }
-        controller.show(0);
     }
 
     public void StartWalkingOptions(){

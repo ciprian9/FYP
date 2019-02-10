@@ -38,6 +38,10 @@ Consider implementing the music player here. If most policies wil have a music p
 
 public class WalkingPolicy extends Service {
 
+    private boolean pedometer;
+    private boolean time;
+    private boolean dist_speed;
+
     final class TheThread implements Runnable{
         int serviceId;
 
@@ -55,6 +59,17 @@ public class WalkingPolicy extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        Bundle extras = intent.getExtras();
+
+        //just checking
+        if( extras != null ) {
+            pedometer = extras.getBoolean("Pedometer");
+            time = extras.getBoolean("time");
+            dist_speed = extras.getBoolean("distance");
+        }
+
+
         Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
         Thread theThread = new Thread(new TheThread(startId));
         theThread.start();
@@ -75,12 +90,17 @@ public class WalkingPolicy extends Service {
     public void doEverything() {
 
         try {
-            Intent i = new Intent(this, PedometerActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            i.putExtra("where", "policy");
-            startActivity(i);
+            if(pedometer) {
+                Intent i = new Intent(this, PedometerActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                i.putExtra("where", "policy");
+                i.putExtra("pedometer", pedometer);
+                i.putExtra("time", time);
+                i.putExtra("dist", dist_speed);
+                startActivity(i);
+            }
         } catch (Exception e){
             System.out.printf(e.toString());
         }
