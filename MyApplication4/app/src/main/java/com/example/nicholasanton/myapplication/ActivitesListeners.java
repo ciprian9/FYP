@@ -182,8 +182,8 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     public void StartWalkingService(){
         //create a new intent that will start walkingPolicy service
         //MakeNotifications("on Foot", "on Foot");
-        //Intent intent = new Intent(this, WalkingPolicy.class);
-        //startService(intent);
+        Intent intent = new Intent(this, WalkingPolicy.class);
+        startService(intent);
         musicSrv.setSong(0);
         musicSrv.playSong();
         if(playbackPaused){

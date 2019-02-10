@@ -180,9 +180,14 @@ public class WalkingOptions extends AppCompatActivity {
     }
 
     public void openPedometer(){
-        Intent intent = new Intent(this, PedometerActivity.class);
-        intent.putExtra("where", "Options");
-        startActivity(intent);
+//        Intent i = new Intent(this, PedometerActivity.class);
+//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        i.putExtra("where", "options");
+//        startActivity(i);
+
+        startActivity(new Intent(WalkingOptions.this, PedometerActivity.class));
     }
 
 
