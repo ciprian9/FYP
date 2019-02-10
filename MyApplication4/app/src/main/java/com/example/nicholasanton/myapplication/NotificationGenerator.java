@@ -40,7 +40,7 @@ public class NotificationGenerator {
     public static void customBigNotification(Context context){
         RemoteViews expandedView = new RemoteViews(context.getPackageName(), R.layout.music_controls);
 
-        NotificationCompat.Builder nc = new NotificationCompat.Builder(context);
+        NotificationCompat.Builder nc = new NotificationCompat.Builder(context, "MusicPlayer");
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notifyIntent = new Intent(context, MainActivity.class);
 
