@@ -65,9 +65,6 @@ public class TextToSpeechService extends Service {
         //FOR API 24 USER HAS TO GRANT ACCESS TO THIS
         AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-        if (MusicPlayerService.mediaPlayer != null) {
-            MusicPlayerService.mediaPlayer.pause();
-        }
 
 
         if (sender != "" && smsMessage != ""){
@@ -105,9 +102,7 @@ public class TextToSpeechService extends Service {
             Toast.makeText(this, "Stop Talking", Toast.LENGTH_SHORT).show();
             AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             //audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-            if (MusicPlayerService.mediaPlayer != null) {
-                MusicPlayerService.mediaPlayer.start();
-            }
+
             stopSelf();
         }
     }

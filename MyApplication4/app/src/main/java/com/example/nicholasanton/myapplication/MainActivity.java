@@ -37,19 +37,17 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity {
 
     private int MY_PERMISSIONS_REQUEST_SMS_RECEIVE = 10;
     private int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
-//    public GoogleApiClient mApiClient;
     private TextView Username;
     private TextView Password;
     private CheckBox chkRemember;
     private String uName;
     private String Pass;
     private boolean LoggedIn;
-//
-//    @RequiresApi(api = Build.VERSION_CODES.M)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,36 +78,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             // Permission has already been granted
         }
 
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECEIVE_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.RECEIVE_SMS)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECEIVE_SMS},
+                        MY_PERMISSIONS_REQUEST_SMS_RECEIVE);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+        }
+
         Username = findViewById(R.id.Username);
         Password = findViewById(R.id.Password);
         chkRemember = findViewById(R.id.saveLoginCheckBox);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-        }
-
-        ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.KILL_BACKGROUND_PROCESSES},
-                1);
-
-        ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                1);
-        ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                1);
-//
-//        NotificationManager n = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-//        if(!n.isNotificationPolicyAccessGranted()) {
-//            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-//            startActivity(intent);
-//        }
-//
-        //request runtime permisson to access Received SMS messages
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.RECEIVE_SMS},
-                MY_PERMISSIONS_REQUEST_SMS_RECEIVE);
 
         DataHandler db = new DataHandler(this);
         Cursor cursor = db.SelectUser();
@@ -124,22 +120,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 System.out.print(e);
             }
         }
-//
-//        //create the GoogleApiClient and bulid it so that it will detect activities
-////        mApiClient = new GoogleApiClient.Builder(this)
-////                .addApi(ActivityRecognition.API)
-////                .addConnectionCallbacks(this)
-////                .addOnConnectionFailedListener(this)
-////                .build();
-//
-//
-//        //Listener for the Start Button
-////////        final Button StartBtn = findViewById(R.id.StartBtn);
-////////        StartBtn.setOnClickListener(new View.OnClickListener(){
-////////            public void onClick(View v){
-////////                mApiClient.connect();
-////////            }
-////////        });
 
         //Listener for the Register Button
         final Button RegisterBtn = findViewById(R.id.RegisterButton);
@@ -155,25 +135,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 LogUserIn();
             }
         });
-//
-////        //Listener for the stop button
-////        final Button StopBtn = findViewById(R.id.StopBtn);
-////        StopBtn.setOnClickListener(new View.OnClickListener(){
-////            public void onClick(View v){
-////                mApiClient.disconnect();
-////                StopApp();
-////            }
-////        });
-//
-//
-//        //Listener for the walkingPolicy button
-////        final Button walkingPolicy =  findViewById(R.id.walkingPolicy);
-////        walkingPolicy.setOnClickListener(new View.OnClickListener(){
-////            public void onClick(View v){
-////                openWalkingOptions();
-////            }
-////        });
-////    }
     }
 
         public void OpenRegisterScreen(){
@@ -248,33 +209,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             };
             RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
         }
-//    //Open Walking options activity
-////    public void openWalkingOptions(){
-////        Intent intent = new Intent(this, WalkingOptions.class);
-////        startActivity(intent);
-////    }
 
-//
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        //Use a pending intent and a task to start the Intent service ActivityRecognitionService
-        //Intent intent = new Intent( this, ActivityRecognizedService.class );
-        //PendingIntent pendingIntent = PendingIntent.getService( this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT );
-        //ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates( mApiClient, 3000, pendingIntent );
-        //ActivityRecognitionClient activityRecognitionClient = ActivityRecognition.getClient(this);
-        //Task task = activityRecognitionClient.requestActivityUpdates(3000, pendingIntent);
-    }
-
-//
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 
     //Check if permission was granted for SMS
     @Override
@@ -285,9 +220,4 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Log.i("TAG", "MY_PERMISSIONS_REQUEST_SMS_RECEIVE --> YES");
         }
     }
-//
-//    public void StopApp(){
-//        stopService(new Intent(this, WalkingPolicy.class));
-//        MusicPlayerService.mediaPlayer.stop();
-//    }
 }

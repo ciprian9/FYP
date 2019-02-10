@@ -3,10 +3,7 @@ package com.example.nicholasanton.myapplication;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -30,7 +27,7 @@ public class Playlist_View extends AppCompatActivity {
         My_Delete_Playlist_Adapter adapter = new My_Delete_Playlist_Adapter(list, this);
 
         //handle listview and assign adapter
-        ListView lView = (ListView)findViewById(R.id.delete_list);
+        ListView lView = findViewById(R.id.delete_list);
         lView.setAdapter(adapter);
     }
 
