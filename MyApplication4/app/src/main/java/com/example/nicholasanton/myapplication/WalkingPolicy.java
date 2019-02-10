@@ -62,7 +62,7 @@ public class WalkingPolicy extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
         Thread theThread = new Thread(new TheThread(startId));
-        NotificationGenerator.customBigNotification(getApplicationContext());
+        //NotificationGenerator.customBigNotification(getApplicationContext());
         theThread.start();
         return START_STICKY;
     }
@@ -79,34 +79,28 @@ public class WalkingPolicy extends Service {
     }
 
     public void doEverything() {
-        db = new DataHandler(getApplicationContext());
-        getApplicationContext();
-        AudioManager au = (AudioManager) getSystemService(AUDIO_SERVICE);
 
-        cursor = db.SelectSettingsQuery(Constants.PEDOMETER_SETTING);
-        if (cursor.moveToFirst()) {
-            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
-            if (temp == 1) {
-                try {
-                    Intent i = new Intent(this, PedometerActivity.class);
-                    i.putExtra("where", "Policy");
-                    startActivity(i);
-                } catch (Exception e){
-                    System.out.printf(e.toString());
-                }
-            }
+        try {
+            Intent i = new Intent(this, PedometerActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            i.putExtra("where", "policy");
+            startActivity(i);
+        } catch (Exception e){
+            System.out.printf(e.toString());
         }
 
-        isHeadsetOn = au.isWiredHeadsetOn();
-        cursor = db.SelectSettingsQuery(Constants.HEADPHONE_SETTING);
-        if (cursor.moveToFirst()) {
-            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
-            if (temp == 1 && !isHeadsetOn) {
-                Intent i = new Intent(this, MusicPlayerService.class);
-                i = i.putExtra("stop", 0);
-                startService(i);
-            }
-        }
+//        isHeadsetOn = au.isWiredHeadsetOn();
+//        cursor = db.SelectSettingsQuery(Constants.HEADPHONE_SETTING);
+//        if (cursor.moveToFirst()) {
+//            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
+//            if (temp == 1 && !isHeadsetOn) {
+//                Intent i = new Intent(this, MusicPlayerService.class);
+//                i = i.putExtra("stop", 0);
+//                startService(i);
+//            }
+//        }
 
 //        db = new DataHandler(getApplicationContext());
 //        cursor = db.SelectSettingsQuery(Constants.SAVE_RESOURCE_SETTING);

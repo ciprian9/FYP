@@ -39,7 +39,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".Register"></activity>
-        <activity android:name=".PedometerActivity">
+        <activity android:name=".PedometerActivity"
+            android:launchMode="singleTask">
         </activity>
 
         <meta-data
@@ -63,11 +64,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".WalkingOptions" />
+        <activity android:name=".WalkingOptions"
+            android:launchMode="singleTask"/>
 
         <service
             android:name=".WalkingPolicy"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask"/>
 
         <activity android:name=".PlayLists" />
 

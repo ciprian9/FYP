@@ -119,6 +119,9 @@ public class musicService extends Service implements MediaPlayer.OnPreparedListe
 
     public void playSong(){
         player.reset();
+        if(songPosn > songs.size() -1){
+            songPosn = 0;
+        }
         song playSong = songs.get(songPosn);
         songTitle = playSong.getTitle();
         long currSong = playSong.getID();
