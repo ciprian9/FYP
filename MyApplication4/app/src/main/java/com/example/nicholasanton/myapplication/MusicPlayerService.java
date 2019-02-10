@@ -54,6 +54,8 @@ public class MusicPlayerService extends Service {
     }
 
     private void playMusic() {
+        WalkingOptions wo = new WalkingOptions();
+        wo.readSettings("MusicPlayer", null);
         DataHandler db = new DataHandler(getApplicationContext());
         Cursor res = db.SelectPlaylistQuery(1);
         list = new ArrayList<String>();

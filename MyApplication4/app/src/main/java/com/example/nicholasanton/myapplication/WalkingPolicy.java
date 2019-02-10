@@ -62,6 +62,7 @@ public class WalkingPolicy extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
         Thread theThread = new Thread(new TheThread(startId));
+        NotificationGenerator.customBigNotification(getApplicationContext());
         theThread.start();
         return START_STICKY;
     }
