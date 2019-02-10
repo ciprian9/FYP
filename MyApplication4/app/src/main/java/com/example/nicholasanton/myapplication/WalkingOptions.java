@@ -57,7 +57,7 @@ import java.util.Map;
 public class WalkingOptions extends AppCompatActivity {
 
     private Switch playHeadphones;
-    private Switch startPedometer;
+    private Switch startPedometer, Time, Rest;
     private int accountid;
 
 
@@ -77,12 +77,18 @@ public class WalkingOptions extends AppCompatActivity {
 
         playHeadphones =  findViewById(R.id.swPlayHeadphones);
         startPedometer = findViewById(R.id.swStartPedometer);
+        Time =  findViewById(R.id.swTime);
+        Rest = findViewById(R.id.swRest);
 
         VarsToForm();
         if (accountid != 0) {
             SaveSettings db = new SaveSettings(accountid, 1, "MusicPlayer", false, this);
             db.registerSetting(Constants.URL_SAVE_SETTING);
             SaveSettings db1 = new SaveSettings(accountid, 1, "Pedometer", false, this);
+            db1.registerSetting(Constants.URL_SAVE_SETTING);
+            SaveSettings db2 = new SaveSettings(accountid, 1, "Time", false, this);
+            db1.registerSetting(Constants.URL_SAVE_SETTING);
+            SaveSettings db3 = new SaveSettings(accountid, 1, "Distance_Speed", false, this);
             db1.registerSetting(Constants.URL_SAVE_SETTING);
 
         };
@@ -119,6 +125,22 @@ public class WalkingOptions extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SaveSettings db = new SaveSettings(accountid, 1, "Pedometer", isChecked, getApplicationContext());
+                db.registerSetting(Constants.URL_UPDATE_SETTING);
+            }
+        });
+
+        Time.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SaveSettings db = new SaveSettings(accountid, 1, "Time", isChecked, getApplicationContext());
+                db.registerSetting(Constants.URL_UPDATE_SETTING);
+            }
+        });
+
+        Rest.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SaveSettings db = new SaveSettings(accountid, 1, "Distance_Speed", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
             }
         });
@@ -168,7 +190,8 @@ public class WalkingOptions extends AppCompatActivity {
 
         readSettings("MusicPlayer", playHeadphones);
         readSettings("Pedometer", startPedometer);
-
+        readSettings("Time", playHeadphones);
+        readSettings("Distance_Speed", startPedometer);
     }
 
     public void openPlaylists(){
