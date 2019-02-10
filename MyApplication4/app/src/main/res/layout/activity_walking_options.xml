@@ -29,6 +29,38 @@
         android:text="Pedometer On/Off"
         android:layout_marginBottom="10dp"/>
 
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/swRest"
+        android:layout_marginTop="6dp"
+        android:text="Save Settings" />
+
+    <Button
+        android:id="@+id/btnPedometer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSave"
+        android:layout_marginTop="-6dp"
+        android:text="Open Pedometer" />
+
+    <Switch
+        android:id="@+id/swRest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/swTime"
+        android:layout_marginTop="8dp"
+        android:text="Show Distance &amp; Speed"
+        tools:text="Show Distance &amp; Speed" />
+
+    <Switch
+        android:id="@+id/swTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Time On/Off"
+        android:layout_below="@+id/swStartPedometer"/>
+
 
     <!--
     <Switch
@@ -85,18 +117,5 @@
         android:singleLine="true"
         android:textDirection="rtl"/>
 -->
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/swStartPedometer"
-        android:text="Save Settings" />
-
-    <Button
-        android:id="@+id/btnPedometer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btnSave"
-        android:text="Open Pedometer" />
 
 </RelativeLayout>
