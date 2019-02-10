@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 public class PedometerActivity extends AppCompatActivity implements SensorEventListener, StepListener {
+    private boolean pedometer, time, dist;
     private TextView TvSteps, TvDistance, TvTimer, TvSpeed;
     private StepDetector simpleStepDetector;
     private static final String TEXT_NUM_STEPS = "Number of Steps: ";
@@ -35,7 +36,9 @@ public class PedometerActivity extends AppCompatActivity implements SensorEventL
             mins=secs/60;
             secs%=60;
             hour = mins / 60;
-            TvTimer.setText(TEXT_STO_STEPS+String.format("%02d",hour)+":"+String.format("%02d",mins)+":"+String.format("%02d", secs));
+            if(time) {
+                TvTimer.setText(TEXT_STO_STEPS + String.format("%02d", hour) + ":" + String.format("%02d", mins) + ":" + String.format("%02d", secs));
+            }
             customHandler.postDelayed(this, 0);
         }
     };
@@ -43,7 +46,20 @@ public class PedometerActivity extends AppCompatActivity implements SensorEventL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_pedometer);
+        setContentView(R.layout.activity_pedometer);
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                pedometer= false;
+                time = false;
+                dist = false;
+            } else {
+                pedometer = extras.getBoolean("pedometer");
+                time = extras.getBoolean("time");
+                dist = extras.getBoolean("dist");
+            }
+        }
 
         // Get an instance of the SensorManager
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -57,8 +73,10 @@ public class PedometerActivity extends AppCompatActivity implements SensorEventL
         TvSpeed =  findViewById(R.id.tvSpeed);
 
         sensorManager.registerListener(PedometerActivity.this, accel, SensorManager.SENSOR_DELAY_FASTEST);
-        startTime = SystemClock.uptimeMillis();
-        customHandler.postDelayed(updateTimerThread, 0);
+        if(dist) {
+            startTime = SystemClock.uptimeMillis();
+            customHandler.postDelayed(updateTimerThread, 0);
+        }
 
 
 //        BtnStop.setOnClickListener(new View.OnClickListener() {
@@ -93,14 +111,21 @@ public class PedometerActivity extends AppCompatActivity implements SensorEventL
 
     @Override
     public void step(long timeNs) {
-        long handm;
-        handm = (hour * 3600) + (mins * 60) + secs;
-        numSteps++;
-        TvSteps.setText(TEXT_NUM_STEPS + numSteps);
-        float distanceMeters = getDistanceRun(numSteps);
-        TvDistance.setText(TEXT_MET_STEPS + String.format("%.02f", distanceMeters));
-        float speed = distanceMeters / handm;
-        TvSpeed.setText(TEXT_SPE_STEPS+String.format("%.02f", speed));
+
+        if(dist) {
+            numSteps++;
+            if (pedometer) {
+                TvSteps.setText(TEXT_NUM_STEPS + numSteps);
+            }
+        }
+        if(dist) {
+            long handm;
+            handm = (hour * 3600) + (mins * 60) + secs;
+            float distanceMeters = getDistanceRun(numSteps);
+            TvDistance.setText(TEXT_MET_STEPS + String.format("%.02f", distanceMeters));
+            float speed = distanceMeters / handm;
+            TvSpeed.setText(TEXT_SPE_STEPS + String.format("%.02f", speed));
+        }
     }
 
     public float getDistanceRun(long steps){
