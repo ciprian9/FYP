@@ -134,7 +134,9 @@ public class WalkingOptions extends AppCompatActivity {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             //Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
-                            aSwitch.setChecked(Boolean.valueOf(jsonObject.getString("status")));
+                            if (aSwitch != null) {
+                                aSwitch.setChecked(Boolean.valueOf(jsonObject.getString("status")));
+                            }
                             //startPedometer.setChecked(Boolean.valueOf(jsonObject.getString("status")));
 
                         } catch (JSONException e) {
