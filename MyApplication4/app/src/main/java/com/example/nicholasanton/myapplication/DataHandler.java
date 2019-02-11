@@ -60,7 +60,7 @@ public class DataHandler extends SQLiteOpenHelper {
     }
 
     //Settings Table select statement with a where clause
-    public Cursor SelectSettingsQuery(String aString){
+    Cursor SelectSettingsQuery(String aString){
         //create a sqlite database object
         SQLiteDatabase db = this.getWritableDatabase();
         //preapare the where clause parameters

@@ -12,7 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 public class PedometerActivity extends AppCompatActivity implements SensorEventListener, StepListener {
-    private boolean pedometer, time, dist;
+    private boolean pedometer, time, dist, musicPlayer, pressed;
+    private int accountid, where;
     private TextView TvSteps, TvDistance, TvTimer, TvSpeed;
     private StepDetector simpleStepDetector;
     private static final String TEXT_NUM_STEPS = "Number of Steps: ";
@@ -54,11 +55,23 @@ public class PedometerActivity extends AppCompatActivity implements SensorEventL
                 pedometer= false;
                 time = false;
                 dist = false;
+                musicPlayer = false;
+                accountid = 0;
+                pressed = false;
+                where = 0;
             } else {
                 pedometer = extras.getBoolean("pedometer");
                 time = extras.getBoolean("time");
                 dist = extras.getBoolean("dist");
+                musicPlayer = extras.getBoolean("music");
+                accountid = extras.getInt("accountid");
+                pressed = extras.getBoolean("pressed");
+                where = extras.getInt("where");
             }
+        }
+
+        if(pressed) {
+            onBackPressed();
         }
 
         // Get an instance of the SensorManager
@@ -73,23 +86,24 @@ public class PedometerActivity extends AppCompatActivity implements SensorEventL
         TvSpeed =  findViewById(R.id.tvSpeed);
 
         sensorManager.registerListener(PedometerActivity.this, accel, SensorManager.SENSOR_DELAY_FASTEST);
-        if(dist) {
+        if(dist || time) {
             startTime = SystemClock.uptimeMillis();
             customHandler.postDelayed(updateTimerThread, 0);
         }
+    }
 
-
-//        BtnStop.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View arg0) {
-//
-//                sensorManager.unregisterListener(MainActivity.this);
-//                customHandler.removeCallbacks(updateTimerThread);
-//                timeInMilliseconds = 0L;
-//
-//            }
-//        });
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        //now getIntent() should always return the last received intent
+        pedometer = getIntent().getExtras().getBoolean("pedometer");
+        time = getIntent().getExtras().getBoolean("time");
+        dist = getIntent().getExtras().getBoolean("dist");
+        musicPlayer = getIntent().getExtras().getBoolean("music");
+        accountid = getIntent().getExtras().getInt("accountid");
+        pressed = getIntent().getExtras().getBoolean("pressed");
+        where = getIntent().getExtras().getInt("where");
     }
 
     @Override
@@ -98,7 +112,15 @@ public class PedometerActivity extends AppCompatActivity implements SensorEventL
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(PedometerActivity.this, ActivitesListeners.class));
+        if(where == 0){
+            Intent i = new Intent(PedometerActivity.this, WalkingOptions.class);
+            i.putExtra("accountid", accountid);
+            startActivity(i);
+        }else {
+            Intent i = new Intent(PedometerActivity.this, ActivitesListeners.class);
+            i.putExtra("accountid", accountid);
+            startActivity(i);
+        }
     }
 
     @Override
@@ -112,7 +134,7 @@ public class PedometerActivity extends AppCompatActivity implements SensorEventL
     @Override
     public void step(long timeNs) {
 
-        if(dist) {
+        if(dist || pedometer) {
             numSteps++;
             if (pedometer) {
                 TvSteps.setText(TEXT_NUM_STEPS + numSteps);

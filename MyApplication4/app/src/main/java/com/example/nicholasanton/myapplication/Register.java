@@ -7,14 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,7 +98,7 @@ public class Register extends AppCompatActivity {
                     }
                 }){
         @Override
-        protected Map<String, String> getParams() throws AuthFailureError {
+        protected Map<String, String> getParams() {
             Map<String, String> params = new HashMap<>();
             params.put("username", uName);
             params.put("password", Pass);

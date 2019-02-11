@@ -9,24 +9,17 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.IBinder;
 import android.provider.MediaStore;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.MediaController.MediaPlayerControl;
-import android.widget.Switch;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,14 +31,10 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     private ArrayList<song> songList;
     private musicService musicSrv;
     private Intent playIntent;
-    private boolean musicBound = false;
     private MusicController controller;
-    private boolean paused = false, playbackPaused=false;
-    private boolean musicPlayer = false;
-    private boolean pedometer = false;
-    private boolean timeRecord = false;
-    private boolean dist_speed = false;
-
+    private boolean paused = false, playbackPaused=false, musicBound = false,
+                    musicPlayer = false, pedometer = false, timeRecord = false,
+                    dist_speed = false;
 
     @Override
     protected void onPause(){
@@ -72,10 +61,9 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
         songList = new ArrayList<>();
-
         getSongList();
-
         Collections.sort(songList, new Comparator<song>() {
             @Override
             public int compare(song o1, song o2) {
@@ -83,26 +71,20 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
             }
         });
 
-        getSettings();
-
-        //SongAdapter songAdt = new SongAdapter(this, songList);
-        //songView.setAdapter(songAdt);
-
         setController();
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
-            if (extras == null) {
-                accountid = 0;
-            } else {
-                accountid = extras.getInt("accountid");
+            if (extras != null) {
+                accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
             }
         }
 
         final Button walkingPolicy = findViewById(R.id.walkingPolicy);
         walkingPolicy.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                StartWalkingService();
+                getWalkingSettings();
+
             }
         });
 
@@ -116,19 +98,41 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         final Button runningPolicy = findViewById(R.id.runningPolicy);
         runningPolicy.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                StartRunningPolicy();
+                //StartRunningPolicy();
+            }
+        });
+
+        final Button StopBtn = findViewById(R.id.StopBtn);
+        StopBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                StopWalkingPolicy();
             }
         });
     }
 
-    private void getSettings() {
-        readSettings("MusicPlayer");
-        readSettings("Pedometer");
-        readSettings("Time");
-        readSettings("Distance_Speed");
+    private void StopWalkingPolicy() {
+        if (musicSrv != null) {
+            musicSrv.pausePlayer();
+            controller.setVisibility(View.GONE);
+        }
+        Intent intent = new Intent(this, PedometerActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |  Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(Constants.PRESSED_INTENT, true);
+        intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
+        intent.putExtra(Constants.WHERE_INTENT, Constants.MAINMENU);
+        startActivity(intent);
+
+
     }
 
-    public void readSettings(final String aName) {
+    private void getWalkingSettings() {
+        readSettings(Constants.MUSIC_SETTING, Constants.WALKING_POLICY);
+        readSettings(Constants.PEDOMETER_SETTING, Constants.WALKING_POLICY);
+        readSettings(Constants.TIME_SETTING, Constants.WALKING_POLICY);
+        readSettings(Constants.DISTANCE_SETTING, Constants.WALKING_POLICY);
+    }
+
+    public void readSettings(final String aName, final int aPolicyID) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_READ_SETTING,
                 new Response.Listener<String>() {
@@ -136,14 +140,20 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            if(aName.equals("MusicPlayer")) {
-                                musicPlayer = Boolean.valueOf(jsonObject.getString("status"));
-                            } else if(aName.equals("Pedometer")){
-                                pedometer = Boolean.valueOf(jsonObject.getString("status"));
-                            }else if(aName.equals("Time")){
-                                timeRecord = Boolean.valueOf(jsonObject.getString("status"));
-                            }else if(aName.equals("Distance_Speed")){
-                                dist_speed= Boolean.valueOf(jsonObject.getString("status"));
+                            switch (aName) {
+                                case Constants.MUSIC_SETTING:
+                                    musicPlayer = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
+                                    break;
+                                case Constants.PEDOMETER_SETTING:
+                                    pedometer = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
+                                    break;
+                                case Constants.TIME_SETTING:
+                                    timeRecord = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
+                                    break;
+                                case Constants.DISTANCE_SETTING:
+                                    dist_speed = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
+                                    StartWalkingService();
+                                    break;
                             }
 
                         } catch (JSONException e) {
@@ -158,11 +168,11 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                     }
                 }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("accountid", String.valueOf(accountid));
-                params.put("policyid", String.valueOf(1));
-                params.put("name", aName);
+                params.put(Constants.ACCOUNTID_INTENT, String.valueOf(accountid));
+                params.put(Constants.POLICY_ID, String.valueOf(aPolicyID));
+                params.put(Constants.PARAM_NAME, aName);
                 return params;
             }
         };
@@ -173,10 +183,11 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     private ServiceConnection musicConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            musicService.MusicBinder binder = (musicService.MusicBinder)service;
+            musicService.MusicBinder binder = (musicService.MusicBinder) service;
             musicSrv = binder.getService();
             musicSrv.setList(songList);
             musicBound = true;
+
         }
 
         @Override
@@ -188,32 +199,33 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     public void getSongList(){
         ContentResolver musicResolver = getContentResolver();
         Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
+        try (Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null)) {
 
-        if (musicCursor != null && musicCursor.moveToFirst()){
-            int titleColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-            int idColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media._ID);
-            int artistColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+            if (musicCursor != null && musicCursor.moveToFirst()) {
+                int titleColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+                int idColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media._ID);
+                int artistColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
 
-            do {
-                long thisID = musicCursor.getLong(idColumn);
-                String thisTitle = musicCursor.getString(titleColumn);
-                String thisArtist = musicCursor.getString(artistColumn);
-                songList.add(new song(thisID, thisTitle, thisArtist));
+                do {
+                    long thisID = musicCursor.getLong(idColumn);
+                    String thisTitle = musicCursor.getString(titleColumn);
+                    String thisArtist = musicCursor.getString(artistColumn);
+                    songList.add(new song(thisID, thisTitle, thisArtist));
+                }
+                while (musicCursor.moveToNext());
             }
-            while(musicCursor.moveToNext());
         }
     }
 
 
 
-    public void MakeNotifications(String str, String chanelID){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanelID);
-        builder.setContentText(str);
-        builder.setSmallIcon( R.mipmap.ic_launcher );
-        builder.setContentTitle( getString( R.string.app_name ) );
-        NotificationManagerCompat.from(this).notify(0, builder.build());
-    }
+//    public void MakeNotifications(String str, String chanelID){
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanelID);
+//        builder.setContentText(str);
+//        builder.setSmallIcon( R.mipmap.ic_launcher );
+//        builder.setContentTitle( getString( R.string.app_name ) );
+//        NotificationManagerCompat.from(this).notify(0, builder.build());
+//    }
 
     @Override
     public void onStart(){
@@ -225,15 +237,15 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         }
     }
 
-    public void songPicked(View view){
-        musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
-        musicSrv.playSong();
-        if(playbackPaused){
-            setController();
-            playbackPaused=false;
-        }
-        controller.show(0);
-    }
+//    public void songPicked(View view){
+//        musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
+//        musicSrv.playSong();
+//        if(playbackPaused){
+//            setController();
+//            playbackPaused=false;
+//        }
+//        controller.show(0);
+//    }
 
     @Override
     protected void onDestroy(){
@@ -246,11 +258,16 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         //create a new intent that will start walkingPolicy service
         //MakeNotifications("on Foot", "on Foot");
         Intent intent = new Intent(this, WalkingPolicy.class);
-        intent.putExtra("Pedometer", pedometer);
-        intent.putExtra("time", timeRecord);
-        intent.putExtra("distance", dist_speed);
+        intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
+        intent.putExtra(Constants.MUSIC_INTENT, musicPlayer);
+        intent.putExtra(Constants.PEDOMETER_INTENT, pedometer);
+        intent.putExtra(Constants.TIME_INTENT, timeRecord);
+        intent.putExtra(Constants.DISTANCE_INTENT, dist_speed);
         startService(intent);
         if(musicPlayer) {
+            if (controller.getVisibility() == View.GONE) {
+                controller.setVisibility(View.VISIBLE);
+            }
             musicSrv.setSong(0);
             musicSrv.playSong();
             if (playbackPaused) {
@@ -264,21 +281,21 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     public void StartWalkingOptions(){
         //create a new intent that will start walkingOptions class
         Intent intent = new Intent(this, WalkingOptions.class);
-        intent.putExtra("accountid", accountid);
+        intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
         try {
             startActivity(intent);
         } catch (Exception e){
-            System.out.printf(e.toString());
+            System.out.print(e.toString());
         }
     }
 
-    public void StartRunningPolicy(){
-        //create a new intent that will start walkingPolicy service
-        MakeNotifications("Running", "Running");
-        //Running Policy class
-        //Intent intent = new Intent(this, WalkingPolicy.class);
-        //startService(intent);
-    }
+//    public void StartRunningPolicy(){
+//        //create a new intent that will start walkingPolicy service
+//        MakeNotifications("Running", "Running");
+//        //Running Policy class
+//        //Intent intent = new Intent(this, WalkingPolicy.class);
+//        //startService(intent);
+//    }
 
     @Override
     public void start() {

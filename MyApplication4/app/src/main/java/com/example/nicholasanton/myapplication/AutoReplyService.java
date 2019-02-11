@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.telephony.SmsManager;
-import android.widget.Toast;
 
 public class AutoReplyService extends Service {
 

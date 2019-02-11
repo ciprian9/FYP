@@ -6,7 +6,6 @@ https://stackoverflow.com/questions/17525886/listview-with-add-and-delete-button
 Creates a Custom Adapter to allow buttons and textviews to be displayed on a listview component
  */
 
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +18,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class My_Delete_Playlist_Adapter extends BaseAdapter implements ListAdapter {
-    private ArrayList<String> list = new ArrayList<String>();
+    private ArrayList<String> list;
     private Context context;
     private DataHandler db;
     private String selectedItem;
 
 
-    public My_Delete_Playlist_Adapter(ArrayList<String> list, Context context) {
+    My_Delete_Playlist_Adapter(ArrayList<String> list, Context context) {
         this.list = list;
         this.context = context;
         db = new DataHandler(context);
@@ -48,7 +47,6 @@ public class My_Delete_Playlist_Adapter extends BaseAdapter implements ListAdapt
     }
 
 
-    @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
         if (view == null) {
@@ -59,11 +57,11 @@ public class My_Delete_Playlist_Adapter extends BaseAdapter implements ListAdapt
 
 
         //Handle TextView and display string from your list
-        TextView listItemText = (TextView)view.findViewById(R.id.list_item_string);
+        TextView listItemText = view.findViewById(R.id.list_item_string);
         listItemText.setText(list.get(position));
 
         //Handle buttons and add onClickListeners
-        Button deleteBtn = (Button)view.findViewById(R.id.delete_btn);
+        Button deleteBtn = view.findViewById(R.id.delete_btn);
 
         deleteBtn.setOnClickListener(new View.OnClickListener(){
             @Override
