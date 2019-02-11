@@ -1,17 +1,10 @@
 package com.example.nicholasanton.myapplication;
 
 import android.Manifest;
-//import android.app.NotificationManager;
-//import android.content.Context;
-//import android.content.Intent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-//import android.os.Build;
 import android.database.Cursor;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-//import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,31 +15,24 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private int MY_PERMISSIONS_REQUEST_SMS_RECEIVE = 10;
-    private int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
     private TextView Username;
     private TextView Password;
     private CheckBox chkRemember;
     private String uName;
     private String Pass;
-    private boolean LoggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,50 +44,31 @@ public class MainActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed; request the permission
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        1);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        } else {
-            // Permission has already been granted
+                        // No explanation needed; request the permission
+                        int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                    }
         }
+
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.RECEIVE_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+            // No explanation needed; request the permission
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.RECEIVE_SMS)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed; request the permission
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.RECEIVE_SMS},
-                        MY_PERMISSIONS_REQUEST_SMS_RECEIVE);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+                new String[]{Manifest.permission.RECEIVE_SMS},
+                MY_PERMISSIONS_REQUEST_SMS_RECEIVE);
             }
-        } else {
-            // Permission has already been granted
         }
+
 
         Username = findViewById(R.id.Username);
         Password = findViewById(R.id.Password);
@@ -117,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 Password.setText(cursor.getString(Constants.COLUMN_PASSWORD));
                 chkRemember.setChecked(true);
             }catch (Exception e){
-                System.out.print(e);
+                System.out.print(e.getMessage());
             }
         }
 
@@ -147,12 +114,10 @@ public class MainActivity extends AppCompatActivity {
         if (chkRemember.isChecked()){
             if (db.SelectUser().getCount() == 0) {
                 db.insertUser(uName, Pass);
-                Cursor c = db.SelectUser();
-                int temp = c.getCount();
             }else{
                 Cursor cursor = db.SelectUser();
                 cursor.moveToFirst();
-                if(cursor.getString(Constants.COLUMN_USERNAME) != uName){
+                if(!cursor.getString(Constants.COLUMN_USERNAME).equals(uName)){
                     db.updateUser(uName, Pass);
                 }
             }
@@ -160,11 +125,11 @@ public class MainActivity extends AppCompatActivity {
             db.DeleteUser();
         }
         Intent i = new Intent(this, ActivitesListeners.class);
-        i.putExtra("accountid", accountid);
+        i.putExtra(Constants.ACCOUNTID_INTENT, accountid);
         try {
             startActivity(i);
         }catch (Exception e){
-            System.out.print(e);
+            System.out.print(e.getMessage());
         }
     }
 
@@ -180,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if(!jsonObject.getBoolean("error")){
-                                    LoggedIn = true;
                                     Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                                     GoToMenu(jsonObject.getInt("id"));
                                 }else{
@@ -200,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }){
                 @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
+                protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<>();
                     params.put("username", uName);
                     params.put("password", Pass);

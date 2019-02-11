@@ -11,9 +11,7 @@ import android.provider.MediaStore;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ListView;
 import android.view.View;
 

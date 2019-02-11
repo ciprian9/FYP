@@ -40,7 +40,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".Register"></activity>
         <activity android:name=".PedometerActivity"
-            android:launchMode="singleTask">
+				  android:launchMode="singleTask">
         </activity>
 
         <meta-data

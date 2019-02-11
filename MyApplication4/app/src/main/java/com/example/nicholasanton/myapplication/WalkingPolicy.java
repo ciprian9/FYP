@@ -41,6 +41,8 @@ public class WalkingPolicy extends Service {
     private boolean pedometer;
     private boolean time;
     private boolean dist_speed;
+    private boolean musicPlayer;
+    private int accountid;
 
     final class TheThread implements Runnable{
         int serviceId;
@@ -64,7 +66,9 @@ public class WalkingPolicy extends Service {
 
         //just checking
         if( extras != null ) {
-            pedometer = extras.getBoolean("Pedometer");
+            accountid = extras.getInt("accountid");
+            musicPlayer = extras.getBoolean("music");
+            pedometer = extras.getBoolean("pedometer");
             time = extras.getBoolean("time");
             dist_speed = extras.getBoolean("distance");
         }
@@ -79,6 +83,8 @@ public class WalkingPolicy extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Intent i = new Intent(this, PedometerActivity.class);
+        startActivity(i);
         Toast.makeText(this, "Service Has Been Destroyed", Toast.LENGTH_SHORT).show();
     }
 
@@ -90,15 +96,17 @@ public class WalkingPolicy extends Service {
     public void doEverything() {
 
         try {
-            if(pedometer) {
+            if(pedometer || time || dist_speed) {
                 Intent i = new Intent(this, PedometerActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 i.putExtra("where", "policy");
+                i.putExtra("accountid", accountid);
+                i.putExtra("music", musicPlayer);
                 i.putExtra("pedometer", pedometer);
                 i.putExtra("time", time);
                 i.putExtra("dist", dist_speed);
+                i.putExtra("pressed", true);
+                i.putExtra("where", 1);
                 startActivity(i);
             }
         } catch (Exception e){

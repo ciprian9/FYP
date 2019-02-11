@@ -56,7 +56,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WalkingOptions extends AppCompatActivity {
-
+    private boolean   musicPlayer = false, pedometer = false, timeRecord = false,
+                      dist_speed = false;
     private Switch playHeadphones;
     private Switch startPedometer, Time, Rest;
     private int accountid;
@@ -119,6 +120,7 @@ public class WalkingOptions extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SaveSettings db = new SaveSettings(accountid, 1, "MusicPlayer", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
+                musicPlayer = isChecked;
             }
         });
 
@@ -127,6 +129,7 @@ public class WalkingOptions extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SaveSettings db = new SaveSettings(accountid, 1, "Pedometer", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
+                pedometer = isChecked;
             }
         });
 
@@ -135,6 +138,7 @@ public class WalkingOptions extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SaveSettings db = new SaveSettings(accountid, 1, "Time", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
+                timeRecord = isChecked;
             }
         });
 
@@ -143,6 +147,7 @@ public class WalkingOptions extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SaveSettings db = new SaveSettings(accountid, 1, "Distance_Speed", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
+                dist_speed = isChecked;
             }
         });
 
@@ -159,6 +164,15 @@ public class WalkingOptions extends AppCompatActivity {
                             //Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             if (aSwitch != null) {
                                 aSwitch.setChecked(Boolean.valueOf(jsonObject.getString("status")));
+                                if(aName.equals("MusicPlayer")) {
+                                    musicPlayer = Boolean.valueOf(jsonObject.getString("status"));
+                                } else if(aName.equals("Pedometer")){
+                                    pedometer = Boolean.valueOf(jsonObject.getString("status"));
+                                }else if(aName.equals("Time")){
+                                    timeRecord = Boolean.valueOf(jsonObject.getString("status"));
+                                }else if(aName.equals("Distance_Speed")){
+                                    dist_speed= Boolean.valueOf(jsonObject.getString("status"));
+                                }
                             }
 
                         } catch (JSONException e) {
@@ -185,6 +199,20 @@ public class WalkingOptions extends AppCompatActivity {
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, ActivitesListeners.class);
+        i.putExtra("accountid", accountid);
+        startActivity(i);
+    }
+
+    @Override
+    protected void onResume(){
+        accountid = getIntent().getExtras().getInt("accountid");
+        VarsToForm();
+        super.onResume();
+    }
+
 
     public void VarsToForm(){
         //Read the database values and update the activity to reflect those values
@@ -201,7 +229,15 @@ public class WalkingOptions extends AppCompatActivity {
     }
 
     public void openPedometer(){
-        startActivity(new Intent(WalkingOptions.this, PedometerActivity.class));
+        Intent intent = new Intent(WalkingOptions.this, PedometerActivity.class);
+        intent.putExtra("pressed", false);
+        intent.putExtra("accountid", accountid);
+        intent.putExtra("where", 0);
+        intent.putExtra("music", musicPlayer);
+        intent.putExtra("pedometer", pedometer);
+        intent.putExtra("time", timeRecord);
+        intent.putExtra("dist", dist_speed);
+        startActivity(intent);
     }
 
 }

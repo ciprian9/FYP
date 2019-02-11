@@ -15,7 +15,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class musicService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
 
@@ -24,8 +23,6 @@ public class musicService extends Service implements MediaPlayer.OnPreparedListe
     private int songPosn;
     private String songTitle="";
     private static final int NOTIFY_ID=1;
-    private boolean shuffle=false;
-    private Random rand;
     private AudioManager am;
 
 
@@ -36,7 +33,6 @@ public class musicService extends Service implements MediaPlayer.OnPreparedListe
         songPosn=0;
         player = new MediaPlayer();
         initMusicPlayer();
-        rand = new Random();
         am=(AudioManager)getSystemService(AUDIO_SERVICE);
     }
 
@@ -49,7 +45,7 @@ public class musicService extends Service implements MediaPlayer.OnPreparedListe
         player.pause();
     }
 
-    public class MusicBinder extends Binder{
+    class MusicBinder extends Binder{
         musicService getService(){
             return musicService.this;
         }
@@ -172,17 +168,9 @@ public class musicService extends Service implements MediaPlayer.OnPreparedListe
     }
 
     public void playNext(){
-        if(shuffle){
-            int newSong = songPosn;
-            while(newSong==songPosn){
-                newSong=rand.nextInt(songs.size());
-            }
-            songPosn=newSong;
-        }else {
-            songPosn++;
-            if (songPosn > songs.size()) {
-                songPosn = 0;
-            }
+        songPosn++;
+        if (songPosn > songs.size()) {
+            songPosn = 0;
         }
         playSong();
     }
@@ -192,11 +180,4 @@ public class musicService extends Service implements MediaPlayer.OnPreparedListe
         stopForeground(true);
     }
 
-    public void setShuffle(){
-        if(shuffle){
-            shuffle=false;
-        }else{
-            shuffle=true;
-        }
-    }
 }
