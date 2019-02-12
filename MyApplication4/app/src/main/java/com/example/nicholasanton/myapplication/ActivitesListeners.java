@@ -34,7 +34,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     private MusicController controller;
     private boolean paused = false, playbackPaused=false, musicBound = false,
                     musicPlayer = false, pedometer = false, timeRecord = false,
-                    dist_speed = false;
+                    dist_speed = false, isPlaying=false;
 
     @Override
     protected void onPause(){
@@ -45,7 +45,6 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     @Override
     protected void onResume(){
         super.onResume();
-        controller.setVisibility(View.VISIBLE);
         if(paused){
             setController();
             paused=false;
@@ -113,13 +112,13 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     }
 
     private void StopWalkingPolicy() {
+        isPlaying = false;
         if (musicSrv != null) {
             if(musicSrv.isPng()) {
                 musicSrv.pausePlayer();
             }
-
-            stopService(new Intent(this, musicService.class));
             controller.setVisibility(View.GONE);
+            stopService(new Intent(this, musicService.class));
         }
         stopService(new Intent(this, pedometerService.class));
 
@@ -258,6 +257,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     public void StartWalkingService(){
         //create a new intent that will start walkingPolicy service
         //MakeNotifications("on Foot", "on Foot");
+        isPlaying = true;
         Intent intent = new Intent(this, WalkingPolicy.class);
         intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
         intent.putExtra(Constants.MUSIC_INTENT, musicPlayer);

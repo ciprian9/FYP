@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 public class PedometerActivity extends AppCompatActivity{
@@ -41,9 +42,16 @@ public class PedometerActivity extends AppCompatActivity{
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        unregisterReceiver(receiver);
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            if (receiver != null) {
+                unregisterReceiver(receiver);
+            }
+        } catch (IllegalArgumentException e) {
+            Log.i("Receiver", "Reciver is already unregistered");
+            receiver = null;
+        }
     }
 
     class DataReceiver extends BroadcastReceiver {
