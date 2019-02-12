@@ -66,11 +66,11 @@ public class WalkingPolicy extends Service {
 
         //just checking
         if( extras != null ) {
-            accountid = extras.getInt("accountid");
-            musicPlayer = extras.getBoolean("music");
-            pedometer = extras.getBoolean("pedometer");
-            time = extras.getBoolean("time");
-            dist_speed = extras.getBoolean("distance");
+            accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
+            musicPlayer = extras.getBoolean(Constants.MUSIC_INTENT);
+            pedometer = extras.getBoolean(Constants.PEDOMETER_INTENT);
+            time = extras.getBoolean(Constants.TIME_INTENT);
+            dist_speed = extras.getBoolean(Constants.DISTANCE_INTENT);
         }
 
 
@@ -97,17 +97,11 @@ public class WalkingPolicy extends Service {
 
         try {
             if(pedometer || time || dist_speed) {
-                Intent i = new Intent(this, PedometerActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                i.putExtra("where", "policy");
-                i.putExtra("accountid", accountid);
-                i.putExtra("music", musicPlayer);
-                i.putExtra("pedometer", pedometer);
-                i.putExtra("time", time);
-                i.putExtra("dist", dist_speed);
-                i.putExtra("pressed", true);
-                i.putExtra("where", 1);
-                startActivity(i);
+                Intent i = new Intent(this, pedometerService.class);
+                i.putExtra(Constants.PEDOMETER_INTENT, pedometer);
+                i.putExtra(Constants.TIME_INTENT, time);
+                i.putExtra(Constants.DISTANCE_INTENT, dist_speed);
+                startService(i);
             }
         } catch (Exception e){
             System.out.printf(e.toString());
