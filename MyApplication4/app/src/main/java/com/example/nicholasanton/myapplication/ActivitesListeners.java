@@ -45,6 +45,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     @Override
     protected void onResume(){
         super.onResume();
+        controller.setVisibility(View.VISIBLE);
         if(paused){
             setController();
             paused=false;
@@ -56,6 +57,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         controller.hide();
         super.onStop();
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,15 +114,14 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
 
     private void StopWalkingPolicy() {
         if (musicSrv != null) {
-            musicSrv.pausePlayer();
+            if(musicSrv.isPng()) {
+                musicSrv.pausePlayer();
+            }
+
+            stopService(new Intent(this, musicService.class));
             controller.setVisibility(View.GONE);
         }
-        Intent intent = new Intent(this, PedometerActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |  Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.putExtra(Constants.PRESSED_INTENT, true);
-        intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
-        intent.putExtra(Constants.WHERE_INTENT, Constants.MAINMENU);
-        startActivity(intent);
+        stopService(new Intent(this, pedometerService.class));
 
 
     }
@@ -264,6 +265,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         intent.putExtra(Constants.TIME_INTENT, timeRecord);
         intent.putExtra(Constants.DISTANCE_INTENT, dist_speed);
         startService(intent);
+        startService(new Intent(this, musicService.class));
         if(musicPlayer) {
             if (controller.getVisibility() == View.GONE) {
                 controller.setVisibility(View.VISIBLE);

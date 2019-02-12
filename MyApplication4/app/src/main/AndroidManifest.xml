@@ -10,25 +10,23 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
-
-    <permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
-    <permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
-    <permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
+
+    <permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+    <permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <permission
         android:name="${applicationId}.permission.C2D_MESSAGE"
         android:protectionLevel="signature"/>
+
 
     <application
         android:allowBackup="true"
@@ -38,15 +36,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Register"></activity>
-        <activity android:name=".PedometerActivity"
-				  android:launchMode="singleTask">
-        </activity>
-
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
             android:value="AIzaSyDESgnI7omKhAH3WLeYiS46CajJI4m_q4A" />
 
+
+        <activity android:name=".Register" />
+        <activity android:name=".PedometerActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,15 +51,13 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".ActivityRecognizedService" />
+        <!--<service android:name=".ActivityRecognizedService" />-->
 
-        <activity android:name=".WalkingOptions"
-            android:launchMode="singleTask"/>
+        <activity android:name=".WalkingOptions"/>
 
         <service
             android:name=".WalkingPolicy"
-            android:exported="false"
-            android:launchMode="singleTask"/>
+            android:exported="false"/>
 
         <activity android:name=".PlayLists" />
 
@@ -76,7 +70,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".NotificationBroadcast" >
+       <!-- <receiver android:name=".NotificationBroadcast" >
             <intent-filter>
                 <action android:name="com.example.nicholasanton.myapplication.previous" />
                 <action android:name="com.example.nicholasanton.myapplication.delete" />
@@ -84,16 +78,18 @@
                 <action android:name="com.example.nicholasanton.myapplication.next" />
                 <action android:name="com.example.nicholasanton.myapplication.play" />
             </intent-filter>
-        </receiver>
+        </receiver> -->
 
         <activity android:name=".Playlist_View" />
-        <activity android:name=".ActivitesListeners"
-            android:launchMode="singleTop"></activity>
+        <activity
+            android:name=".ActivitesListeners"
+            android:launchMode="singleTop"/>
 
         <service android:name=".TextToSpeechService" />
         <service android:name=".AutoReplyService" />
-        <service android:name=".SaveResourcesService" />
+        <!--<service android:name=".SaveResourcesService" /> -->
         <service android:name=".musicService"/>
+        <service android:name=".pedometerService"/>
     </application>
 
 </manifest>
