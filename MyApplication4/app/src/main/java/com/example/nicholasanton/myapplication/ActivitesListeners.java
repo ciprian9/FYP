@@ -84,8 +84,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         final Button walkingPolicy = findViewById(R.id.walkingPolicy);
         walkingPolicy.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                getWalkingSettings();
-
+                getWalkingSettings(Constants.WALKING_POLICY);
             }
         });
 
@@ -96,10 +95,17 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
             }
         });
 
-        final Button runningPolicy = findViewById(R.id.runningPolicy);
-        runningPolicy.setOnClickListener(new View.OnClickListener() {
+        final Button runnningPolicy = findViewById(R.id.runningPolicy);
+        runnningPolicy.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //StartRunningPolicy();
+                getWalkingSettings(Constants.RUNNING_POLICY);
+            }
+        });
+
+        final Button runningOptions = findViewById(R.id.runningOptions);
+        runningOptions.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                StartRunningOptions();
             }
         });
 
@@ -125,11 +131,11 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
 
     }
 
-    private void getWalkingSettings() {
-        readSettings(Constants.MUSIC_SETTING, Constants.WALKING_POLICY);
-        readSettings(Constants.PEDOMETER_SETTING, Constants.WALKING_POLICY);
-        readSettings(Constants.TIME_SETTING, Constants.WALKING_POLICY);
-        readSettings(Constants.DISTANCE_SETTING, Constants.WALKING_POLICY);
+    private void getWalkingSettings(int aPolicyID) {
+        readSettings(Constants.MUSIC_SETTING, aPolicyID);
+        readSettings(Constants.PEDOMETER_SETTING, aPolicyID);
+        readSettings(Constants.TIME_SETTING, aPolicyID);
+        readSettings(Constants.DISTANCE_SETTING, aPolicyID);
     }
 
     public void readSettings(final String aName, final int aPolicyID) {
@@ -152,6 +158,14 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                                     break;
                                 case Constants.DISTANCE_SETTING:
                                     dist_speed = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
+                                    switch (aPolicyID){
+                                        case 1:
+                                            StartWalkingService();
+                                            break;
+                                        case 2:
+                                            StartRunningService();
+                                            break;
+                                    }
                                     StartWalkingService();
                                     break;
                             }
@@ -291,13 +305,42 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         }
     }
 
-//    public void StartRunningPolicy(){
-//        //create a new intent that will start walkingPolicy service
-//        MakeNotifications("Running", "Running");
-//        //Running Policy class
-//        //Intent intent = new Intent(this, WalkingPolicy.class);
-//        //startService(intent);
-//    }
+    public void StartRunningService(){
+        //create a new intent that will start walkingPolicy service
+        //MakeNotifications("on Foot", "on Foot");
+        isPlaying = true;
+        Intent intent = new Intent(this, RunningPolicy.class);
+        intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
+        intent.putExtra(Constants.MUSIC_INTENT, musicPlayer);
+        intent.putExtra(Constants.PEDOMETER_INTENT, pedometer);
+        intent.putExtra(Constants.TIME_INTENT, timeRecord);
+        intent.putExtra(Constants.DISTANCE_INTENT, dist_speed);
+        startService(intent);
+        startService(new Intent(this, musicService.class));
+        if(musicPlayer) {
+            if (controller.getVisibility() == View.GONE) {
+                controller.setVisibility(View.VISIBLE);
+            }
+            musicSrv.setSong(0);
+            musicSrv.playSong();
+            if (playbackPaused) {
+                setController();
+                playbackPaused = false;
+            }
+            controller.show(0);
+        }
+    }
+
+    public void StartRunningOptions(){
+        //create a new intent that will start walkingOptions class
+        Intent intent = new Intent(this, RunningOptions.class);
+        intent.putExtra("accountid", accountid);
+        try {
+            startActivity(intent);
+        } catch (Exception e){
+            System.out.printf(e.toString());
+        }
+    }
 
     @Override
     public void start() {

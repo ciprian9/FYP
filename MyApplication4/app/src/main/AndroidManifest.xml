@@ -90,6 +90,8 @@
         <!--<service android:name=".SaveResourcesService" /> -->
         <service android:name=".musicService"/>
         <service android:name=".pedometerService"/>
+        <activity android:name=".RunningOptions"/>
+        <service android:name=".RunningPolicy"/>
     </application>
 
 </manifest>
