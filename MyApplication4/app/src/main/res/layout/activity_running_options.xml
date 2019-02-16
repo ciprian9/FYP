@@ -29,22 +29,6 @@
         android:text="Pedometer On/Off"
         android:layout_marginBottom="10dp"/>
 
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/swRest"
-        android:layout_marginTop="6dp"
-        android:text="Save Settings" />
-
-    <Button
-        android:id="@+id/btnPedometer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnSave"
-        android:layout_marginTop="-6dp"
-        android:text="Open Pedometer" />
-
     <Switch
         android:id="@+id/swRest"
         android:layout_width="match_parent"
@@ -60,5 +44,12 @@
         android:layout_height="wrap_content"
         android:text="Show Time On/Off"
         android:layout_below="@+id/swStartPedometer"/>
+
+    <Button
+        android:id="@+id/btnOpenMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OPEN MAP &amp; PEDOMETER"
+        android:layout_below="@+id/swRest"/>
 
 </RelativeLayout>

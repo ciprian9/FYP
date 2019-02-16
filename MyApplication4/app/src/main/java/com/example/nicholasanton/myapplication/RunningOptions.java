@@ -75,12 +75,10 @@ public class RunningOptions extends AppCompatActivity {
             }
         });
 
-        final Button PedometerBtn = findViewById(R.id.btnPedometer);
-        PedometerBtn.setOnClickListener(new View.OnClickListener(){
+        final Button MapBtn = findViewById(R.id.btnOpenMap);
+        MapBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                //mApiClient.disconnect();
-                //System.out.printf(steps);
-                openPedometer();
+                openTheMap();
             }
         });
 
@@ -180,13 +178,14 @@ public class RunningOptions extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void openPedometer(){
-        Intent intent = new Intent(this, PedometerActivity.class);
-        intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
-        intent.putExtra(Constants.PEDOMETER_INTENT, pedometer);
-        intent.putExtra(Constants.TIME_INTENT, timeRecord);
-        intent.putExtra(Constants.DISTANCE_INTENT, dist_speed);
-        startActivity(intent);
+    public void openTheMap(){
+        Intent i = new Intent(this, MapActivity.class);
+        i.putExtra(Constants.ACCOUNTID_INTENT, accountid);
+        i.putExtra(Constants.PEDOMETER_INTENT, pedometer);
+        i.putExtra(Constants.TIME_INTENT, timeRecord);
+        i.putExtra(Constants.DISTANCE_INTENT, dist_speed);
+        i.putExtra(Constants.POLICY_ID, 2);
+        startActivity(i);
     }
 
 }

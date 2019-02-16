@@ -30,24 +30,19 @@ package com.example.nicholasanton.myapplication;
     need to move to new policy
  */
 
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.android.gms.nearby.messages.Distance;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -105,12 +100,10 @@ public class WalkingOptions extends AppCompatActivity {
             }
         });
 
-        final Button PedometerBtn = findViewById(R.id.btnPedometer);
-        PedometerBtn.setOnClickListener(new View.OnClickListener(){
+        final Button MapBtn = findViewById(R.id.btnOpenMap);
+        MapBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                //mApiClient.disconnect();
-                //System.out.printf(steps);
-                openPedometer();
+                openTheMap();
             }
         });
 
@@ -228,13 +221,14 @@ public class WalkingOptions extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void openPedometer(){
-        Intent intent = new Intent(WalkingOptions.this, PedometerActivity.class);
-        intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
-        intent.putExtra(Constants.PEDOMETER_INTENT, pedometer);
-        intent.putExtra(Constants.TIME_INTENT, timeRecord);
-        intent.putExtra(Constants.DISTANCE_INTENT, dist_speed);
-        startActivity(intent);
+    public void openTheMap(){
+        Intent i = new Intent(this, MapActivity.class);
+        i.putExtra(Constants.ACCOUNTID_INTENT, accountid);
+        i.putExtra(Constants.PEDOMETER_INTENT, pedometer);
+        i.putExtra(Constants.TIME_INTENT, timeRecord);
+        i.putExtra(Constants.DISTANCE_INTENT, dist_speed);
+        i.putExtra(Constants.POLICY_ID, 1);
+        startActivity(i);
     }
 
 }
