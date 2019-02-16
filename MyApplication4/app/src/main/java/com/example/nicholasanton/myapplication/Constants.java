@@ -49,6 +49,7 @@ public interface Constants {
     String PEDOMETER_SETTING = "pedometer";
     String TIME_SETTING = "Time";
     String DISTANCE_SETTING = "Distance_Speed";
+    String RECORD_ROUTE = "RecordRoute";
 
     String DB_FLAG = "status";
 

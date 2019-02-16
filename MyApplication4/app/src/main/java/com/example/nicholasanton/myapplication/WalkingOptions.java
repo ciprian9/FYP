@@ -52,9 +52,8 @@ import java.util.Map;
 
 public class WalkingOptions extends AppCompatActivity {
     private boolean   musicPlayer = false, pedometer = false, timeRecord = false,
-                      dist_speed = false;
-    private Switch playHeadphones;
-    private Switch startPedometer, Time, Rest;
+                      dist_speed = false, recordRoute = false;
+    private Switch playHeadphones, startPedometer, Time, Rest, RecordRoute;
     private int accountid;
 
 
@@ -76,6 +75,7 @@ public class WalkingOptions extends AppCompatActivity {
         startPedometer = findViewById(R.id.swStartPedometer);
         Time =  findViewById(R.id.swTime);
         Rest = findViewById(R.id.swRest);
+        RecordRoute = findViewById(R.id.swRecordRoute);
 
         VarsToForm();
         if (accountid != 0) {
@@ -87,7 +87,8 @@ public class WalkingOptions extends AppCompatActivity {
             db2.registerSetting(Constants.URL_SAVE_SETTING);
             SaveSettings db3 = new SaveSettings(accountid, 1, "Distance_Speed", false, this);
             db3.registerSetting(Constants.URL_SAVE_SETTING);
-
+            SaveSettings db4 = new SaveSettings(accountid, 1, "RecordRoute", false, this);
+            db4.registerSetting(Constants.URL_SAVE_SETTING);
         };
 
 
@@ -144,6 +145,15 @@ public class WalkingOptions extends AppCompatActivity {
             }
         });
 
+        RecordRoute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SaveSettings db = new SaveSettings(accountid, 1, "RecordRoute", isChecked, getApplicationContext());
+                db.registerSetting(Constants.URL_UPDATE_SETTING);
+                recordRoute = isChecked;
+            }
+        });
+
     }
 
     public void readSettings(final String aName, final Switch aSwitch) {
@@ -161,10 +171,12 @@ public class WalkingOptions extends AppCompatActivity {
                                     musicPlayer = Boolean.valueOf(jsonObject.getString("status"));
                                 } else if(aName.equals("Pedometer")){
                                     pedometer = Boolean.valueOf(jsonObject.getString("status"));
-                                }else if(aName.equals("Time")){
+                                } else if(aName.equals("Time")){
                                     timeRecord = Boolean.valueOf(jsonObject.getString("status"));
-                                }else if(aName.equals("Distance_Speed")){
-                                    dist_speed= Boolean.valueOf(jsonObject.getString("status"));
+                                } else if(aName.equals("Distance_Speed")){
+                                    dist_speed = Boolean.valueOf(jsonObject.getString("status"));
+                                } else if(aName.equals("RecordRoute")){
+                                    recordRoute = Boolean.valueOf(jsonObject.getString("status"));
                                 }
                             }
 
@@ -192,13 +204,6 @@ public class WalkingOptions extends AppCompatActivity {
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        Intent i = new Intent(this, ActivitesListeners.class);
-//        i.putExtra("accountid", accountid);
-//        startActivity(i);
-//    }
-
     @Override
     protected void onResume(){
         accountid = getIntent().getExtras().getInt("accountid");
@@ -214,6 +219,7 @@ public class WalkingOptions extends AppCompatActivity {
         readSettings("Pedometer", startPedometer);
         readSettings("Time", Time);
         readSettings("Distance_Speed", Rest);
+        readSettings("RecordRoute", RecordRoute);
     }
 
     public void openPlaylists(){

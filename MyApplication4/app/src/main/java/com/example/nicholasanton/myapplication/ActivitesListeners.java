@@ -34,7 +34,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     private MusicController controller;
     private boolean paused = false, playbackPaused=false, musicBound = false,
                     musicPlayer = false, pedometer = false, timeRecord = false,
-                    dist_speed = false, isPlaying=false;
+                    dist_speed = false, isPlaying=false, recordRoute = false;
 
     @Override
     protected void onPause(){
@@ -149,6 +149,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         readSettings(Constants.PEDOMETER_SETTING, aPolicyID);
         readSettings(Constants.TIME_SETTING, aPolicyID);
         readSettings(Constants.DISTANCE_SETTING, aPolicyID);
+        readSettings(Constants.RECORD_ROUTE, aPolicyID);
     }
 
     public void readSettings(final String aName, final int aPolicyID) {
@@ -171,6 +172,9 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                                     break;
                                 case Constants.DISTANCE_SETTING:
                                     dist_speed = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
+                                    break;
+                                case Constants.RECORD_ROUTE:
+                                    recordRoute = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
                                     switch (aPolicyID){
                                         case 1:
                                             StartWalkingService();
@@ -279,13 +283,15 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         super.onDestroy();
     }
 
-    public void StartWalkingService(){
+    public void StartWalkingService() {
         //create a new intent that will start walkingPolicy service
         //MakeNotifications("on Foot", "on Foot");
-        Intent i = new Intent(getApplicationContext(), MapService.class);
-        i.putExtra("temp", false);
-        i.putExtra(Constants.POLICY_ID, 1);
-        startService(i);
+        if (recordRoute){
+            Intent i = new Intent(getApplicationContext(), MapService.class);
+            i.putExtra("temp", false);
+            i.putExtra(Constants.POLICY_ID, 1);
+            startService(i);
+        }
         isPlaying = true;
         Intent intent = new Intent(this, WalkingPolicy.class);
         intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
@@ -323,10 +329,12 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     public void StartRunningService(){
         //create a new intent that will start walkingPolicy service
         //MakeNotifications("on Foot", "on Foot");
-        Intent i = new Intent(getApplicationContext(), MapService.class);
-        i.putExtra("temp", false);
-        i.putExtra(Constants.POLICY_ID, 2);
-        startService(i);
+        if (recordRoute){
+            Intent i = new Intent(getApplicationContext(), MapService.class);
+            i.putExtra("temp", false);
+            i.putExtra(Constants.POLICY_ID, 2);
+            startService(i);
+        }
         isPlaying = true;
         Intent intent = new Intent(this, RunningPolicy.class);
         intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
