@@ -45,13 +45,26 @@ public class MapService extends Service{
     @SuppressLint("MissingPermission")
     @Override
     public void onCreate() {
+        super.onCreate();
+    }
+
+    @SuppressLint("MissingPermission")
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Bundle extras = intent.getExtras();
+
+        if( extras != null ) {
+            temp = extras.getBoolean("temp");
+            policyID = extras.getInt(Constants.POLICY_ID);
+        }
+
         File dir = getFilesDir();
         File file = null;
-        if (policyID == 1) {
+        if (policyID == 1 && !temp) {
             if (fileExists(this, walkingFileName)){
                 file = new File(dir, walkingFileName);
             }
-        } else if (policyID == 2) {
+        } else if (policyID == 2 && !temp) {
             if (fileExists(this, runningFileName)) {
                 file = new File(dir, runningFileName);
             }
@@ -67,7 +80,7 @@ public class MapService extends Service{
                 temp2 = location.getLongitude();
                 LatLng latLng = new LatLng(temp1, temp2);
                 if ((temp1 >= (prevLat + 0.000005) || temp1 <= (prevLat - 0.000005)) ||
-                    (temp2 >= (prevLong + 0.000005) || temp2 <= (prevLong - 0.000005))){
+                        (temp2 >= (prevLong + 0.000005) || temp2 <= (prevLong - 0.000005))){
                     if (policyID == 1) {
                         saveFile(walkingFileName, (latLng.toString() + "\n"));
                     } else if (policyID == 2){
@@ -103,18 +116,6 @@ public class MapService extends Service{
         locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, listener);
-
-        super.onCreate();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Bundle extras = intent.getExtras();
-
-        if( extras != null ) {
-            temp = extras.getBoolean("temp");
-            policyID = extras.getInt(Constants.POLICY_ID);
-        }
 
         return super.onStartCommand(intent, flags, startId);
     }

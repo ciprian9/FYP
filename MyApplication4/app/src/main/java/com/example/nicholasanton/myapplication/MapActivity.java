@@ -86,20 +86,6 @@ public class MapActivity extends AppCompatActivity {
         setContentView(R.layout.map_activity);
         points = new ArrayList<LatLng>();
 
-        receiver = new NewLocationReciever();
-        registerReceiver(receiver, new IntentFilter("location_update"));
-
-        if (isMyServiceRunning(MapService.class)){
-            Intent mapServiceIntent = new Intent(this, MapService.class);
-            mapServiceIntent.putExtra("temp", true);
-            startService(mapServiceIntent);
-        }
-
-        //*********************************************************************************PEDOMETER**************************************************************
-
-        dataReceiver = new DataReceiver();
-        registerReceiver(dataReceiver, new IntentFilter("GET_PEDOMETER_DATA"));
-
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras != null) {
@@ -109,6 +95,22 @@ public class MapActivity extends AppCompatActivity {
                 policyID = extras.getInt(Constants.POLICY_ID);
             }
         }
+
+        receiver = new NewLocationReciever();
+        registerReceiver(receiver, new IntentFilter("location_update"));
+
+        if (isMyServiceRunning(MapService.class)){
+            Intent mapServiceIntent = new Intent(this, MapService.class);
+            mapServiceIntent.putExtra("temp", true);
+            mapServiceIntent.putExtra(Constants.POLICY_ID, policyID);
+            startService(mapServiceIntent);
+        }
+
+        //*********************************************************************************PEDOMETER**************************************************************
+
+        dataReceiver = new DataReceiver();
+        registerReceiver(dataReceiver, new IntentFilter("GET_PEDOMETER_DATA"));
+
 
         TvSteps =  findViewById(R.id.tv_steps);
         TvDistance =  findViewById(R.id.tvDistance);

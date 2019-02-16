@@ -49,7 +49,16 @@
         android:id="@+id/btnOpenMap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="OPEN MAP &amp; PEDOMETER"
-        android:layout_below="@+id/swRest"/>
+        android:layout_below="@+id/swRecordRoute"
+        android:layout_marginTop="16dp"
+        android:text="OPEN MAP &amp; PEDOMETER" />
+
+    <Switch
+        android:id="@+id/swRecordRoute"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/swRest"
+        android:layout_marginTop="8dp"
+        android:text="Record Route" />
 
 </RelativeLayout>
