@@ -83,8 +83,6 @@ public class WalkingPolicy extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Intent i = new Intent(this, PedometerActivity.class);
-        startActivity(i);
         Toast.makeText(this, "Service Has Been Destroyed", Toast.LENGTH_SHORT).show();
     }
 

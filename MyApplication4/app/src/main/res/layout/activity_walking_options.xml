@@ -29,14 +29,6 @@
         android:text="Pedometer On/Off"
         android:layout_marginBottom="10dp"/>
 
-    <Button
-        android:id="@+id/btnPedometer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/swRest"
-        android:layout_marginTop="-6dp"
-        android:text="Open Pedometer" />
-
     <Switch
         android:id="@+id/swRest"
         android:layout_width="match_parent"
@@ -53,61 +45,11 @@
         android:text="Show Time On/Off"
         android:layout_below="@+id/swStartPedometer"/>
 
-
-    <!--
-    <Switch
-        android:id="@+id/swTrackUsage"
+    <Button
+        android:id="@+id/btnOpenMap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/swPlayHeadphones"
-        android:text="Track Usage"
-        android:layout_marginBottom="10dp"/>
-
-    <Switch
-        android:id="@+id/swSaveResources"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/swTrackUsage"
-        android:text="Save Resources"
-        android:layout_marginBottom="10dp"/>
-
-    <Switch
-        android:id="@+id/swNotificationTTS"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/swSaveResources"
-        android:text="Notification Text-to-speech"
-        android:layout_marginBottom="10dp"/>
-
-    <Switch
-        android:id="@+id/swAutoReply"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/swNotificationTTS"
-        android:text="AutoReply to SMS"
-        android:layout_marginBottom="10dp"/>
-
-    <TextView
-        android:id="@+id/BatteryPercentText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/swAutoReply"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="26dp"
-        android:layout_marginBottom="10dp"
-        android:text="Battery Level" />
-
-    <EditText
-        android:id="@+id/batteryPercent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/swAutoReply"
-        android:layout_marginBottom="20dp"
-        android:layout_toRightOf="@id/BatteryPercentText"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        android:singleLine="true"
-        android:textDirection="rtl"/>
--->
+        android:text="OPEN MAP &amp; PEDOMETER"
+        android:layout_below="@+id/swRest"/>
 
 </RelativeLayout>
