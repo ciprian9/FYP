@@ -37,6 +37,8 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                     dist_speed = false, isPlaying=false, recordRoute = false;
     static boolean notificationTTS;
     static boolean autoReply;
+    static boolean callReply;
+    static boolean runningService = false;
 
     @Override
     protected void onPause(){
@@ -154,6 +156,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         readSettings(Constants.RECORD_ROUTE, aPolicyID);
         readSettings(Constants.TEXT_TO_SPEECH_SETTING, aPolicyID);
         readSettings(Constants.AUTO_REPLY_SETTING, aPolicyID);
+        readSettings(Constants.CALL_REPLY_SETTING, aPolicyID);
     }
 
     public void readSettings(final String aName, final int aPolicyID) {
@@ -185,12 +188,16 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                                     break;
                                 case Constants.AUTO_REPLY_SETTING:
                                     autoReply = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
+                                    break;
+                                case Constants.CALL_REPLY_SETTING:
+                                    callReply = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
                                     switch (aPolicyID){
                                         case 1:
                                             StartWalkingService();
                                             break;
                                         case 2:
                                             StartRunningService();
+                                            runningService = true;
                                             break;
                                     }
                             }
