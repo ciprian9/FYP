@@ -27,8 +27,8 @@ import java.util.Map;
 
 public class RunningOptions extends AppCompatActivity {
     private boolean   musicPlayer = false, pedometer = false, timeRecord = false,
-            dist_speed = false, recordRoute = false, notificationTTS = false;
-    private Switch playHeadphones, startPedometer, Time, Rest, RecordRoute, NotficationTTS;
+            dist_speed = false, recordRoute = false, notificationTTS = false, autoReply = false;
+    private Switch playHeadphones, startPedometer, Time, Rest, RecordRoute, NotficationTTS, AutoReply;
     private int accountid;
 
 
@@ -52,6 +52,7 @@ public class RunningOptions extends AppCompatActivity {
         Rest = findViewById(R.id.swRest);
         RecordRoute = findViewById(R.id.swRecordRoute);
         NotficationTTS = findViewById(R.id.swNotificationTTS);
+        AutoReply = findViewById(R.id.swAutoReply);
 
         VarsToForm();
         if (accountid != 0) {
@@ -67,6 +68,8 @@ public class RunningOptions extends AppCompatActivity {
             db4.registerSetting(Constants.URL_SAVE_SETTING);
             SaveSettings db5 = new SaveSettings(accountid, 2, "NotificationTTS", false, this);
             db5.registerSetting(Constants.URL_SAVE_SETTING);
+            SaveSettings db6 = new SaveSettings(accountid, 2, "AutoReply", false, this);
+            db6.registerSetting(Constants.URL_SAVE_SETTING);
         };
 
 
@@ -136,6 +139,15 @@ public class RunningOptions extends AppCompatActivity {
                 notificationTTS = isChecked;
             }
         });
+
+        AutoReply.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SaveSettings db = new SaveSettings(accountid, 2, "AutoReply", isChecked, getApplicationContext());
+                db.registerSetting(Constants.URL_UPDATE_SETTING);
+                autoReply = isChecked;
+            }
+        });
     }
 
     public void readSettings(final String aName, final Switch aSwitch) {
@@ -161,6 +173,8 @@ public class RunningOptions extends AppCompatActivity {
                                     recordRoute = Boolean.valueOf(jsonObject.getString("status"));
                                 } else if(aName.equals("NotificationTTS")){
                                     notificationTTS = Boolean.valueOf(jsonObject.getString("status"));
+                                } else if(aName.equals("AutoReply")){
+                                    autoReply = Boolean.valueOf(jsonObject.getString("status"));
                                 }
                             }
 
@@ -198,6 +212,7 @@ public class RunningOptions extends AppCompatActivity {
         readSettings("Distance_Speed", Rest);
         readSettings("RecordRoute", RecordRoute);
         readSettings("NotificationTTS", NotficationTTS);
+        readSettings("AutoReply", AutoReply);
     }
 
     public void openPlaylists(){
