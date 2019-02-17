@@ -27,8 +27,8 @@ import java.util.Map;
 
 public class RunningOptions extends AppCompatActivity {
     private boolean   musicPlayer = false, pedometer = false, timeRecord = false,
-            dist_speed = false, recordRoute = false, notificationTTS = false, autoReply = false;
-    private Switch playHeadphones, startPedometer, Time, Rest, RecordRoute, NotficationTTS, AutoReply;
+            dist_speed = false, recordRoute = false, notificationTTS = false, autoReply = false, callReply = false;
+    private Switch playHeadphones, startPedometer, Time, Rest, RecordRoute, NotficationTTS, AutoReply, CallReply;
     private int accountid;
 
 
@@ -53,6 +53,7 @@ public class RunningOptions extends AppCompatActivity {
         RecordRoute = findViewById(R.id.swRecordRoute);
         NotficationTTS = findViewById(R.id.swNotificationTTS);
         AutoReply = findViewById(R.id.swAutoReply);
+        CallReply = findViewById(R.id.swCallReply);
 
         VarsToForm();
         if (accountid != 0) {
@@ -70,6 +71,8 @@ public class RunningOptions extends AppCompatActivity {
             db5.registerSetting(Constants.URL_SAVE_SETTING);
             SaveSettings db6 = new SaveSettings(accountid, 2, "AutoReply", false, this);
             db6.registerSetting(Constants.URL_SAVE_SETTING);
+            SaveSettings db7 = new SaveSettings(accountid, 2, "CallReply", false, this);
+            db7.registerSetting(Constants.URL_SAVE_SETTING);
         };
 
 
@@ -148,6 +151,15 @@ public class RunningOptions extends AppCompatActivity {
                 autoReply = isChecked;
             }
         });
+
+        CallReply.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SaveSettings db = new SaveSettings(accountid, 2, "CallReply", isChecked, getApplicationContext());
+                db.registerSetting(Constants.URL_UPDATE_SETTING);
+                callReply = isChecked;
+            }
+        });
     }
 
     public void readSettings(final String aName, final Switch aSwitch) {
@@ -175,6 +187,8 @@ public class RunningOptions extends AppCompatActivity {
                                     notificationTTS = Boolean.valueOf(jsonObject.getString("status"));
                                 } else if(aName.equals("AutoReply")){
                                     autoReply = Boolean.valueOf(jsonObject.getString("status"));
+                                } else if(aName.equals("CallReply")){
+                                    callReply = Boolean.valueOf(jsonObject.getString("status"));
                                 }
                             }
 
@@ -213,6 +227,7 @@ public class RunningOptions extends AppCompatActivity {
         readSettings("RecordRoute", RecordRoute);
         readSettings("NotificationTTS", NotficationTTS);
         readSettings("AutoReply", AutoReply);
+        readSettings("CallReply", CallReply);
     }
 
     public void openPlaylists(){

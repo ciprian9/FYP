@@ -19,6 +19,8 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
 
@@ -80,7 +82,13 @@
             </intent-filter>
         </receiver>
 
-       <!-- <receiver android:name=".NotificationBroadcast" >
+        <receiver  android:name=".IncomingCallReceiver" android:enabled="true" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- <receiver android:name=".NotificationBroadcast" >
             <intent-filter>
                 <action android:name="com.example.nicholasanton.myapplication.previous" />
                 <action android:name="com.example.nicholasanton.myapplication.delete" />

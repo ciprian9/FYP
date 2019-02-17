@@ -11,6 +11,7 @@ public interface Constants {
     String SAVE_RESOURCE_SETTING = "saveResources";
     String TEXT_TO_SPEECH_SETTING = "notificationTTS";
     String AUTO_REPLY_SETTING = "autoReply";
+    String CALL_REPLY_SETTING = "callReply";
     String BATTERY_LEVEL = "battery";
     //String PEDOMETER_SETTING = "startPedometer";
 
