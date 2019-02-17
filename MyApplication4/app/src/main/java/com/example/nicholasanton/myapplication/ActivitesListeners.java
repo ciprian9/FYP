@@ -35,6 +35,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     private boolean paused = false, playbackPaused=false, musicBound = false,
                     musicPlayer = false, pedometer = false, timeRecord = false,
                     dist_speed = false, isPlaying=false, recordRoute = false;
+    static boolean notificationTTS;
 
     @Override
     protected void onPause(){
@@ -150,6 +151,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         readSettings(Constants.TIME_SETTING, aPolicyID);
         readSettings(Constants.DISTANCE_SETTING, aPolicyID);
         readSettings(Constants.RECORD_ROUTE, aPolicyID);
+        readSettings(Constants.TEXT_TO_SPEECH_SETTING, aPolicyID);
     }
 
     public void readSettings(final String aName, final int aPolicyID) {
@@ -175,6 +177,9 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                                     break;
                                 case Constants.RECORD_ROUTE:
                                     recordRoute = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
+                                    break;
+                                case Constants.TEXT_TO_SPEECH_SETTING:
+                                    notificationTTS = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
                                     switch (aPolicyID){
                                         case 1:
                                             StartWalkingService();
@@ -246,8 +251,6 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         }
     }
 
-
-
 //    public void MakeNotifications(String str, String chanelID){
 //        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanelID);
 //        builder.setContentText(str);
@@ -279,6 +282,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     @Override
     protected void onDestroy(){
         stopService(playIntent);
+        unbindService(musicConnection);
         musicSrv=null;
         super.onDestroy();
     }

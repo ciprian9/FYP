@@ -12,6 +12,7 @@ public class RunningPolicy extends Service {
     private boolean time;
     private boolean dist_speed;
     private boolean musicPlayer;
+    private boolean notificationTTS;
     private int accountid;
 
     final class TheThread implements Runnable{
@@ -40,6 +41,7 @@ public class RunningPolicy extends Service {
             pedometer = extras.getBoolean(Constants.PEDOMETER_INTENT);
             time = extras.getBoolean(Constants.TIME_INTENT);
             dist_speed = extras.getBoolean(Constants.DISTANCE_INTENT);
+            notificationTTS = extras.getBoolean(Constants.TEXT_TO_SPEECH_SETTING);
         }
 
 

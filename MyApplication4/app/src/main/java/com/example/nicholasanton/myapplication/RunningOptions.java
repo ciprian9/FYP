@@ -27,8 +27,8 @@ import java.util.Map;
 
 public class RunningOptions extends AppCompatActivity {
     private boolean   musicPlayer = false, pedometer = false, timeRecord = false,
-            dist_speed = false, recordRoute = false;
-    private Switch playHeadphones, startPedometer, Time, Rest, RecordRoute;
+            dist_speed = false, recordRoute = false, notificationTTS = false;
+    private Switch playHeadphones, startPedometer, Time, Rest, RecordRoute, NotficationTTS;
     private int accountid;
 
 
@@ -51,6 +51,7 @@ public class RunningOptions extends AppCompatActivity {
         Time =  findViewById(R.id.swTime);
         Rest = findViewById(R.id.swRest);
         RecordRoute = findViewById(R.id.swRecordRoute);
+        NotficationTTS = findViewById(R.id.swNotificationTTS);
 
         VarsToForm();
         if (accountid != 0) {
@@ -64,6 +65,8 @@ public class RunningOptions extends AppCompatActivity {
             db3.registerSetting(Constants.URL_SAVE_SETTING);
             SaveSettings db4 = new SaveSettings(accountid, 2, "RecordRoute", false, this);
             db4.registerSetting(Constants.URL_SAVE_SETTING);
+            SaveSettings db5 = new SaveSettings(accountid, 2, "NotificationTTS", false, this);
+            db5.registerSetting(Constants.URL_SAVE_SETTING);
         };
 
 
@@ -125,6 +128,14 @@ public class RunningOptions extends AppCompatActivity {
             }
         });
 
+        NotficationTTS.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SaveSettings db = new SaveSettings(accountid, 2, "NotificationTTS", isChecked, getApplicationContext());
+                db.registerSetting(Constants.URL_UPDATE_SETTING);
+                notificationTTS = isChecked;
+            }
+        });
     }
 
     public void readSettings(final String aName, final Switch aSwitch) {
@@ -148,6 +159,8 @@ public class RunningOptions extends AppCompatActivity {
                                     dist_speed= Boolean.valueOf(jsonObject.getString("status"));
                                 }else if(aName.equals("RecordRoute")){
                                     recordRoute = Boolean.valueOf(jsonObject.getString("status"));
+                                } else if(aName.equals("NotificationTTS")){
+                                    notificationTTS = Boolean.valueOf(jsonObject.getString("status"));
                                 }
                             }
 
@@ -184,6 +197,7 @@ public class RunningOptions extends AppCompatActivity {
         readSettings("Time", Time);
         readSettings("Distance_Speed", Rest);
         readSettings("RecordRoute", RecordRoute);
+        readSettings("NotificationTTS", NotficationTTS);
     }
 
     public void openPlaylists(){
