@@ -1,5 +1,6 @@
 package com.example.nicholasanton.myapplication;
 
+import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
@@ -12,24 +13,27 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.IllegalFormatCodePointException;
 import java.util.Locale;
+
+import static com.example.nicholasanton.myapplication.ActivitesListeners.notificationTTS;
 
 public class TextToSpeechService extends Service {
 
-    final class TTSThread implements Runnable{
-        int serviceId;
-
-        TTSThread(int serviceId) {
-            this.serviceId = serviceId;
-        }
-
-        @Override
-        public void run(){
-            synchronized (this){
-                speakTheText();
-            }
-        }
-    }
+//    final class TTSThread implements Runnable{
+//        int serviceId;
+//
+//        TTSThread(int serviceId) {
+//            this.serviceId = serviceId;
+//        }
+//
+//        @Override
+//        public void run(){
+//            synchronized (this){
+//                speakTheText();
+//            }
+//        }
+//    }
 
     private Cursor cursor;
     private String TextMessage = "";
@@ -37,7 +41,7 @@ public class TextToSpeechService extends Service {
     private String sender="";
     private String smsMessage ="";
     private DataHandler db;
-    private Thread thread;
+    //private Thread thread;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -47,7 +51,7 @@ public class TextToSpeechService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        thread = new Thread(new TTSThread(startId));
+        //thread = new Thread(new TTSThread(startId));
         Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
         db = new DataHandler(getApplicationContext());
         if (intent.getStringExtra("sender") != null){
@@ -57,36 +61,44 @@ public class TextToSpeechService extends Service {
         if (intent.getStringExtra("message") != null){
             smsMessage = intent.getStringExtra("message");
         }
-        thread.start();
+        //thread.start();
+        speakTheText();
         return START_STICKY;
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void speakTheText() {
         //FOR API 24 USER HAS TO GRANT ACCESS TO THIS
-        AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-
+        //AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        //audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 
         if (sender != "" && smsMessage != ""){
-            cursor = db.SelectSettingsQuery(Constants.TEXT_TO_SPEECH_SETTING);
-            if (cursor.moveToFirst()) {
-                int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
-                if (temp == 1) {
+            if (isMyServiceRunning(RunningPolicy.class)) {
+                if (notificationTTS) {
                     TextMessage = TextMessage + sender + " says " + smsMessage;
                     SetSpeaker();
                 }
             }
         }
 
-        cursor = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
-        if (cursor.moveToFirst()) {
-            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
-            if (temp == 1 && sender != "") {
-                Intent i = new Intent(this, AutoReplyService.class);
-                i = i.putExtra("sender", sender);
-                startService(i);
-            }
-        }
+//        cursor = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
+//        if (cursor.moveToFirst()) {
+//            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
+//            if (temp == 1 && sender != "") {
+//                Intent i = new Intent(this, AutoReplyService.class);
+//                i = i.putExtra("sender", sender);
+//                startService(i);
+//            }
+//        }
     }
 
     private void speak(){

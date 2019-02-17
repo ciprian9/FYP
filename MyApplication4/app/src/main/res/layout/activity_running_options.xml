@@ -49,8 +49,8 @@
         android:id="@+id/btnOpenMap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/swRecordRoute"
-        android:layout_marginTop="16dp"
+        android:layout_below="@+id/swNotificationTTS"
+        android:layout_marginTop="10dp"
         android:text="OPEN MAP &amp; PEDOMETER" />
 
     <Switch
@@ -60,5 +60,14 @@
         android:layout_below="@+id/swRest"
         android:layout_marginTop="8dp"
         android:text="Record Route" />
+
+    <Switch
+        android:id="@+id/swNotificationTTS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/swRecordRoute"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
+        android:text="Notification Text-to-speech" />
 
 </RelativeLayout>
