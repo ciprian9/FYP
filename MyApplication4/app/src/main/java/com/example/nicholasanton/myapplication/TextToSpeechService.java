@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.util.IllegalFormatCodePointException;
 import java.util.Locale;
 
+import static com.example.nicholasanton.myapplication.ActivitesListeners.autoReply;
 import static com.example.nicholasanton.myapplication.ActivitesListeners.notificationTTS;
 
 public class TextToSpeechService extends Service {
@@ -87,18 +88,13 @@ public class TextToSpeechService extends Service {
                     TextMessage = TextMessage + sender + " says " + smsMessage;
                     SetSpeaker();
                 }
+                if (autoReply) {
+                    Intent i = new Intent(this, AutoReplyService.class);
+                    i = i.putExtra("sender", sender);
+                    startService(i);
+                }
             }
         }
-
-//        cursor = db.SelectSettingsQuery(Constants.AUTO_REPLY_SETTING);
-//        if (cursor.moveToFirst()) {
-//            int temp = cursor.getInt(Constants.COLUMN_SETTINGS_STATUS);
-//            if (temp == 1 && sender != "") {
-//                Intent i = new Intent(this, AutoReplyService.class);
-//                i = i.putExtra("sender", sender);
-//                startService(i);
-//            }
-//        }
     }
 
     private void speak(){
