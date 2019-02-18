@@ -1,10 +1,15 @@
 package com.example.nicholasanton.myapplication;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private String uName;
     private String Pass;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+//        Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+//        startActivityForResult(intent);
+
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -110,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
                         13);
             }
         }
-
 
         Username = findViewById(R.id.Username);
         Password = findViewById(R.id.Password);

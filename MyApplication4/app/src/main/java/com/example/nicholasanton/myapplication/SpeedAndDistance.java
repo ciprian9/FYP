@@ -16,12 +16,16 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Formatter;
 import java.util.Locale;
 
 public class SpeedAndDistance extends Service implements IBaseGpsListener {
 
     private String actualSpeed;
+    private Location prevLocation;
+    private float distance;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -29,8 +33,9 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         this.updateSpeed(null);
-
+        prevLocation = new Location("prevLocation");
         updateSpeed(null);
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -41,6 +46,7 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
         if(location != null) {
             location.setUseMetricunits(true);
             nCurrentSpeed = location.getSpeed();
+
         }
 
         Formatter fmt = new Formatter(new StringBuilder());
@@ -52,8 +58,15 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
 
         actualSpeed = (strCurrentSpeed + " " + strUnits);
 
+        if(prevLocation != null && prevLocation.getLongitude() != 0 && prevLocation.getLatitude() != 0){
+            distance =  distance + prevLocation.distanceTo(location);
+        }
+
+        prevLocation = location;
+
         Intent tempIntent = new Intent("GET_SPEED_DATA");
         tempIntent.putExtra("Speed", actualSpeed);
+        tempIntent.putExtra(Constants.DISTANCE_INTENT, distance);
         sendBroadcast(tempIntent);
     }
 
