@@ -20,17 +20,18 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RunningOptions extends AppCompatActivity {
-    private boolean   musicPlayer = false, pedometer = false, timeRecord = false,
-            dist_speed = false, recordRoute = false, notificationTTS = false, autoReply = false, callReply = false;
-    private Switch playHeadphones, startPedometer, Time, Rest, RecordRoute, NotficationTTS, AutoReply, CallReply;
+public class DrivingOptions extends AppCompatActivity {
+    private boolean   musicPlayer = false, showSpeed = false, recomendDestinations = false,
+            caloriesBurnt = false, recordRoute = false, notificationTTS = false, autoReply = false, callReply = false, gpsSpeech = false, doNotDisturb = false;
+    private Switch playHeadphones, DoNotDisturb, GPSSpeech, CaloriesBurnt, RecordRoute, NotficationTTS, AutoReply, CallReply;
     private int accountid;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_running_options);
+        setContentView(R.layout.activity_driving_options); //This is cycle options not running so there is no calories burned switch meaning CaloriesBurnet is null causing it to crash
+        //fix the layout  then you can uncomment the listener for calories burned
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -42,9 +43,8 @@ public class RunningOptions extends AppCompatActivity {
         }
 
         playHeadphones =  findViewById(R.id.swPlayHeadphones);
-        startPedometer = findViewById(R.id.swDoNotDisturb);
-        Time =  findViewById(R.id.swGPSSpeech);
-        Rest = findViewById(R.id.swRest);
+        DoNotDisturb = findViewById(R.id.swDoNotDisturb);
+        GPSSpeech =  findViewById(R.id.swGPSSpeech);
         RecordRoute = findViewById(R.id.swRecordRoute);
         NotficationTTS = findViewById(R.id.swNotificationTTS);
         AutoReply = findViewById(R.id.swAutoReply);
@@ -52,22 +52,20 @@ public class RunningOptions extends AppCompatActivity {
 
         VarsToForm();
         if (accountid != 0) {
-            SaveSettings db = new SaveSettings(accountid, 2, "MusicPlayer", false, this);
+            SaveSettings db = new SaveSettings(accountid, 4, "MusicPlayer", false, this);
             db.registerSetting(Constants.URL_SAVE_SETTING);
-            SaveSettings db1 = new SaveSettings(accountid, 2, "Pedometer", false, this);
+            SaveSettings db1 = new SaveSettings(accountid, 4, "DoNotDisturb", false, this);
             db1.registerSetting(Constants.URL_SAVE_SETTING);
-            SaveSettings db2 = new SaveSettings(accountid, 2, "Time", false, this);
+            SaveSettings db2 = new SaveSettings(accountid, 4, "GPSSpeech", false, this);
             db2.registerSetting(Constants.URL_SAVE_SETTING);
-            SaveSettings db3 = new SaveSettings(accountid, 2, "Distance_Speed", false, this);
+            SaveSettings db3 = new SaveSettings(accountid, 4, "RecordRoute", false, this);
             db3.registerSetting(Constants.URL_SAVE_SETTING);
-            SaveSettings db4 = new SaveSettings(accountid, 2, "RecordRoute", false, this);
+            SaveSettings db4 = new SaveSettings(accountid, 4, "NotificationTTS", false, this);
             db4.registerSetting(Constants.URL_SAVE_SETTING);
-            SaveSettings db5 = new SaveSettings(accountid, 2, "NotificationTTS", false, this);
+            SaveSettings db5 = new SaveSettings(accountid, 4, "AutoReply", false, this);
             db5.registerSetting(Constants.URL_SAVE_SETTING);
-            SaveSettings db6 = new SaveSettings(accountid, 2, "AutoReply", false, this);
+            SaveSettings db6 = new SaveSettings(accountid, 4, "CallReply", false, this);
             db6.registerSetting(Constants.URL_SAVE_SETTING);
-            SaveSettings db7 = new SaveSettings(accountid, 2, "CallReply", false, this);
-            db7.registerSetting(Constants.URL_SAVE_SETTING);
         };
 
 
@@ -91,39 +89,42 @@ public class RunningOptions extends AppCompatActivity {
         playHeadphones.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SaveSettings db = new SaveSettings(accountid, 2, "MusicPlayer", isChecked, getApplicationContext());
+                SaveSettings db = new SaveSettings(accountid, 4, "MusicPlayer", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
+                musicPlayer = isChecked;
             }
         });
 
-        startPedometer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        DoNotDisturb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SaveSettings db = new SaveSettings(accountid, 2, "Pedometer", isChecked, getApplicationContext());
+                SaveSettings db = new SaveSettings(accountid, 4, "DoNotDisturb", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
+                doNotDisturb = isChecked;
             }
         });
 
-        Time.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        GPSSpeech.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SaveSettings db = new SaveSettings(accountid, 2, "Time", isChecked, getApplicationContext());
+                SaveSettings db = new SaveSettings(accountid, 4, "GPSSpeech", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
+                gpsSpeech = false;
             }
         });
 
-        Rest.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SaveSettings db = new SaveSettings(accountid, 2, "Distance_Speed", isChecked, getApplicationContext());
-                db.registerSetting(Constants.URL_UPDATE_SETTING);
-            }
-        });
+//        CaloriesBurnt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                SaveSettings db = new SaveSettings(accountid, 2, "CaloriesBurnt", isChecked, getApplicationContext());
+//                db.registerSetting(Constants.URL_UPDATE_SETTING);
+//            }
+//        });
 
         RecordRoute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SaveSettings db = new SaveSettings(accountid, 2, "RecordRoute", isChecked, getApplicationContext());
+                SaveSettings db = new SaveSettings(accountid, 4, "RecordRoute", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
                 recordRoute = isChecked;
             }
@@ -132,7 +133,7 @@ public class RunningOptions extends AppCompatActivity {
         NotficationTTS.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SaveSettings db = new SaveSettings(accountid, 2, "NotificationTTS", isChecked, getApplicationContext());
+                SaveSettings db = new SaveSettings(accountid, 4, "NotificationTTS", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
                 notificationTTS = isChecked;
             }
@@ -141,7 +142,7 @@ public class RunningOptions extends AppCompatActivity {
         AutoReply.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SaveSettings db = new SaveSettings(accountid, 2, "AutoReply", isChecked, getApplicationContext());
+                SaveSettings db = new SaveSettings(accountid, 4, "AutoReply", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
                 autoReply = isChecked;
             }
@@ -150,7 +151,7 @@ public class RunningOptions extends AppCompatActivity {
         CallReply.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SaveSettings db = new SaveSettings(accountid, 2, "CallReply", isChecked, getApplicationContext());
+                SaveSettings db = new SaveSettings(accountid, 4, "CallReply", isChecked, getApplicationContext());
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
                 callReply = isChecked;
             }
@@ -170,12 +171,12 @@ public class RunningOptions extends AppCompatActivity {
                                 aSwitch.setChecked(Boolean.valueOf(jsonObject.getString("status")));
                                 if(aName.equals("MusicPlayer")) {
                                     musicPlayer = Boolean.valueOf(jsonObject.getString("status"));
-                                } else if(aName.equals("Pedometer")){
-                                    pedometer = Boolean.valueOf(jsonObject.getString("status"));
-                                }else if(aName.equals("Time")){
-                                    timeRecord = Boolean.valueOf(jsonObject.getString("status"));
-                                }else if(aName.equals("Distance_Speed")){
-                                    dist_speed= Boolean.valueOf(jsonObject.getString("status"));
+                                } else if(aName.equals("DoNotDisturb")){
+                                    doNotDisturb = Boolean.valueOf(jsonObject.getString("status"));
+                                }else if(aName.equals("GPSSpeech")){
+                                    gpsSpeech = Boolean.valueOf(jsonObject.getString("status"));
+                                }else if(aName.equals("CaloriesBurnt")){
+                                    caloriesBurnt= Boolean.valueOf(jsonObject.getString("status"));
                                 }else if(aName.equals("RecordRoute")){
                                     recordRoute = Boolean.valueOf(jsonObject.getString("status"));
                                 } else if(aName.equals("NotificationTTS")){
@@ -203,7 +204,7 @@ public class RunningOptions extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("accountid", String.valueOf(accountid));
-                params.put("policyid", String.valueOf(2));
+                params.put("policyid", String.valueOf(4));
                 params.put("name", aName);
                 return params;
             }
@@ -216,9 +217,9 @@ public class RunningOptions extends AppCompatActivity {
         //Read the database values and update the activity to reflect those values
 
         readSettings("MusicPlayer", playHeadphones);
-        readSettings("Pedometer", startPedometer);
-        readSettings("Time", Time);
-        readSettings("Distance_Speed", Rest);
+        readSettings("DoNotDisturb", DoNotDisturb);
+        readSettings("GPSSpeech", GPSSpeech);
+        //readSettings("CaloriesBurnt", CaloriesBurnt);
         readSettings("RecordRoute", RecordRoute);
         readSettings("NotificationTTS", NotficationTTS);
         readSettings("AutoReply", AutoReply);
@@ -233,12 +234,9 @@ public class RunningOptions extends AppCompatActivity {
     public void openTheMap(){
         Intent i = new Intent(this, MapActivity.class);
         i.putExtra(Constants.ACCOUNTID_INTENT, accountid);
-        i.putExtra(Constants.PEDOMETER_INTENT, pedometer);
-        i.putExtra(Constants.TIME_INTENT, timeRecord);
-        i.putExtra(Constants.DISTANCE_INTENT, dist_speed);
-        i.putExtra(Constants.POLICY_ID, 2);
+        //i.putExtra(Constants.CALORIES_INTENT, caloriesBurnt);
+        i.putExtra(Constants.POLICY_ID, 4);
         startActivity(i);
     }
 
 }
-

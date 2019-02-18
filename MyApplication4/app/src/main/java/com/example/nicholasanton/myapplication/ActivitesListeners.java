@@ -39,6 +39,8 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     static boolean autoReply;
     static boolean callReply;
     static boolean runningService = false;
+    static boolean cyclingService = false;
+    static boolean drivingService = false;
 
     @Override
     protected void onPause(){
@@ -113,13 +115,127 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
             }
         });
 
+        final Button cyclingPolicy = findViewById(R.id.cyclingPolicy);
+        cyclingPolicy.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getWalkingSettings(Constants.CYCLING_POLICY);
+            }
+        });
+
+        final Button cyclingOptions = findViewById(R.id.cyclingOptions);
+        cyclingOptions.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                StartCyclingOptions();
+            }
+        });
+
+        final Button drivingPolicy = findViewById(R.id.drivingPolicy);
+        drivingPolicy.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getWalkingSettings(Constants.DRIVING_POLICY);
+            }
+        });
+
+        final Button drivingOptions = findViewById(R.id.drivingOptions);
+        drivingOptions.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                StartDrivingOptions();
+            }
+        });
+
         final Button StopBtn = findViewById(R.id.StopBtn);
         StopBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 StopWalkingPolicy();
                 StopRunningPolicy();
+                StopCyclingPolicy();
+                StopDrivingPolicy();
             }
         });
+    }
+
+    public void StartDrivingOptions(){
+        //create a new intent that will start walkingOptions class
+        Intent intent = new Intent(this, DrivingOptions.class);
+        intent.putExtra("accountid", accountid);
+        try {
+            startActivity(intent);
+        } catch (Exception e){
+            System.out.printf(e.toString());
+        }
+    }
+
+    public void StartCyclingOptions(){
+        //create a new intent that will start walkingOptions class
+        Intent intent = new Intent(this, CyclingOptions.class);
+        intent.putExtra("accountid", accountid);
+        try {
+            startActivity(intent);
+        } catch (Exception e){
+            System.out.printf(e.toString());
+        }
+    }
+
+    public void StartDrivingService(){
+        if (recordRoute){
+            Intent i = new Intent(getApplicationContext(), MapService.class);
+            i.putExtra("temp", false);
+            i.putExtra(Constants.POLICY_ID, 4);
+            startService(i);
+        }
+        isPlaying = true;
+        Intent intent = new Intent(this, DrivingPolicy.class);
+        intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
+        intent.putExtra(Constants.MUSIC_INTENT, musicPlayer);
+        intent.putExtra(Constants.PEDOMETER_INTENT, pedometer);
+        intent.putExtra(Constants.TIME_INTENT, timeRecord);
+        intent.putExtra(Constants.DISTANCE_INTENT, dist_speed);
+        startService(intent);
+        startService(new Intent(this, musicService.class));
+        if(musicPlayer) {
+            if (controller.getVisibility() == View.GONE) {
+                controller.setVisibility(View.VISIBLE);
+            }
+            musicSrv.setSong(0);
+            musicSrv.playSong();
+            if (playbackPaused) {
+                setController();
+                playbackPaused = false;
+            }
+            controller.show(0);
+        }
+    }
+
+    public void StartCyclingService(){
+        if (recordRoute){
+            Intent i = new Intent(getApplicationContext(), MapService.class);
+            i.putExtra("temp", false);
+            i.putExtra(Constants.POLICY_ID, 3);
+            startService(i);
+        }
+        Intent speed = new Intent(this, SpeedAndDistance.class);
+        startService(speed);
+        isPlaying = true;
+        Intent intent = new Intent(this, CyclingPolicy.class);
+        intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
+        intent.putExtra(Constants.MUSIC_INTENT, musicPlayer);
+        intent.putExtra(Constants.PEDOMETER_INTENT, pedometer);
+        intent.putExtra(Constants.TIME_INTENT, timeRecord);
+        intent.putExtra(Constants.DISTANCE_INTENT, dist_speed);
+        startService(intent);
+        startService(new Intent(this, musicService.class));
+        if(musicPlayer) {
+            if (controller.getVisibility() == View.GONE) {
+                controller.setVisibility(View.VISIBLE);
+            }
+            musicSrv.setSong(0);
+            musicSrv.playSong();
+            if (playbackPaused) {
+                setController();
+                playbackPaused = false;
+            }
+            controller.show(0);
+        }
     }
 
     private void StopWalkingPolicy() {
@@ -136,6 +252,32 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     }
 
     private void StopRunningPolicy() {
+        isPlaying = false;
+        if (musicSrv != null) {
+            if(musicSrv.isPng()) {
+                musicSrv.pausePlayer();
+            }
+            controller.setVisibility(View.GONE);
+            stopService(new Intent(this, musicService.class));
+        }
+        stopService(new Intent(this, pedometerService.class));
+        stopService(new Intent(this, MapService.class));
+    }
+
+    private void StopCyclingPolicy() {
+        isPlaying = false;
+        if (musicSrv != null) {
+            if(musicSrv.isPng()) {
+                musicSrv.pausePlayer();
+            }
+            controller.setVisibility(View.GONE);
+            stopService(new Intent(this, musicService.class));
+        }
+        stopService(new Intent(this, pedometerService.class));
+        stopService(new Intent(this, MapService.class));
+    }
+
+    private void StopDrivingPolicy() {
         isPlaying = false;
         if (musicSrv != null) {
             if(musicSrv.isPng()) {
@@ -198,6 +340,14 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                                         case 2:
                                             StartRunningService();
                                             runningService = true;
+                                            break;
+                                        case 3:
+                                            StartCyclingService();
+                                            cyclingService = true;
+                                            break;
+                                        case 4:
+                                            StartDrivingService();
+                                            drivingService = true;
                                             break;
                                     }
                             }

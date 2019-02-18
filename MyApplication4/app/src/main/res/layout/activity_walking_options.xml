@@ -22,7 +22,7 @@
         android:layout_marginBottom="10dp"/>
 
     <Switch
-        android:id="@+id/swStartPedometer"
+        android:id="@+id/swDoNotDisturb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/swPlayHeadphones"
@@ -33,17 +33,17 @@
         android:id="@+id/swRest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/swTime"
+        android:layout_below="@+id/swGPSSpeech"
         android:layout_marginTop="8dp"
         android:text="Show Distance &amp; Speed"
         tools:text="Show Distance &amp; Speed" />
 
     <Switch
-        android:id="@+id/swTime"
+        android:id="@+id/swGPSSpeech"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Show Time On/Off"
-        android:layout_below="@+id/swStartPedometer"/>
+        android:layout_below="@+id/swDoNotDisturb"/>
 
     <Button
         android:id="@+id/btnOpenMap"

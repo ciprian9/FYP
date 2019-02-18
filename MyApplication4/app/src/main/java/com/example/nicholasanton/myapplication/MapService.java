@@ -23,6 +23,8 @@ public class MapService extends Service{
     private LocationManager locationManager;
     private String walkingFileName = "latandlongsWalk.txt";
     private String runningFileName = "latandlongsRun.txt";
+    private String cyclingFileName = "latandlongsCycle.txt";
+    private String drivingFileName = "latandlongsDrive.txt";
     private double temp1 = 0;
     private double temp2 = 0;
     private double prevLat, prevLong;
@@ -68,6 +70,14 @@ public class MapService extends Service{
             if (fileExists(this, runningFileName)) {
                 file = new File(dir, runningFileName);
             }
+        } else if (policyID == 3 && !temp){
+            if (fileExists(this, cyclingFileName)) {
+                file = new File(dir, cyclingFileName);
+            }
+        } else if (policyID == 4 && !temp){
+            if (fileExists(this, drivingFileName)) {
+                file = new File(dir, drivingFileName);
+            }
         }
         if (file != null) {
             boolean deleted = file.delete();
@@ -85,6 +95,10 @@ public class MapService extends Service{
                         saveFile(walkingFileName, (latLng.toString() + "\n"));
                     } else if (policyID == 2){
                         saveFile(runningFileName, (latLng.toString() + "\n"));
+                    } else if (policyID == 3){
+                        saveFile(cyclingFileName, (latLng.toString() + "\n"));
+                    } else if (policyID == 4){
+                        saveFile(drivingFileName, (latLng.toString() + "\n"));
                     }
                     if (temp) {
                         Intent i = new Intent("location_update");
