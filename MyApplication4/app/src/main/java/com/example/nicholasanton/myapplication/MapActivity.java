@@ -400,9 +400,10 @@ public class MapActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("GET_SPEED_DATA")){
                 String speed = intent.getStringExtra("Speed");
+                float distance = intent.getFloatExtra(Constants.DISTANCE_INTENT, 0);
                 TvSpeed.setText(TEXT_SPE_STEPS + speed);
                 TvSteps.setText("");
-                TvDistance.setText("");
+                TvDistance.setText(TEXT_MET_STEPS + String.format("%.02f", distance));
                 TvTimer.setText("");
 
             }

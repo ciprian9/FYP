@@ -1,14 +1,18 @@
 package com.example.nicholasanton.myapplication;
 
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -176,13 +180,42 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         }
     }
 
+    private void requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp() {
+        //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
+        if( Build.VERSION.SDK_INT < 23 ) {
+            return;
+        }
+
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if ( notificationManager.isNotificationPolicyAccessGranted()) {
+            AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+        } else{
+            // Ask the user to grant access
+            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+            startActivityForResult( intent, 2 );
+        }
+    }
+
+    private void turnOffDoNotDisturb() {
+        //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
+        if( Build.VERSION.SDK_INT < 23 ) {
+            return;
+        }
+
+        AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void StartDrivingService(){
-        if (recordRoute){
+        if (recordRoute) {
             Intent i = new Intent(getApplicationContext(), MapService.class);
             i.putExtra("temp", false);
             i.putExtra(Constants.POLICY_ID, 4);
             startService(i);
         }
+        requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
         isPlaying = true;
         Intent intent = new Intent(this, DrivingPolicy.class);
         intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
@@ -288,6 +321,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         }
         stopService(new Intent(this, pedometerService.class));
         stopService(new Intent(this, MapService.class));
+        turnOffDoNotDisturb();
     }
 
     private void getWalkingSettings(int aPolicyID) {
@@ -305,6 +339,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_READ_SETTING,
                 new Response.Listener<String>() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onResponse(String response) {
                         try {

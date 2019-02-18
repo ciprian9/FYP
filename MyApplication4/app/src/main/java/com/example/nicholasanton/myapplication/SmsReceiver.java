@@ -1,6 +1,7 @@
 package com.example.nicholasanton.myapplication;
 
 import android.app.ActivityManager;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +15,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-       Bundle bundle = intent.getExtras();
+        Bundle bundle = intent.getExtras();
         //attempt to stop the notification from the default sms application
         //android blocked access to do this todo look for new method to block notfications
 
