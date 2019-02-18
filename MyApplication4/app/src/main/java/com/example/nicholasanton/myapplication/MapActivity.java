@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import permissions.dispatcher.RuntimePermissions;
 import permissions.dispatcher.NeedsPermission;
 
-
 @RuntimePermissions
 public class MapActivity extends AppCompatActivity {
 
@@ -56,13 +55,14 @@ public class MapActivity extends AppCompatActivity {
     private static final String TEXT_STO_STEPS = "Stopwatch: ";
     private static final String TEXT_SPE_STEPS = "Speed: ";
 
-
     //Map processing
     private SupportMapFragment mapFragment;
     private GoogleMap map;
     private LocationRequest mLocationRequest;
     private String walkingFileName = "latandlongsWalk.txt";
     private String runningFileName = "latandlongsRun.txt";
+    private String cyclingFileName = "latandlongsCycle.txt";
+    private String drivingFileName = "latandlongsDrive.txt";
     private ArrayList<LatLng> points; //added
     Polyline line; //added
     Location mCurrentLocation;
@@ -70,6 +70,7 @@ public class MapActivity extends AppCompatActivity {
     private long FASTEST_INTERVAL = 500; /* 0.5 secs */
     private NewLocationReciever receiver;
     private DataReceiver dataReceiver;
+    private SpeedReciever speedReciever;
     private int policyID;
 
     private final static String KEY_LOCATION = "location";
@@ -99,6 +100,7 @@ public class MapActivity extends AppCompatActivity {
         receiver = new NewLocationReciever();
         registerReceiver(receiver, new IntentFilter("location_update"));
 
+
         if (isMyServiceRunning(MapService.class)){
             Intent mapServiceIntent = new Intent(this, MapService.class);
             mapServiceIntent.putExtra("temp", true);
@@ -110,6 +112,9 @@ public class MapActivity extends AppCompatActivity {
 
         dataReceiver = new DataReceiver();
         registerReceiver(dataReceiver, new IntentFilter("GET_PEDOMETER_DATA"));
+
+        speedReciever = new SpeedReciever();
+        registerReceiver(speedReciever, new IntentFilter("GET_SPEED_DATA"));
 
 
         TvSteps =  findViewById(R.id.tv_steps);
@@ -160,6 +165,10 @@ public class MapActivity extends AppCompatActivity {
             textFromFile = readFile(walkingFileName);
         } else if (policyID == 2){
             textFromFile = readFile(runningFileName);
+        } else if (policyID == 3){
+            textFromFile = readFile(cyclingFileName);
+        } else if (policyID == 4){
+            textFromFile = readFile(drivingFileName);
         }
         String[] textFile = textFromFile.split("\n");
         for (int i = 0; i < textFile.length; i++) {
@@ -222,6 +231,14 @@ public class MapActivity extends AppCompatActivity {
                 if (fileExists(this, runningFileName)) {
                     drawTheLines();
                 }
+            } else if (policyID == 3){
+                if (fileExists(this, cyclingFileName)) {
+                    drawTheLines();
+                }
+            } else if (policyID == 4){
+                if (fileExists(this, drivingFileName)) {
+                    drawTheLines();
+                }
             }
         } else {
             Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
@@ -279,6 +296,9 @@ public class MapActivity extends AppCompatActivity {
             }
             if (dataReceiver != null){
                 unregisterReceiver(dataReceiver);
+            }
+            if (speedReciever != null){
+                unregisterReceiver(speedReciever);
             }
             if (isMyServiceRunning(MapService.class)){
                 Intent mapServiceIntent = new Intent(this, MapService.class);
@@ -367,11 +387,24 @@ public class MapActivity extends AppCompatActivity {
     }
 
     class NewLocationReciever extends BroadcastReceiver{
-
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("location_update")) {
                 drawTheLines();
+            }
+        }
+    }
+
+    class SpeedReciever extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("GET_SPEED_DATA")){
+                String speed = intent.getStringExtra("Speed");
+                TvSpeed.setText(TEXT_SPE_STEPS + speed);
+                TvSteps.setText("");
+                TvDistance.setText("");
+                TvTimer.setText("");
+
             }
         }
     }
@@ -387,6 +420,7 @@ public class MapActivity extends AppCompatActivity {
                 int sec = intent.getIntExtra("sec", 0);
                 int hour = intent.getIntExtra("hour", 0);
                 int steps = intent.getIntExtra("steps", 0);
+
                 if(time) {
                     TvTimer.setText(TEXT_STO_STEPS + String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec));
                 }

@@ -13,7 +13,9 @@ import com.android.internal.telephony.ITelephony;
 import java.lang.reflect.Method;
 
 import static com.example.nicholasanton.myapplication.ActivitesListeners.callReply;
+import static com.example.nicholasanton.myapplication.ActivitesListeners.drivingService;
 import static com.example.nicholasanton.myapplication.ActivitesListeners.runningService;
+import static com.example.nicholasanton.myapplication.ActivitesListeners.cyclingService;
 
 public class IncomingCallReceiver extends BroadcastReceiver {
     @Override
@@ -29,7 +31,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     m.setAccessible(true);
                     telephonyService = (ITelephony) m.invoke(tm);
                     if ((number != null)) {
-                        if (runningService) {
+                        if (runningService || cyclingService  || drivingService) {
                             if (callReply) {
                                 telephonyService.endCall();
                                 Toast.makeText(context, "Ending the call from: " + number, Toast.LENGTH_SHORT).show();

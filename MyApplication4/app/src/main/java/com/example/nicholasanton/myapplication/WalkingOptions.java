@@ -72,8 +72,8 @@ public class WalkingOptions extends AppCompatActivity {
         }
 
         playHeadphones =  findViewById(R.id.swPlayHeadphones);
-        startPedometer = findViewById(R.id.swStartPedometer);
-        Time =  findViewById(R.id.swTime);
+        startPedometer = findViewById(R.id.swDoNotDisturb);
+        Time =  findViewById(R.id.swGPSSpeech);
         Rest = findViewById(R.id.swRest);
         RecordRoute = findViewById(R.id.swRecordRoute);
 

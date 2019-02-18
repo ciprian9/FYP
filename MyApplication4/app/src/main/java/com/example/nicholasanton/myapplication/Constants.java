@@ -35,6 +35,8 @@ public interface Constants {
 
     int WALKING_POLICY = 1;
     int RUNNING_POLICY = 2;
+    int CYCLING_POLICY = 3;
+    int DRIVING_POLICY = 4;
 
     String PARAM_NAME = "name";
     String POLICY_ID = "policyid";
@@ -45,6 +47,9 @@ public interface Constants {
     String PEDOMETER_INTENT = "pedometer";
     String TIME_INTENT ="time";
     String DISTANCE_INTENT= "distance";
+    String SPEED_INTENT = "speed";
+    String RECOMEND_INTENT ="recomend";
+    String CALORIES_INTENT= "calories";
 
     String MUSIC_SETTING = "MusicPlayer";
     String PEDOMETER_SETTING = "pedometer";

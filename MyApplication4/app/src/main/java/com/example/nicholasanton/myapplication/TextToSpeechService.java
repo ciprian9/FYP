@@ -17,6 +17,7 @@ import java.util.IllegalFormatCodePointException;
 import java.util.Locale;
 
 import static com.example.nicholasanton.myapplication.ActivitesListeners.autoReply;
+import static com.example.nicholasanton.myapplication.ActivitesListeners.drivingService;
 import static com.example.nicholasanton.myapplication.ActivitesListeners.notificationTTS;
 
 public class TextToSpeechService extends Service {
@@ -83,7 +84,7 @@ public class TextToSpeechService extends Service {
         //audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 
         if (sender != "" && smsMessage != ""){
-            if (isMyServiceRunning(RunningPolicy.class)) {
+            if (isMyServiceRunning(RunningPolicy.class) || isMyServiceRunning(CyclingPolicy.class) || isMyServiceRunning(DrivingPolicy.class)) {
                 if (notificationTTS) {
                     TextMessage = TextMessage + sender + " says " + smsMessage;
                     SetSpeaker();

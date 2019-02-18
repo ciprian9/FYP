@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.nicholasanton.myapplication">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,25 +21,21 @@
     <uses-permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-
     <permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
         android:protectionLevel="dangerous" />
     <permission
         android:name="android.permission.ACCESS_COARSE_LOCATION"
         android:protectionLevel="dangerous" />
-
     <permission
         android:name="${applicationId}.permission.C2D_MESSAGE"
-        android:protectionLevel="signature"/>
-
+        android:protectionLevel="signature" />
 
     <application
         android:allowBackup="true"
@@ -49,10 +45,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".DrivingOptions">
+        </activity>
+        <activity android:name=".CyclingOptions">
+        </activity>
+
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
             android:value="AIzaSyDESgnI7omKhAH3WLeYiS46CajJI4m_q4A" />
-
 
         <activity android:name=".Register" />
         <activity android:name=".MainActivity">
@@ -61,15 +61,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!--<service android:name=".ActivityRecognizedService" />-->
-
-        <activity android:name=".WalkingOptions"/>
+        </activity> <!-- <service android:name=".ActivityRecognizedService" /> -->
+        <activity android:name=".WalkingOptions" />
 
         <service
             android:name=".WalkingPolicy"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity android:name=".PlayLists" />
 
@@ -81,14 +78,16 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
-        <receiver  android:name=".IncomingCallReceiver" android:enabled="true" android:exported="true">
+        <receiver
+            android:name=".IncomingCallReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
-
-        <!-- <receiver android:name=".NotificationBroadcast" >
+        <!--
+ <receiver android:name=".NotificationBroadcast" >
             <intent-filter>
                 <action android:name="com.example.nicholasanton.myapplication.previous" />
                 <action android:name="com.example.nicholasanton.myapplication.delete" />
@@ -96,8 +95,8 @@
                 <action android:name="com.example.nicholasanton.myapplication.next" />
                 <action android:name="com.example.nicholasanton.myapplication.play" />
             </intent-filter>
-        </receiver> -->
-
+        </receiver>
+        -->
         <activity android:name=".MapActivity">
         </activity>
 
@@ -115,16 +114,20 @@
         <activity android:name=".Playlist_View" />
         <activity
             android:name=".ActivitesListeners"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
 
         <service android:name=".TextToSpeechService" />
-        <service android:name=".AutoReplyService" />
-        <!--<service android:name=".SaveResourcesService" /> -->
-        <service android:name=".musicService"/>
-        <service android:name=".pedometerService"/>
-        <activity android:name=".RunningOptions"/>
-        <service android:name=".RunningPolicy"/>
+        <service android:name=".AutoReplyService" /> <!-- <service android:name=".SaveResourcesService" /> -->
+        <service android:name=".musicService" />
+        <service android:name=".pedometerService" />
+        <service android:name=".CyclingPolicy" />
+
+        <activity android:name=".RunningOptions" />
+
+        <service android:name=".RunningPolicy" />
         <service android:name=".MapService" />
+        <service android:name=".DrivingPolicy" />
+        <service android:name=".SpeedAndDistance"/>
     </application>
 
 </manifest>

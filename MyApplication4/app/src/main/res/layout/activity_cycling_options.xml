@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WalkingOptions">
+    tools:context=".CyclingOptions">
 
     <Button
         android:id="@+id/walkingPlaylist"
@@ -25,48 +25,33 @@
         android:id="@+id/swDoNotDisturb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/swPlayHeadphones"
-        android:text="Pedometer On/Off"
-        android:layout_marginBottom="10dp"/>
-
-    <Switch
-        android:id="@+id/swRest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/swGPSSpeech"
-        android:layout_marginTop="8dp"
-        android:text="Show Distance &amp; Speed"
-        tools:text="Show Distance &amp; Speed" />
+        android:layout_below="@+id/swAutoReply"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="10dp"
+        android:text="Show Speed" />
 
     <Switch
         android:id="@+id/swGPSSpeech"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show Time On/Off"
-        android:layout_below="@+id/swDoNotDisturb"/>
-
-    <Button
-        android:id="@+id/btnOpenMap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/swCallReply"
-        android:layout_marginTop="10dp"
-        android:text="OPEN MAP &amp; PEDOMETER" />
+        android:layout_below="@+id/swDoNotDisturb"
+        android:layout_marginTop="8dp"
+        android:text="Recomend Destinations" />
 
     <Switch
         android:id="@+id/swRecordRoute"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/swRest"
-        android:layout_marginTop="8dp"
+        android:layout_below="@+id/swCallReply"
+        android:layout_marginTop="9dp"
         android:text="Record Route" />
 
     <Switch
         android:id="@+id/swNotificationTTS"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/swRecordRoute"
-        android:layout_marginTop="8dp"
+        android:layout_below="@id/swPlayHeadphones"
+        android:layout_marginTop="9dp"
         android:layout_marginBottom="10dp"
         android:text="Notification Text-to-speech" />
 
@@ -74,15 +59,24 @@
         android:id="@+id/swAutoReply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Auto Reply"
-        android:layout_below="@id/swNotificationTTS"/>
+        android:layout_below="@id/swNotificationTTS"
+        android:layout_marginTop="11dp"
+        android:text="Auto Reply" />
 
     <Switch
         android:id="@+id/swCallReply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/swAutoReply"
-        android:layout_marginTop="9dp"
+        android:layout_below="@+id/swGPSSpeech"
+        android:layout_marginTop="6dp"
         android:text="Reply To Calls" />
+
+    <Button
+        android:id="@+id/btnOpenMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/swRecordRoute"
+        android:layout_marginTop="10dp"
+        android:text="OPEN MAP &amp; PEDOMETER" />
 
 </RelativeLayout>

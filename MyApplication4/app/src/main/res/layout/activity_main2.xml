@@ -10,7 +10,7 @@
         android:id="@+id/StartBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/drivingPolicy"
+        android:layout_below="@id/drivingOptions"
         android:text="Start" />
 
     <Button
@@ -45,7 +45,7 @@
         android:id="@+id/drivingPolicy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/cyclingPolicy"
+        android:layout_below="@id/cyclingOptions"
         android:text="Driving Policy" />
 
     <Button
@@ -67,6 +67,20 @@
         android:layout_height="wrap_content"
         android:text="Running Options"
         android:layout_below="@+id/runningPolicy"/>
+
+    <Button
+        android:id="@+id/cyclingOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cycling Options"
+        android:layout_below="@+id/cyclingPolicy"/>
+
+    <Button
+        android:id="@+id/drivingOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Driving Options"
+        android:layout_below="@id/drivingPolicy"/>
 
 
 </RelativeLayout>

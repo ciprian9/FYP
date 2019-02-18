@@ -28,7 +28,7 @@ public class AutoReplyService extends Service {
     private String sender="";
 
     private void autoReply() {
-        if (isMyServiceRunning(RunningPolicy.class)) {
+        if (isMyServiceRunning(RunningPolicy.class) || isMyServiceRunning(CyclingPolicy.class) || isMyServiceRunning(DrivingPolicy.class)) {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(sender, null, "Sorry I'm kind of busy", null, null);
         }
