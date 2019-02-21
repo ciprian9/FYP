@@ -1,5 +1,7 @@
 package com.example.nicholasanton.myapplication;
 
+//COPIED FROM http://www.gadgetsaint.com/android/create-pedometer-step-counter-android/#.XG65DOj7S70
+
 public class StepDetector {
 
     private static final int ACCEL_RING_SIZE = 50;

@@ -1,5 +1,7 @@
 package com.example.nicholasanton.myapplication;
 
+//https://stackoverflow.com/questions/15570542/determining-the-speed-of-a-vehicle-using-gps-in-android
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
