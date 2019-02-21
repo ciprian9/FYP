@@ -1,5 +1,7 @@
 package com.example.nicholasanton.myapplication;
 
+//USED FROM: https://gist.github.com/enginebai/adcae1f17d3b2114590c
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;

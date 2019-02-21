@@ -1,5 +1,8 @@
 package com.example.nicholasanton.myapplication;
 
+//COPIED FROM http://www.gadgetsaint.com/android/create-pedometer-step-counter-android/#.XG65DOj7S70
+//USED ALGORITHM FROM http://www.lewisgavin.co.uk/Step-Tracker-Android/
+
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.Sensor;

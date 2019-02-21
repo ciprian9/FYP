@@ -1,5 +1,7 @@
 package com.example.nicholasanton.myapplication;
 
+//USED FOR MUSIC PLAYER: https://www.youtube.com/watch?v=p2ffzsCqrs8
+
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
