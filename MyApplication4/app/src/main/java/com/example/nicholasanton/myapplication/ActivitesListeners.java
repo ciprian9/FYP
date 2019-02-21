@@ -218,6 +218,8 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
             startService(i);
         }
         requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+        Intent myIntent = new Intent(ActivitesListeners.this, LockedScreen.class);
+        ActivitesListeners.this.startActivity(myIntent);
         isPlaying = true;
         Intent intent = new Intent(this, DrivingPolicy.class);
         intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);

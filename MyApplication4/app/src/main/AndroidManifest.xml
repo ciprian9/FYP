@@ -24,7 +24,6 @@
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
-
     <permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -47,6 +46,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".LockedScreen">
+        </activity>
         <activity android:name=".DrivingOptions">
         </activity>
         <activity android:name=".CyclingOptions">
@@ -129,7 +130,7 @@
         <service android:name=".RunningPolicy" />
         <service android:name=".MapService" />
         <service android:name=".DrivingPolicy" />
-        <service android:name=".SpeedAndDistance"/>
+        <service android:name=".SpeedAndDistance" />
     </application>
 
 </manifest>
