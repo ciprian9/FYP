@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/walkingPolicy"
-        android:text="Walking Options" />
+        android:text="Walking Preferences" />
 
     <ListView
         android:id="@+id/song_list"
@@ -65,22 +65,22 @@
         android:id="@+id/runningOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Running Options"
-        android:layout_below="@+id/runningPolicy"/>
+        android:layout_below="@+id/runningPolicy"
+        android:text="Running Preferences" />
 
     <Button
         android:id="@+id/cyclingOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cycling Options"
-        android:layout_below="@+id/cyclingPolicy"/>
+        android:layout_below="@+id/cyclingPolicy"
+        android:text="Cycling Preferences" />
 
     <Button
         android:id="@+id/drivingOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Driving Options"
-        android:layout_below="@id/drivingPolicy"/>
+        android:layout_below="@id/drivingPolicy"
+        android:text="Driving Preferences" />
 
 
 </RelativeLayout>
