@@ -3,32 +3,46 @@ package com.example.nicholasanton.myapplication;
 //USED FOR MUSIC PLAYER: https://www.youtube.com/watch?v=p2ffzsCqrs8
 
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.Toast;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.Trigger;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +61,9 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     static boolean runningService = false;
     static boolean cyclingService = false;
     static boolean drivingService = false;
+    static boolean inMeeting = false;
+    private EventReciever reciever;
+    private FirebaseJobDispatcher mDispatcher;
 
     @Override
     protected void onPause(){
@@ -74,6 +91,11 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        reciever = new EventReciever();
+        registerReceiver(reciever, new IntentFilter("GET_EVENTS"));
+        mDispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
+        Start();
 
         songList = new ArrayList<>();
         getSongList();
@@ -156,6 +178,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                 StopRunningPolicy();
                 StopCyclingPolicy();
                 StopDrivingPolicy();
+                turnOffDoNotDisturb();
             }
         });
     }
@@ -184,24 +207,24 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
 
     private void requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp() {
         //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
-        if( Build.VERSION.SDK_INT < 23 ) {
+        if( Build.VERSION.SDK_INT < 21 ) {
             return;
         }
 
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        if ( notificationManager.isNotificationPolicyAccessGranted()) {
+        //if ( notificationManager.isNotificationPolicyAccessGranted()) {
             AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-        } else{
-            // Ask the user to grant access
-            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-            startActivityForResult( intent, 2 );
-        }
+        //} else{
+        //    // Ask the user to grant access
+        //    Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+        //    startActivityForResult( intent, 2 );
+        //}
     }
 
     private void turnOffDoNotDisturb() {
         //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
-        if( Build.VERSION.SDK_INT < 23 ) {
+        if( Build.VERSION.SDK_INT < 21 ) {
             return;
         }
 
@@ -680,5 +703,82 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         controller.show(0);
     }
 
+    public void Start() {
+        startService(new Intent(ActivitesListeners.this , Sample_service.class));
+    }
 
+    public void Stop(View v) {
+        stopService(new Intent(ActivitesListeners.this , Sample_service.class));
+    }
+
+    public void getEvents(){
+        String[] projection = new String[] { CalendarContract.Events.CALENDAR_ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND, CalendarContract.Events.ALL_DAY, CalendarContract.Events.EVENT_LOCATION };
+        Calendar startTime = Calendar.getInstance();
+        startTime.set(Calendar.getInstance().get(Calendar.YEAR),Calendar.getInstance().get(Calendar.MONTH),Calendar.getInstance().get(Calendar.DAY_OF_MONTH)-1,23,59);
+        Calendar endTime= Calendar.getInstance();
+        endTime.set(Calendar.getInstance().get(Calendar.YEAR),Calendar.getInstance().get(Calendar.MONTH),Calendar.getInstance().get(Calendar.DAY_OF_MONTH),23,59);
+        String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + startTime.getTimeInMillis() + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + endTime.getTimeInMillis() + " ))";
+        Cursor cursor = this.getBaseContext().getContentResolver().query( CalendarContract.Events.CONTENT_URI, projection, selection, null, null );
+        if (cursor.moveToFirst()) {
+            do {
+                try {
+                    scheduleJobs((new Date(cursor.getLong(3))).getTime(), cursor.getString(1), 0);
+                    scheduleJobs((new Date(cursor.getLong(4))).getTime(), (cursor.getString(1)+"1"), 1);
+                } catch (Exception e){
+                    Log.d("Error : ", e.toString());
+                }
+
+            } while ( cursor.moveToNext());
+        }
+        cursor.close();
+    }
+
+    private void requestDoNotDisturbPermission() {
+        //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
+        if( Build.VERSION.SDK_INT < 23 ) {
+            return;
+        }
+
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+        startActivityForResult( intent, 2 );
+
+    }
+
+    private void scheduleJobs(long setTime, String title, int startend){
+        Bundle bun = new Bundle();
+
+        requestDoNotDisturbPermission();
+
+        bun.putInt("StartEnd", startend);
+
+        long time = System.currentTimeMillis();
+//        long setTime = (new Date(cursor.getLong(3))).getTime();
+        long newtime = (setTime - time);
+        newtime = newtime / 1000;
+        if (newtime>0) {
+            Job myJob = mDispatcher.newJobBuilder()
+                    .setService(MyJobService.class)
+                    //.setTag(cursor.getString(1))
+                    .setTag(title + startend)
+                    .setRecurring(false)
+                    .setTrigger(Trigger.executionWindow((int) newtime, (int) (newtime + 5)))
+                    .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+                    .setReplaceCurrent(false)
+                    .setExtras(bun)
+                    .build();
+            mDispatcher.mustSchedule(myJob);
+            Toast.makeText(this, "Job Scheduled", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    class EventReciever extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("GET_EVENTS")) {
+                getEvents();
+            }
+        }
+    }
 }

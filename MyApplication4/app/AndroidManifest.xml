@@ -51,8 +51,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".LockedScreen">
-        </activity>
         <activity android:name=".DrivingOptions">
         </activity>
         <activity android:name=".CyclingOptions">
@@ -124,6 +122,8 @@
             android:name=".ActivitesListeners"
             android:launchMode="singleTop" />
 
+        <service android:name=".Sample_service"/>
+
         <service android:name=".TextToSpeechService" />
         <service android:name=".AutoReplyService" /> <!-- <service android:name=".SaveResourcesService" /> -->
         <service android:name=".musicService" />
@@ -135,13 +135,14 @@
         <service android:name=".RunningPolicy" />
         <service android:name=".MapService" />
         <service android:name=".DrivingPolicy" />
-        <service android:name=".SpeedAndDistance" />
+        <service android:name=".SpeedAndDistance"/>
+
         <service android:name=".MyJobService" android:exported="false">
             <intent-filter>
                 <action android:name="com.example.myapplication.ACTION_EXECUTE"/>
             </intent-filter>
         </service>
-        <service android:name=".Sample_service"/>
+
     </application>
-    
+
 </manifest>
