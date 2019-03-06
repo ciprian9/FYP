@@ -127,24 +127,10 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
             }
         }
 
-        final Button walkingPolicy = findViewById(R.id.walkingPolicy);
-        walkingPolicy.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                getWalkingSettings(Constants.WALKING_POLICY);
-            }
-        });
-
         final Button walkingOptions = findViewById(R.id.walkingOptions);
         walkingOptions.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 StartWalkingOptions();
-            }
-        });
-
-        final Button runnningPolicy = findViewById(R.id.runningPolicy);
-        runnningPolicy.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                getWalkingSettings(Constants.RUNNING_POLICY);
             }
         });
 
@@ -155,24 +141,10 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
             }
         });
 
-        final Button cyclingPolicy = findViewById(R.id.cyclingPolicy);
-        cyclingPolicy.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                getWalkingSettings(Constants.CYCLING_POLICY);
-            }
-        });
-
         final Button cyclingOptions = findViewById(R.id.cyclingOptions);
         cyclingOptions.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 StartCyclingOptions();
-            }
-        });
-
-        final Button drivingPolicy = findViewById(R.id.drivingPolicy);
-        drivingPolicy.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                getWalkingSettings(Constants.DRIVING_POLICY);
             }
         });
 
@@ -791,26 +763,31 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         switch (activityType) {
             case IN_VEHICLE:
                 Log.d("Activity123", "CAR");
-                StartDrivingService();
+                getWalkingSettings(Constants.DRIVING_POLICY);
                 break;
             case ON_BICYCLE:
                 Log.d("Activity123", "BIKE");
-                StartCyclingService();
+                getWalkingSettings(Constants.CYCLING_POLICY);
                 break;
             case ON_FOOT:
             case WALKING:
                 Log.d("Activity123", "WALKING");
-                StartWalkingService();
+                getWalkingSettings(Constants.WALKING_POLICY);
                 break;
             case STILL:
                 Log.d("Activity123", "STILL");
+                StopWalkingPolicy();
+                StopRunningPolicy();
+                StopCyclingPolicy();
+                StopDrivingPolicy();
+                turnOffDoNotDisturb();
                 break;
             case TILTING:
                 Log.d("Activity123", "TILTING");
                 break;
             case RUNNING:
                 Log.d("Activity123", "RUNNING");
-                StartRunningService();
+                getWalkingSettings(Constants.RUNNING_POLICY);
                 break;
             case UNKNOWN:
             case DEFAULT:

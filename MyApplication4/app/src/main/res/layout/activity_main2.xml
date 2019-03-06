@@ -7,52 +7,17 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/StartBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/drivingOptions"
-        android:text="Start" />
-
-    <Button
         android:id="@+id/StopBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/StartBtn"
+        android:layout_below="@id/drivingOptions"
         android:layout_alignParentEnd="true"
         android:text="Stop" />
-
-    <Button
-        android:id="@+id/walkingPolicy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Walking Policy" />
-
-    <Button
-        android:id="@+id/runningPolicy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/walkingOptions"
-        android:text="Running Policy" />
-
-    <Button
-        android:id="@+id/cyclingPolicy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/runningOptions"
-        android:text="Cycling Policy" />
-
-    <Button
-        android:id="@+id/drivingPolicy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/cyclingOptions"
-        android:text="Driving Policy" />
 
     <Button
         android:id="@+id/walkingOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/walkingPolicy"
         android:text="Walking Preferences" />
 
     <ListView
@@ -65,21 +30,21 @@
         android:id="@+id/runningOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/runningPolicy"
+        android:layout_below="@+id/walkingOptions"
         android:text="Running Preferences" />
 
     <Button
         android:id="@+id/cyclingOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cyclingPolicy"
+        android:layout_below="@+id/runningOptions"
         android:text="Cycling Preferences" />
 
     <Button
         android:id="@+id/drivingOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/drivingPolicy"
+        android:layout_below="@id/cyclingOptions"
         android:text="Driving Preferences" />
 
 
