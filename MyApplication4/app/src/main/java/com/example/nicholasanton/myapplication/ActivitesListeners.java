@@ -46,7 +46,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ActivitesListeners extends AppCompatActivity implements MediaPlayerControl {
+import javax.inject.Inject;
+
+import butterknife.ButterKnife;
+
+public class ActivitesListeners extends AppCompatActivity implements MediaPlayerControl, HomeView {
     private int accountid;
     private ArrayList<song> songList;
     private musicService musicSrv;
@@ -64,6 +68,9 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     static boolean inMeeting = false;
     private EventReciever reciever;
     private FirebaseJobDispatcher mDispatcher;
+
+    @Inject
+    HomePresenter presenter;
 
     @Override
     protected void onPause(){
@@ -91,6 +98,11 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        ButterKnife.bind(this);
+        ((TrackerCoachApplication) getApplication()).getObjectGraph().plus(new HomeViewModule(this)).inject(this);
+        presenter.init();
+        presenter.callTrackingService();
 
         reciever = new EventReciever();
         registerReceiver(reciever, new IntentFilter("GET_EVENTS"));
@@ -771,6 +783,51 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
             mDispatcher.mustSchedule(myJob);
             Toast.makeText(this, "Job Scheduled", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void show(ActivityType activityType) {
+        switch (activityType) {
+            case IN_VEHICLE:
+                Log.d("Activity123", "CAR");
+                StartDrivingService();
+                break;
+            case ON_BICYCLE:
+                Log.d("Activity123", "BIKE");
+                StartCyclingService();
+                break;
+            case ON_FOOT:
+            case WALKING:
+                Log.d("Activity123", "WALKING");
+                StartWalkingService();
+                break;
+            case STILL:
+                Log.d("Activity123", "STILL");
+                break;
+            case TILTING:
+                Log.d("Activity123", "TILTING");
+                break;
+            case RUNNING:
+                Log.d("Activity123", "RUNNING");
+                StartRunningService();
+                break;
+            case UNKNOWN:
+            case DEFAULT:
+            default:
+                Log.d("Activity123", "DEFAULT");
+                break;
+        }
+    }
+
+    @Override
+    public void warnTracking() {
+        Toast.makeText(this, "Tracking Began", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void warnTrackingHasBeenStopped() {
+        Toast.makeText(this, "Tracking Stopped", Toast.LENGTH_LONG).show();
     }
 
     class EventReciever extends BroadcastReceiver {
