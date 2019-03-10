@@ -61,9 +61,10 @@ public interface Constants {
 
     String DB_FLAG = "status";
 
-    String ROOT_URL = "http://192.168.0.241/Android/v1/";
+    String ROOT_URL = "http://192.168.0.11/Android/v1/";
     String URL_REGISTER = ROOT_URL+"registerUser.php";
     String URL_LOGIN = ROOT_URL+"userLogin.php";
+    //String URL_LOGIN = "http://192.168.0.11/Android/v1/userLogin.php";
     String URL_SAVE_SETTING = ROOT_URL+"saveSetting.php";
     String URL_UPDATE_SETTING = ROOT_URL+"updateSetting.php";
     String URL_READ_SETTING = ROOT_URL+"readSetting.php";

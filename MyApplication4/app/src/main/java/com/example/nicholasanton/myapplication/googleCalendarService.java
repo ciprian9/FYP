@@ -25,7 +25,7 @@ public class googleCalendarService extends Service {
 
     ClipboardManager clipboard;
     String username1;
-    private static String ROOTURL = "http://192.168.0.241/Android/php/";
+    private static String ROOTURL = "http://192.168.0.11/Android/php/";
     String token;
     String calendarid;
     Boolean inOrOut = false;

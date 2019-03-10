@@ -278,6 +278,23 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                     .setNegativeButton("Cancel", null)
                     .create();
             SecondDialog.show();
+        } else if (id == R.id.Logout) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Are you sure you want to Log Out?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(i);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
         return super.onOptionsItemSelected(item);
     }
