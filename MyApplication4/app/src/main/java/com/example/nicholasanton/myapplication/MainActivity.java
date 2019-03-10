@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox chkRemember;
     private String uName;
     private String Pass;
+    private String gmail;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -204,6 +205,8 @@ public class MainActivity extends AppCompatActivity {
         }
         Intent i = new Intent(this, ActivitesListeners.class);
         i.putExtra(Constants.ACCOUNTID_INTENT, accountid);
+        i.putExtra(Constants.USERNAME_INTENT, uName);
+        i.putExtra(Constants.GMAIL_INTENT, gmail);
         try {
             startActivity(i);
         }catch (Exception e){
@@ -223,6 +226,11 @@ public class MainActivity extends AppCompatActivity {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if(!jsonObject.getBoolean("error")){
+                                    if (!jsonObject.getString("gmail").isEmpty()) {
+                                        gmail = jsonObject.getString("gmail");
+                                    } else {
+                                        gmail = "NULL";
+                                    }
                                     Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                                     GoToMenu(jsonObject.getInt("id"));
                                 }else{

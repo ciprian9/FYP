@@ -42,6 +42,8 @@ public interface Constants {
     String POLICY_ID = "policyid";
     String MUSIC_INTENT = "music";
     String ACCOUNTID_INTENT = "accountid";
+    String USERNAME_INTENT = "username";
+    String GMAIL_INTENT = "gmail";
     String WHERE_INTENT = "where";
     String PRESSED_INTENT = "pressed";
     String PEDOMETER_INTENT = "pedometer";
@@ -65,4 +67,5 @@ public interface Constants {
     String URL_SAVE_SETTING = ROOT_URL+"saveSetting.php";
     String URL_UPDATE_SETTING = ROOT_URL+"updateSetting.php";
     String URL_READ_SETTING = ROOT_URL+"readSetting.php";
+    String URL_UPDATE_ACCOUNT = ROOT_URL+"updateAccount.php";
 }
