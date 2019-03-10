@@ -4,6 +4,8 @@ package com.example.nicholasanton.myapplication;
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothHeadset;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -15,6 +17,7 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.CalendarContract;
@@ -78,6 +81,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     static boolean inMeeting = false;
     private EventReciever reciever;
     private FirebaseJobDispatcher mDispatcher;
+    BatteryManager myBatteryManager;
     BroadcastReceiver updateUIReciver;
     String summary;
     int hour, mins, secs, ehour, emins, esecs;
@@ -111,6 +115,8 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        BatteryManager myBatteryManager = (BatteryManager) getApplicationContext().getSystemService(Context.BATTERY_SERVICE);
 
         calendarList = new ArrayList<String>();
 
@@ -966,11 +972,13 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
             case STILL:
                 Log.d("Activity123", "STILL");
                 //getCalendarEvents();
-                StopWalkingPolicy();
-                StopRunningPolicy();
-                StopCyclingPolicy();
-                StopDrivingPolicy();
-                turnOffDoNotDisturb();
+                if (isBluetoothHeadsetConnected()) {
+                    StopWalkingPolicy();
+                    StopRunningPolicy();
+                    StopCyclingPolicy();
+                    StopDrivingPolicy();
+                    turnOffDoNotDisturb();
+                }
                 break;
             case TILTING:
                 Log.d("Activity123", "TILTING");
@@ -985,6 +993,12 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                 Log.d("Activity123", "DEFAULT");
                 break;
         }
+    }
+
+    public static boolean isBluetoothHeadsetConnected() {
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()
+                && mBluetoothAdapter.getProfileConnectionState(BluetoothHeadset.HEADSET) == BluetoothHeadset.STATE_CONNECTED;
     }
 
     @Override
