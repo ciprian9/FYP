@@ -3,13 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/mybutton"
+        android:icon="@drawable/ic_action_gear"
+        android:menuCategory="container"
         android:title=""
-        app:showAsAction="always"
-        android:icon="@drawable/ic_action_gear">
+        app:showAsAction="always">
 
-        <item android:id="@+id/ChangeGmail"
+        <item
+            android:id="@+id/ChangeGmail"
             android:title="Change Gmail"
-            app:showAsAction="never"/>
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/Logout"
+            android:title="Log Out"
+            app:showAsAction="never" />
 
     </item>
 </menu>
