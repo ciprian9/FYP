@@ -147,6 +147,7 @@
         <service android:name=".Sample_service"/>
         <service android:name=".TrackingService" />
         <service android:name=".ActivityRecognizerImpl$ActivityRecognitionIntentService"/>
+        <service android:name=".googleCalendarService"/>
     </application>
     
 </manifest>

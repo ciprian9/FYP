@@ -2,11 +2,13 @@ package com.example.nicholasanton.myapplication;
 
 //USED FOR MUSIC PLAYER: https://www.youtube.com/watch?v=p2ffzsCqrs8
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -21,8 +23,11 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.MediaController.MediaPlayerControl;
 import android.widget.Toast;
 
@@ -44,6 +49,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -52,6 +58,10 @@ import butterknife.ButterKnife;
 
 public class ActivitesListeners extends AppCompatActivity implements MediaPlayerControl, HomeView {
     private int accountid;
+    private String username;
+    private String gmail;
+    private List<String> calendarList;
+    private Boolean gmailWanted;
     private ArrayList<song> songList;
     private musicService musicSrv;
     private Intent playIntent;
@@ -68,6 +78,9 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
     static boolean inMeeting = false;
     private EventReciever reciever;
     private FirebaseJobDispatcher mDispatcher;
+    BroadcastReceiver updateUIReciver;
+    String summary;
+    int hour, mins, secs, ehour, emins, esecs;
 
     @Inject
     HomePresenter presenter;
@@ -99,6 +112,20 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        calendarList = new ArrayList<String>();
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
+                username = extras.getString(Constants.USERNAME_INTENT);
+                gmail = extras.getString(Constants.GMAIL_INTENT);
+            }
+        }
+        if (gmail.equalsIgnoreCase("NULL")) {
+            GmailDialog();
+        }
+
         ButterKnife.bind(this);
         ((TrackerCoachApplication) getApplication()).getObjectGraph().plus(new HomeViewModule(this)).inject(this);
         presenter.init();
@@ -119,13 +146,6 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         });
 
         setController();
-
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if (extras != null) {
-                accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
-            }
-        }
 
         final Button walkingOptions = findViewById(R.id.walkingOptions);
         walkingOptions.setOnClickListener(new View.OnClickListener() {
@@ -154,17 +174,112 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                 StartDrivingOptions();
             }
         });
+    }
 
-        final Button StopBtn = findViewById(R.id.StopBtn);
-        StopBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                StopWalkingPolicy();
-                StopRunningPolicy();
-                StopCyclingPolicy();
-                StopDrivingPolicy();
-                turnOffDoNotDisturb();
+    public void GmailDialog(){
+        if (gmail.equalsIgnoreCase("NULL")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Do you want to input a Gmail Address?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                            final EditText taskEditText = new EditText(ActivitesListeners.this);
+                            final AlertDialog SecondDialog = new AlertDialog.Builder(ActivitesListeners.this)
+                                    .setTitle("Input Gmail Address :")
+                                    .setMessage("")
+                                    .setView(taskEditText)
+                                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            gmail = taskEditText.getText().toString();
+                                            setNewGmail(gmail);
+                                            getCalendarEvents();
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .create();
+                            SecondDialog.show();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
+
+    public void setNewGmail(final String newGmailAccount){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.URL_UPDATE_ACCOUNT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if(!jsonObject.getBoolean("error")){
+                                Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            }else{
+                                Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                //DIDNT GO THROUGH
+
+                            }
+
+                        }catch(JSONException e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(Constants.GMAIL_INTENT, newGmailAccount);
+                params.put(Constants.ACCOUNTID_INTENT, String.valueOf(accountid));
+                return params;
             }
-        });
+        };
+        RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mymenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.ChangeGmail) {
+            final EditText taskEditText = new EditText(ActivitesListeners.this);
+            final AlertDialog SecondDialog = new AlertDialog.Builder(ActivitesListeners.this)
+                    .setTitle("Input Gmail Address :")
+                    .setMessage("")
+                    .setView(taskEditText)
+                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            gmail = taskEditText.getText().toString();
+                            setNewGmail(gmail);
+                            getCalendarEvents();
+                        }
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .create();
+            SecondDialog.show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void StartDrivingOptions(){
@@ -706,15 +821,72 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         if (cursor.moveToFirst()) {
             do {
                 try {
-                    scheduleJobs((new Date(cursor.getLong(3))).getTime(), cursor.getString(1), 0);
-                    scheduleJobs((new Date(cursor.getLong(4))).getTime(), (cursor.getString(1)+"1"), 1);
+                    long start = new Date(cursor.getLong(3)).getTime();
+                    long end = new Date(cursor.getLong(4)).getTime();
+                    scheduleJobs(start, cursor.getString(1), 0);
+                    scheduleJobs(end, (cursor.getString(1)+"1"), 1);
                 } catch (Exception e){
                     Log.d("Error : ", e.toString());
                 }
-
             } while ( cursor.moveToNext());
         }
         cursor.close();
+    }
+
+    public long D2MS(int month, int day, int year, int hour, int minute, int seconds) {
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, day, hour, minute, seconds);
+
+        return c.getTimeInMillis();
+    }
+
+    public void getCalendarEvents(){
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("NOW");
+        updateUIReciver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Calendar calendar = Calendar.getInstance();
+
+                int thisYear = calendar.get(Calendar.YEAR);
+                int thisMonth = calendar.get(Calendar.MONTH);
+                int thisDay = calendar.get(Calendar.DAY_OF_MONTH);
+                //UI update here
+                summary = intent.getStringExtra("summary");
+                hour = intent.getIntExtra("sHour", 0);
+                mins = intent.getIntExtra("sMins", 0);
+                secs = intent.getIntExtra("sSecs", 0);
+                ehour = intent.getIntExtra("eHour", 0);
+                emins = intent.getIntExtra("eMins", 0);
+                esecs = intent.getIntExtra("eSecs", 0);
+
+                long FirstD = D2MS(thisMonth, thisDay, thisYear, hour, mins, secs);
+                long SecondD = D2MS(thisMonth, thisDay, thisYear, ehour, emins, esecs);
+
+                for (int i=0;i<calendarList.size();i++) {
+                    if (!calendarList.get(i).equalsIgnoreCase(summary)) {
+                        calendarList.add(summary);
+                        scheduleJobs(FirstD, summary, 0);
+                        scheduleJobs(SecondD, summary + "1", 1);
+                    }
+                }
+
+                if (calendarList.size() == 0){
+                    calendarList.add(summary);
+                    scheduleJobs(FirstD, summary, 0);
+                    scheduleJobs(SecondD, summary + "1", 1);
+                }
+
+//                Toast.makeText(ActivitesListeners.this, summary + "\n" + "start hour : "+hour+" - min : "+mins+" - sec : "+secs
+//                        + "\n" + "end hour : "+ehour+" - min : "+emins+" - sec : "+esecs, Toast.LENGTH_SHORT).show();
+            }
+        };
+        registerReceiver(updateUIReciver, filter);
+
+        Intent i = new Intent(this, googleCalendarService.class);
+        i.putExtra("calendarid", gmail);
+        i.putExtra("username", username);
+        startService(i);
     }
 
     private void requestDoNotDisturbPermission() {
@@ -776,6 +948,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
                 break;
             case STILL:
                 Log.d("Activity123", "STILL");
+                //getCalendarEvents();
                 StopWalkingPolicy();
                 StopRunningPolicy();
                 StopCyclingPolicy();
@@ -812,6 +985,7 @@ public class ActivitesListeners extends AppCompatActivity implements MediaPlayer
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("GET_EVENTS")) {
                 getEvents();
+                getCalendarEvents();
             }
         }
     }
