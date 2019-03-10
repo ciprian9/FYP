@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$response['error'] = false;
 			$response['message'] = "Logged In Succesfully";
 			$response['id'] = $user['id'];
-			// $response['email'] = $user['email'];
+			$response['gmail'] = $user['gmail'];
 			// $response['username'] = $user['username'];
 		}else{
 			$response['error'] = true;

@@ -53,6 +53,19 @@
 		}
 	}
 
+	public function updateAccount($accountid, $gmailAddress){
+		$stmt = $this->con->prepare("UPDATE `accounts` SET `gmail`=? WHERE id = ?");
+		if(empty($gmailAddress)){
+			return 0;
+		}
+		$stmt->bind_param("ss", $accountid, $gmailAddress);
+		if($stmt->execute()){
+			return 1;
+		}else{
+			return 0;
+		}
+	}
+
 	public function userLogin($username, $pass){
 		$password = md5($pass);
 		$stmt = $this->con->prepare("SELECT id FROM accounts WHERE username = ? AND password = ?");
