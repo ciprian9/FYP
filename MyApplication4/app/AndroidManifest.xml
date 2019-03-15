@@ -51,33 +51,33 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".DrivingOptions">
+        <activity android:name=".Views.DrivingOptions">
         </activity>
-        <activity android:name=".CyclingOptions">
+        <activity android:name=".Views.CyclingOptions">
         </activity>
 
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
             android:value="AIzaSyDESgnI7omKhAH3WLeYiS46CajJI4m_q4A" />
 
-        <activity android:name=".Register" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Views.Register" />
+        <activity android:name=".Views.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- <service android:name=".ActivityRecognizedService" /> -->
-        <activity android:name=".WalkingOptions" />
+        <activity android:name=".Views.WalkingOptions" />
 
         <service
-            android:name=".WalkingPolicy"
+            android:name=".Services.Walking_Policy_Service"
             android:exported="false" />
 
         <activity android:name=".PlayLists" />
 
         <receiver
-            android:name=".SmsReceiver"
+            android:name=".Recievers.SmsReceiver"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter android:priority="2147483647">
@@ -85,7 +85,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".IncomingCallReceiver"
+            android:name=".Recievers.IncomingCallReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -103,7 +103,7 @@
             </intent-filter>
         </receiver>
         -->
-        <activity android:name=".MapActivity">
+        <activity android:name=".Views.MapActivity">
         </activity>
 
         <uses-library
@@ -117,27 +117,27 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".Playlist_View" />
+        <activity android:name=".Views.Playlist_View" />
         <activity
-            android:name=".ActivitesListeners"
+            android:name=".Views.ActivitesListeners"
             android:launchMode="singleTop" />
 
-        <service android:name=".Sample_service"/>
+        <service android:name=".Services.Timer_Service"/>
 
-        <service android:name=".TextToSpeechService" />
-        <service android:name=".AutoReplyService" /> <!-- <service android:name=".SaveResourcesService" /> -->
+        <service android:name=".Services.TextToSpeechService" />
+        <service android:name=".Services.AutoReplyService" /> <!-- <service android:name=".SaveResourcesService" /> -->
         <service android:name=".musicService" />
-        <service android:name=".pedometerService" />
-        <service android:name=".CyclingPolicy" />
+        <service android:name=".Services.pedometerService" />
+        <service android:name=".Services.Cycling_Policy_Service" />
 
-        <activity android:name=".RunningOptions" />
+        <activity android:name=".Views.RunningOptions" />
 
-        <service android:name=".RunningPolicy" />
-        <service android:name=".MapService" />
-        <service android:name=".DrivingPolicy" />
-        <service android:name=".SpeedAndDistance"/>
+        <service android:name=".Services.Running_Policy_Service" />
+        <service android:name=".Services.MapService" />
+        <service android:name=".Services.Driving_Policy_Service" />
+        <service android:name=".Services.SpeedAndDistance"/>
 
-        <service android:name=".MyJobService" android:exported="false">
+        <service android:name=".Services.MyJobService" android:exported="false">
             <intent-filter>
                 <action android:name="com.example.myapplication.ACTION_EXECUTE"/>
             </intent-filter>

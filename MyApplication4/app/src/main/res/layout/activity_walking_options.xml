@@ -4,20 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WalkingOptions">
-
-    <Button
-        android:id="@+id/walkingPlaylist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Playlist"
-        android:layout_marginBottom="10dp"/>
+    tools:context=".Views.WalkingOptions">
 
     <Switch
         android:id="@+id/swPlayHeadphones"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/walkingPlaylist"
         android:text="Play Music When Headphones In"
         android:layout_marginBottom="10dp"/>
 

@@ -24,7 +24,7 @@ public class My_Delete_Playlist_Adapter extends BaseAdapter implements ListAdapt
     private String selectedItem;
 
 
-    My_Delete_Playlist_Adapter(ArrayList<String> list, Context context) {
+    public My_Delete_Playlist_Adapter(ArrayList<String> list, Context context) {
         this.list = list;
         this.context = context;
         db = new DataHandler(context);

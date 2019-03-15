@@ -8,12 +8,16 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 
+import com.example.nicholasanton.myapplication.Interfaces.Tracker;
+import com.example.nicholasanton.myapplication.Interfaces.TrackerListener;
+import com.example.nicholasanton.myapplication.Services.TrackingService;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class TrackerImpl implements Tracker{
+public class TrackerImpl implements Tracker {
 
     private Context context;
     private SharedPreferences sharedPreferences;
@@ -22,7 +26,7 @@ public class TrackerImpl implements Tracker{
     private TrackerListener trackerListener;
     private TimerTask timerTask;
 
-    TrackerImpl(Context context) {
+    public TrackerImpl(Context context) {
         this.context = context;
         sharedPreferences =  context.getSharedPreferences(context.getString(R.string.pedometro_preferences), MODE_PRIVATE);
     }

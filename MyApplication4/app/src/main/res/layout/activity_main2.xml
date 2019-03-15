@@ -4,19 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".Views.MainActivity">
 
     <Button
         android:id="@+id/walkingOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Walking Preferences" />
-
-    <ListView
-        android:id="@+id/song_list"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"></ListView>
 
     <Button
         android:id="@+id/runningOptions"
@@ -39,5 +33,50 @@
         android:layout_below="@id/cyclingOptions"
         android:text="Driving Preferences" />
 
+    <Button
+        android:id="@+id/btnTestDriving"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/drivingOptions"
+        android:text="TEST DRIVING"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="107dp"
+        android:layout_height="721dp"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/btnTestWalking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnTestDriving"
+        android:text="TEST WALKING"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnTestCycling"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnTestWalking"
+        android:text="TEST CYCLING"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnTestRunning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnTestCycling"
+        android:text="TEST RUNNING"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnTestRunning"
+        android:text="STOP"
+        android:visibility="gone" />
 
 </RelativeLayout>

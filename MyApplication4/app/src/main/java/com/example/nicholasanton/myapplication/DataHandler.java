@@ -55,7 +55,7 @@ public class DataHandler extends SQLiteOpenHelper {
     private static final String STEPS_TABLE = "CREATE TABLE " + PEDOMETER_TABLE_NAME + " (" + COLUMN_RECORD_ID + " INTEGER PRIMARY KEY, " + COLUMN_START_DATETIME + " TEXT, " + COLUMN_END_DATETIME + " TEXT, "
         + COLUMN_STEP_COUNT + " INTEGER)";
 
-    DataHandler(Context context) {
+    public DataHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
