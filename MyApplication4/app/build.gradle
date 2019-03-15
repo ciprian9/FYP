@@ -52,8 +52,8 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.3.+'
     implementation 'com.squareup.okhttp:okhttp:2.+'
     implementation 'com.squareup.okhttp:okhttp-urlconnection:2.+'
-    implementation 'com.squareup.retrofit:retrofit:2.+'
-    implementation 'com.squareup.retrofit:converter-gson:2.+'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.picasso:picasso:2.3.+'
     implementation 'com.android.support:design:23.+'
     implementation 'com.google.code.gson:gson:2.3.1'
@@ -77,4 +77,10 @@ dependencies {
 
     annotationProcessor 'com.squareup.dagger:dagger-compiler:1.2.2'
     annotationProcessor 'com.jakewharton:butterknife:7.0.1'
+    implementation 'com.github.kaaes:spotify-web-api-android:0.4.1'
+    implementation 'com.spotify.android:auth:1.0.0-alpha'
+    implementation project(':spotify-app-remote-release-0.6.1')
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.4.0'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
 }

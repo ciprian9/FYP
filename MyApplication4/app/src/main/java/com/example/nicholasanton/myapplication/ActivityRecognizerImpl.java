@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.example.nicholasanton.myapplication.Enums.ActivityType;
+import com.example.nicholasanton.myapplication.Interfaces.ActivityRecognizer;
+import com.example.nicholasanton.myapplication.Interfaces.ActivityRecognizerListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
@@ -19,7 +22,7 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
     private static ActivityRecognizerListener activityRecognizerListener;
     private Context context;
 
-    ActivityRecognizerImpl(Context context) {
+    public ActivityRecognizerImpl(Context context) {
         this.context = context;
         googleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
