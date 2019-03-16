@@ -1,5 +1,6 @@
 package com.example.nicholasanton.myapplication.Views;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothHeadset;
@@ -8,11 +9,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.AudioManager;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +45,7 @@ import com.example.nicholasanton.myapplication.R;
 import com.example.nicholasanton.myapplication.Classes.RequestHandler;
 import com.example.nicholasanton.myapplication.Services.Cycling_Policy_Service;
 import com.example.nicholasanton.myapplication.Services.Driving_Policy_Service;
+import com.example.nicholasanton.myapplication.Services.LocationTrack;
 import com.example.nicholasanton.myapplication.Services.MapService;
 import com.example.nicholasanton.myapplication.Services.MyJobService;
 import com.example.nicholasanton.myapplication.Services.Running_Policy_Service;
@@ -54,6 +64,8 @@ import com.firebase.jobdispatcher.Trigger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -62,6 +74,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
@@ -87,6 +101,13 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     public static boolean cyclingService = false;
     public static boolean drivingService = false;
     public static boolean inMeeting = false;
+    public String work;
+    public String home;
+    public LatLng workLL;
+    public LatLng homeLL;
+    public boolean yorn;
+    public boolean justDid;
+    public Location loc1;
     private EventReciever reciever;
     private FirebaseJobDispatcher mDispatcher;
     private static final String CLIENT_ID = "9059d78622a94813a3b8920877c0198a";
@@ -107,6 +128,67 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        ReadLocation();
+
+        loc1 = new Location("School/Work");
+
+        final LocationListener mLocationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(final Location location) {
+//                Log.d("LATLONG123", "Longitude: "+String.format("%.3f",location.getLongitude()));
+//                Log.d("LATLONG123", "Latitude: "+String.format("%.3f",location.getLatitude()));
+//                Log.d("LATLONG123", "Longitude HOME: "+String.format("%.3f",loc1.getLongitude()));
+                Log.d("LATLONG123", "Latitude HOME: "+String.format("%.3f",loc1.getLatitude()));
+                if (String.format("%.4f", location.getLongitude()).equals(String.format("%.4f", loc1.getLongitude()))
+                        && String.format("%.4f", location.getLatitude()).equals(String.format("%.4f", loc1.getLatitude()))) {
+                    Log.d("LATLONG123", "INSIDE");
+                    requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+                }
+
+                if (workLL != null) {
+                    if (String.format("%.4f", location.getLongitude()).equals(String.format("%.4f", workLL.longitude))
+                            && String.format("%.4f", location.getLatitude()).equals(String.format("%.4f", workLL.latitude))) {
+                        Log.d("LATLONG123", "INSIDE");
+                        requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+                    }
+                }
+
+                if (homeLL != null) {
+                    if (String.format("%.4f", location.getLongitude()).equals(String.format("%.4f", homeLL.longitude))
+                            && String.format("%.4f", location.getLatitude()).equals(String.format("%.4f", homeLL.latitude))) {
+                        Log.d("LATLONG123", "INSIDE");
+                        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                        if (!wifiManager.isWifiEnabled()) {
+                            wifiManager.setWifiEnabled(true);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
+
+        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+                10, mLocationListener);
 
         calendarList = new ArrayList<>();
 
@@ -234,12 +316,12 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             }
         });
 
-        final Button b3 = findViewById(R.id.button3);
-        b3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                getWalkingSettings(4);
-            }
-        });
+//        final Button b3 = findViewById(R.id.button3);
+//        b3.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                getWalkingSettings(4);
+//            }
+//        });
 
         ConnectionParams connectionParams =
                 new ConnectionParams.Builder(CLIENT_ID)
@@ -270,6 +352,25 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                         // Something went wrong when attempting to connect! Handle errors here
                     }
                 });
+    }
+
+    public LatLng getLocationFromAddress(Context context, String strAddress) {
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+            Log.d("LATLONG123", p1.latitude + ", " + p1.longitude);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return p1;
     }
 
     @Override
@@ -429,8 +530,176 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     });
             AlertDialog alert = builder.create();
             alert.show();
+        } else if (id == R.id.School_WorkLocation){
+            yorn = true;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Use current location or type in address?")
+                    .setCancelable(false)
+                    .setPositiveButton("Address", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                            final EditText taskEditText = new EditText(ActivitesListeners.this);
+                            final AlertDialog SecondDialog = new AlertDialog.Builder(ActivitesListeners.this)
+                                    .setTitle("Input Address :")
+                                    .setMessage("")
+                                    .setView(taskEditText)
+                                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            String address = taskEditText.getText().toString();
+                                            LatLng latlng1 = getLocationFromAddress(getApplicationContext(), address);
+                                            loc1.setLongitude(latlng1.longitude);
+                                            loc1.setLatitude(latlng1.latitude);
+                                            SetUpLocationwork(latlng1.latitude + "," + latlng1.longitude);
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .create();
+                            SecondDialog.show();
+                        }
+                    })
+                    .setNegativeButton("Here", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            LocationTrack locationTrack = new LocationTrack(ActivitesListeners.this);
+
+                            if (locationTrack.canGetLocation()) {
+                                double longitude = locationTrack.getLongitude();
+                                double latitude = locationTrack.getLatitude();
+
+                                loc1.setLatitude(latitude);
+                                loc1.setLongitude(longitude);
+
+                                SetUpLocation(loc1.getLatitude() + "," + loc1.getLongitude());
+                            } else {
+                                locationTrack.showSettingsAlert();
+                            }
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void ReadLocation() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.URL_READ_LOCATION,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (!jsonObject.getBoolean("error")) {
+                                Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                work = jsonObject.getString("work");
+                                home = jsonObject.getString("home");
+
+                                String[] parts = work.split(",");
+                                if(parts.length >= 2) {
+                                    String first = parts[0];
+                                    String second = parts[1];
+                                    workLL = new LatLng(Double.valueOf(first), Double.valueOf(second));
+                                }
+
+                                parts = home.split(",");
+                                if(parts.length >= 2) {
+                                    String first = parts[0];
+                                    String second = parts[1];
+                                    homeLL = new LatLng(Double.valueOf(first), Double.valueOf(second));
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(Constants.USERID_INTENT, String.valueOf(accountid));
+                return params;
+            }
+        };
+        RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    public void SetUpLocationwork(final String workAdd) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.URL_ADDWORK_LOCATION,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (!jsonObject.getBoolean("error")) {
+                                Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(Constants.USERID_INTENT, String.valueOf(accountid));
+                params.put(Constants.WORK_INTENT, workAdd);
+                return params;
+            }
+        };
+        RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    public void SetUpLocation(final String homeAdd) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.URL_ADD_LOCATION,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (!jsonObject.getBoolean("error")) {
+                                Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(Constants.USERID_INTENT, String.valueOf(accountid));
+                params.put(Constants.HOME_INTENT, homeAdd);
+                return params;
+            }
+        };
+        RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
     public void StartDrivingOptions() {
