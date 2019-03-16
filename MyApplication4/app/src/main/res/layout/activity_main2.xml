@@ -45,7 +45,8 @@
         android:id="@+id/button3"
         android:layout_width="107dp"
         android:layout_height="721dp"
-        android:text="Button" />
+        android:text="Button"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/btnTestWalking"

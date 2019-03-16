@@ -52,6 +52,9 @@ public interface Constants {
     String SPEED_INTENT = "speed";
     String RECOMEND_INTENT ="recomend";
     String CALORIES_INTENT= "calories";
+    String USERID_INTENT= "userid";
+    String HOME_INTENT= "home";
+    String WORK_INTENT= "work";
 
     String MUSIC_SETTING = "MusicPlayer";
     String PEDOMETER_SETTING = "pedometer";
@@ -68,4 +71,7 @@ public interface Constants {
     String URL_UPDATE_SETTING = ROOT_URL+"updateSetting.php";
     String URL_READ_SETTING = ROOT_URL+"readSetting.php";
     String URL_UPDATE_ACCOUNT = ROOT_URL+"updateAccount.php";
+    String URL_ADD_LOCATION = ROOT_URL+"insertLocation.php";
+    String URL_ADDWORK_LOCATION = ROOT_URL+"insertLocationWorking.php";
+    String URL_READ_LOCATION = ROOT_URL+"readLocation.php";
 }
