@@ -13,8 +13,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
-import com.example.nicholasanton.myapplication.PlayLists;
 import com.example.nicholasanton.myapplication.R;
 import com.example.nicholasanton.myapplication.Classes.RequestHandler;
 import com.example.nicholasanton.myapplication.Classes.SaveSettings;
@@ -30,13 +30,14 @@ public class RunningOptions extends AppCompatActivity {
             dist_speed = false, recordRoute = false, notificationTTS = false, autoReply = false, callReply = false;
     private Switch playHeadphones, startPedometer, Time, Rest, RecordRoute, NotficationTTS, AutoReply, CallReply;
     private int accountid;
+    private DataHandler db;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_running_options);
-
+        db = new DataHandler(this);
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
@@ -74,14 +75,6 @@ public class RunningOptions extends AppCompatActivity {
             SaveSettings db7 = new SaveSettings(accountid, 2, "CallReply", false, this);
             db7.registerSetting(Constants.URL_SAVE_SETTING);
         };
-
-        final Button MapBtn = findViewById(R.id.btnOpenMap);
-        MapBtn.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                openTheMap();
-            }
-        });
-
 
         playHeadphones.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -183,7 +176,7 @@ public class RunningOptions extends AppCompatActivity {
                             }
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            db.insertLog("Error Reading Settings Running");
                         }
 
                     }
@@ -191,7 +184,7 @@ public class RunningOptions extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        db.insertLog("Error Reading Settings Script Running");
                     }
                 }) {
             @Override
@@ -209,7 +202,6 @@ public class RunningOptions extends AppCompatActivity {
 
     public void VarsToForm(){
         //Read the database values and update the activity to reflect those values
-
         readSettings("MusicPlayer", playHeadphones);
         readSettings("Pedometer", startPedometer);
         readSettings("Time", Time);
@@ -219,21 +211,5 @@ public class RunningOptions extends AppCompatActivity {
         readSettings("AutoReply", AutoReply);
         readSettings("CallReply", CallReply);
     }
-
-    public void openPlaylists(){
-        Intent intent = new Intent(this, PlayLists.class);
-        startActivity(intent);
-    }
-
-    public void openTheMap(){
-        Intent i = new Intent(this, MapActivity.class);
-        i.putExtra(Constants.ACCOUNTID_INTENT, accountid);
-        i.putExtra(Constants.PEDOMETER_INTENT, pedometer);
-        i.putExtra(Constants.TIME_INTENT, timeRecord);
-        i.putExtra(Constants.DISTANCE_INTENT, dist_speed);
-        i.putExtra(Constants.POLICY_ID, 2);
-        startActivity(i);
-    }
-
 }
 

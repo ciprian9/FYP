@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.widget.Toast;
 
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -33,6 +34,7 @@ public class MapService extends Service{
     private double prevLat, prevLong;
     private boolean temp;
     private int policyID;
+    private DataHandler db;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -47,6 +49,7 @@ public class MapService extends Service{
     @SuppressLint("MissingPermission")
     @Override
     public void onCreate() {
+        db = new DataHandler(this);
         super.onCreate();
     }
 
@@ -64,18 +67,22 @@ public class MapService extends Service{
         File file = null;
         if (policyID == 1 && !temp) {
             if (fileExists(this, walkingFileName)){
+                db.insertLog("New Walking File Created");
                 file = new File(dir, walkingFileName);
             }
         } else if (policyID == 2 && !temp) {
             if (fileExists(this, runningFileName)) {
+                db.insertLog("New Running File Created");
                 file = new File(dir, runningFileName);
             }
         } else if (policyID == 3 && !temp){
             if (fileExists(this, cyclingFileName)) {
+                db.insertLog("New Cycling File Created");
                 file = new File(dir, cyclingFileName);
             }
         } else if (policyID == 4 && !temp){
             if (fileExists(this, drivingFileName)) {
+                db.insertLog("New Driving File Created");
                 file = new File(dir, drivingFileName);
             }
         }
@@ -92,12 +99,16 @@ public class MapService extends Service{
                 if ((temp1 >= (prevLat + 0.000005) || temp1 <= (prevLat - 0.000005)) ||
                         (temp2 >= (prevLong + 0.000005) || temp2 <= (prevLong - 0.000005))){
                     if (policyID == 1) {
+                        db.insertLog("Saving Walking Locations");
                         saveFile(walkingFileName, (latLng.toString() + "\n"));
                     } else if (policyID == 2){
+                        db.insertLog("Saving Running Locations");
                         saveFile(runningFileName, (latLng.toString() + "\n"));
                     } else if (policyID == 3){
+                        db.insertLog("Saving Cycling Locations");
                         saveFile(cyclingFileName, (latLng.toString() + "\n"));
                     } else if (policyID == 4){
+                        db.insertLog("Saving Driving Locations");
                         saveFile(drivingFileName, (latLng.toString() + "\n"));
                     }
                     if (temp) {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
 
 public class Running_Policy_Service extends Service {
@@ -68,6 +69,8 @@ public class Running_Policy_Service extends Service {
 
         try {
             if(pedometer || time || dist_speed) {
+                DataHandler db = new DataHandler(this);
+                db.insertLog("Starting Running Pedometer Service");
                 Intent i = new Intent(this, pedometerService.class);
                 i.putExtra(Constants.PEDOMETER_INTENT, pedometer);
                 i.putExtra(Constants.TIME_INTENT, time);

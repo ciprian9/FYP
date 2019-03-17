@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.ITelephony;
 import com.example.nicholasanton.myapplication.Services.AutoReplyService;
 
@@ -22,7 +23,9 @@ import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.c
 public class IncomingCallReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        DataHandler db = new DataHandler(context);
         ITelephony telephonyService;
+        db.insertLog("Getting Call");
         try {
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
             String number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
@@ -35,6 +38,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     if ((number != null)) {
                         if (runningService || cyclingService  || drivingService || inMeeting) {
                             if (callReply || inMeeting) {
+                                db.insertLog("Ending Call");
                                 telephonyService.endCall();
                                 Toast.makeText(context, "Ending the call from: " + number, Toast.LENGTH_SHORT).show();
                                 Intent autoReplyIntent = new Intent(context, AutoReplyService.class);
@@ -44,15 +48,13 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                         }
                     }
                 } catch (Exception e) {
+                    db.insertLog("Error Inside Call Code");
                     e.printStackTrace();
                     System.out.printf(e.toString());
                 }
             }
-//            if(state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK)){
-//            }
-//            if(state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_IDLE)){
-//            }
         } catch (Exception e) {
+            db.insertLog("Error Inside Calling Code");
             e.printStackTrace();
         }
     }

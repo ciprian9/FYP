@@ -97,6 +97,7 @@ public class TextToSpeechService extends Service {
     }
 
     private void speak(){
+        db.insertLog("Speaking Text Message");
         float pitchOfVoice = (float) 0.7;
         repeatTTS.setPitch(pitchOfVoice);
         int speedOfVoice = 1;

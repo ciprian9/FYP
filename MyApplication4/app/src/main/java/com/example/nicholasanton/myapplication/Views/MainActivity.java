@@ -44,14 +44,14 @@ public class MainActivity extends AppCompatActivity {
     private String gmail;
     private static final String testUname = "tester1234";
     private static final String testPass = "tester1234";
-    private static final int testID = -1;
+    private static final int testID = 10;
+    public DataHandler db;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         Password = findViewById(R.id.Password);
         chkRemember = findViewById(R.id.saveLoginCheckBox);
 
-        DataHandler db = new DataHandler(this);
+        db = new DataHandler(this);
         Cursor cursor = db.SelectUser();
         int temp = cursor.getCount();
         cursor.moveToFirst();
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                 Password.setText(cursor.getString(Constants.COLUMN_PASSWORD));
                 chkRemember.setChecked(true);
             }catch (Exception e){
-                System.out.print(e.getMessage());
+                db.insertLog("Failed Setting Credentials");
             }
         }
 
@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         final Button RegisterBtn = findViewById(R.id.RegisterButton);
         RegisterBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                db.insertLog("Opening Register Screen");
                 OpenRegisterScreen();
             }
         });
@@ -183,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
         final Button LoginBtn = findViewById(R.id.NextButton);
         LoginBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                db.insertLog("Logging In");
                 LogUserIn();
             }
         });
@@ -218,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             startActivity(i);
         }catch (Exception e){
-            System.out.print(e.getMessage());
+            db.insertLog("Failed opening ActivitesListeners");
         }
     }
 
@@ -255,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                                db.insertLog("Error in Logging in script");
                             }
                         }) {
                     @Override
@@ -268,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
                 };
                 RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
             }else{
-                GoToMenu(-1);
+                GoToMenu(testID);
             }
         }
 

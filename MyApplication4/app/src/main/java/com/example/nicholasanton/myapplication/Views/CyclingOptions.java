@@ -13,8 +13,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
-import com.example.nicholasanton.myapplication.PlayLists;
 import com.example.nicholasanton.myapplication.R;
 import com.example.nicholasanton.myapplication.Classes.RequestHandler;
 import com.example.nicholasanton.myapplication.Classes.SaveSettings;
@@ -30,14 +30,14 @@ public class CyclingOptions extends AppCompatActivity {
             caloriesBurnt = false, recordRoute = false, notificationTTS = false, autoReply = false, callReply = false;
     private Switch playHeadphones, ShowSpeed, RecomendDestinations, CaloriesBurnt, RecordRoute, NotficationTTS, AutoReply, CallReply;
     private int accountid;
-
+    private DataHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cycling_options); //This is cycle options not running so there is no calories burned switch meaning CaloriesBurnet is null causing it to crash
         //fix the layout  then you can uncomment the listener for calories burned
-
+        db = new DataHandler(this);
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
@@ -73,14 +73,6 @@ public class CyclingOptions extends AppCompatActivity {
             db6.registerSetting(Constants.URL_SAVE_SETTING);
         };
 
-        final Button MapBtn = findViewById(R.id.btnOpenMap);
-        MapBtn.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                openTheMap();
-            }
-        });
-
-
         playHeadphones.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -104,14 +96,6 @@ public class CyclingOptions extends AppCompatActivity {
                 db.registerSetting(Constants.URL_UPDATE_SETTING);
             }
         });
-
-//        CaloriesBurnt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                SaveSettings db = new SaveSettings(accountid, 2, "CaloriesBurnt", isChecked, getApplicationContext());
-//                db.registerSetting(Constants.URL_UPDATE_SETTING);
-//            }
-//        });
 
         RecordRoute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -181,7 +165,7 @@ public class CyclingOptions extends AppCompatActivity {
                             }
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            db.insertLog("Error Reading Settings Cycling");
                         }
 
                     }
@@ -189,7 +173,7 @@ public class CyclingOptions extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        db.insertLog("Error Reading Settings Script Cycling");
                     }
                 }) {
             @Override
@@ -211,26 +195,9 @@ public class CyclingOptions extends AppCompatActivity {
         readSettings("MusicPlayer", playHeadphones);
         readSettings("ShowSpeed", ShowSpeed);
         readSettings("RecomendDestinations", RecomendDestinations);
-        //readSettings("CaloriesBurnt", CaloriesBurnt);
         readSettings("RecordRoute", RecordRoute);
         readSettings("NotificationTTS", NotficationTTS);
         readSettings("AutoReply", AutoReply);
         readSettings("CallReply", CallReply);
     }
-
-    public void openPlaylists(){
-        Intent intent = new Intent(this, PlayLists.class);
-        startActivity(intent);
-    }
-
-    public void openTheMap(){
-        Intent i = new Intent(this, MapActivity.class);
-        i.putExtra(Constants.ACCOUNTID_INTENT, accountid);
-        i.putExtra(Constants.SPEED_INTENT, showSpeed);
-        i.putExtra(Constants.RECOMEND_INTENT, recomendDestinations);
-        //i.putExtra(Constants.CALORIES_INTENT, caloriesBurnt);
-        i.putExtra(Constants.POLICY_ID, 3);
-        startActivity(i);
-    }
-
 }

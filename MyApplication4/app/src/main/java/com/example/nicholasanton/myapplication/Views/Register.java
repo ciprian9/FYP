@@ -11,6 +11,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
 import com.example.nicholasanton.myapplication.R;
 import com.example.nicholasanton.myapplication.Classes.RequestHandler;
@@ -31,11 +32,14 @@ public class Register extends AppCompatActivity {
     private TextView E_mail;
     private TextView Password;
     private TextView ConfPassword;
+    private DataHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        db = new DataHandler(this);
 
         Username = findViewById(R.id.Username);
         E_mail = findViewById(R.id.email);
@@ -97,6 +101,7 @@ public class Register extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        db.insertLog("Error Registering Script");
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }){

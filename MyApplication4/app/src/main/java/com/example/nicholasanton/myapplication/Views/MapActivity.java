@@ -17,12 +17,14 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
 import com.example.nicholasanton.myapplication.R;
 import com.example.nicholasanton.myapplication.Services.MapService;
@@ -75,6 +77,7 @@ public class MapActivity extends AppCompatActivity {
     private DataReceiver dataReceiver;
     private SpeedReciever speedReciever;
     private int policyID;
+    private DataHandler db;
 
     private final static String KEY_LOCATION = "location";
 
@@ -86,13 +89,19 @@ public class MapActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_activity);
+
+        db = new DataHandler(this);
+
+        db.insertLog("Enter Map Activity\n");
+
         points = new ArrayList<LatLng>();
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
-            if(extras != null) {
+            if (extras != null) {
                 pedometer = extras.getBoolean(Constants.PEDOMETER_INTENT);
                 time = extras.getBoolean(Constants.TIME_INTENT);
                 dist = extras.getBoolean(Constants.DISTANCE_INTENT);
@@ -104,7 +113,7 @@ public class MapActivity extends AppCompatActivity {
         registerReceiver(receiver, new IntentFilter("location_update"));
 
 
-        if (isMyServiceRunning(MapService.class)){
+        if (isMyServiceRunning(MapService.class)) {
             Intent mapServiceIntent = new Intent(this, MapService.class);
             mapServiceIntent.putExtra("temp", true);
             mapServiceIntent.putExtra(Constants.POLICY_ID, policyID);
@@ -120,10 +129,10 @@ public class MapActivity extends AppCompatActivity {
         registerReceiver(speedReciever, new IntentFilter("GET_SPEED_DATA"));
 
 
-        TvSteps =  findViewById(R.id.tv_steps);
-        TvDistance =  findViewById(R.id.tvDistance);
-        TvTimer =  findViewById(R.id.tvTimer);
-        TvSpeed =  findViewById(R.id.tvSpeed);
+        TvSteps = findViewById(R.id.tv_steps);
+        TvDistance = findViewById(R.id.tvDistance);
+        TvTimer = findViewById(R.id.tvTimer);
+        TvSpeed = findViewById(R.id.tvSpeed);
 
 
         //***************************************************************************MAP*************************************************************
@@ -166,11 +175,11 @@ public class MapActivity extends AppCompatActivity {
         String textFromFile = "";
         if (policyID == 1) {
             textFromFile = readFile(walkingFileName);
-        } else if (policyID == 2){
+        } else if (policyID == 2) {
             textFromFile = readFile(runningFileName);
-        } else if (policyID == 3){
+        } else if (policyID == 3) {
             textFromFile = readFile(cyclingFileName);
-        } else if (policyID == 4){
+        } else if (policyID == 4) {
             textFromFile = readFile(drivingFileName);
         }
         String[] textFile = textFromFile.split("\n");
@@ -214,10 +223,29 @@ public class MapActivity extends AppCompatActivity {
         map = googleMap;
         if (map != null) {
             // Map is ready
-            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             Criteria criteria = new Criteria();
 
-            @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    // Permission is not granted
+                    // No explanation needed; request the permission
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                11);
+                    }
+                }
+
+                return;
+            }
+            String locationProvider = LocationManager.NETWORK_PROVIDER;
+            Location location = locationManager.getLastKnownLocation(locationProvider);
             if (location != null) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(18).bearing(location.getBearing()).tilt(0).build();
@@ -228,22 +256,27 @@ public class MapActivity extends AppCompatActivity {
             MapActivityPermissionsDispatcher.startLocationUpdatesWithPermissionCheck(this);
             if (policyID == 1) {
                 if (fileExists(this, walkingFileName)) {
+                    db.insertLog("Failed Drawing Lines for Walking");
                     drawTheLines();
                 }
             } else if (policyID == 2){
                 if (fileExists(this, runningFileName)) {
+                    db.insertLog("Failed Drawing Lines for Running");
                     drawTheLines();
                 }
             } else if (policyID == 3){
                 if (fileExists(this, cyclingFileName)) {
+                    db.insertLog("Failed Drawing Lines for Cycling");
                     drawTheLines();
                 }
             } else if (policyID == 4){
                 if (fileExists(this, drivingFileName)) {
+                    db.insertLog("Failed Drawing Lines for Driving");
                     drawTheLines();
                 }
             }
         } else {
+            db.insertLog("Map was null");
             Toast.makeText(this, "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -271,6 +304,12 @@ public class MapActivity extends AppCompatActivity {
             return;
         }
         map.setMyLocationEnabled(true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        db.insertLog("Exit Map Activity\n");
+        super.onBackPressed();
     }
 
     /*
@@ -309,6 +348,7 @@ public class MapActivity extends AppCompatActivity {
                 startService(mapServiceIntent);
             }
         } catch (IllegalArgumentException e) {
+            db.insertLog("Reciever is already unregistered");
             Log.i("Receiver", "Reciver is already unregistered");
             receiver = null;
         }
@@ -412,6 +452,7 @@ public class MapActivity extends AppCompatActivity {
             }
         }
     }
+
 
     class DataReceiver extends BroadcastReceiver {
 

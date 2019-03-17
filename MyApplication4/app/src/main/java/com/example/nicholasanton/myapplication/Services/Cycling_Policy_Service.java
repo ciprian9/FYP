@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
 
 public class Cycling_Policy_Service extends Service {
@@ -34,7 +35,6 @@ public class Cycling_Policy_Service extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
-
         if( extras != null ) {
             accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
             musicPlayer = extras.getBoolean(Constants.MUSIC_INTENT);
@@ -42,7 +42,6 @@ public class Cycling_Policy_Service extends Service {
             recomendDestinations = extras.getBoolean(Constants.RECOMEND_INTENT);
             notificationTTS = extras.getBoolean(Constants.TEXT_TO_SPEECH_SETTING);
         }
-
 
         Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
         Thread theThread = new Thread(new Cycling_Policy_Service.TheThread(startId));

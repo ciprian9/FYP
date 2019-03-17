@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.nicholasanton.myapplication">
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
@@ -26,18 +26,19 @@
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
-    <uses-permission android:name="android.permission.READ_CALENDAR"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+
     <permission android:name="android.permission.GET_ACCOUNTS" />
-    <permission android:name="android.permission.WRITE_CALENDAR"/>
-    <permission android:name="android.permission.READ_CALENDAR"/>
+    <permission android:name="android.permission.WRITE_CALENDAR" />
+    <permission android:name="android.permission.READ_CALENDAR" />
     <permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
         android:protectionLevel="dangerous" />
@@ -56,8 +57,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Views.DebugConsole">
+        </activity>
         <activity android:name=".Views.LockedScreen">
         </activity>
         <activity android:name=".Views.DrivingOptions">
@@ -82,8 +85,6 @@
         <service
             android:name=".Services.Walking_Policy_Service"
             android:exported="false" />
-
-        <activity android:name=".PlayLists" />
 
         <receiver
             android:name=".Recievers.SmsReceiver"
@@ -114,7 +115,6 @@
         -->
         <activity android:name=".Views.MapActivity">
         </activity>
-
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
@@ -130,7 +130,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".Views.Playlist_View" />
         <activity
             android:name=".Views.ActivitesListeners"
             android:launchMode="singleTop" />
@@ -147,15 +146,19 @@
         <service android:name=".Services.MapService" />
         <service android:name=".Services.Driving_Policy_Service" />
         <service android:name=".Services.SpeedAndDistance" />
-        <service android:name=".Services.MyJobService" android:exported="false">
+        <service android:name=".Services.bedtimeRoutineService"/>
+        <service android:name=".Services.getTheWeather"/>
+        <service
+            android:name=".Services.MyJobService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.example.myapplication.ACTION_EXECUTE"/>
+                <action android:name="com.example.myapplication.ACTION_EXECUTE" />
             </intent-filter>
         </service>
-        <service android:name=".Services.Timer_Service"/>
+        <service android:name=".Services.Timer_Service" />
         <service android:name=".Services.TrackingService" />
-        <service android:name=".ActivityRecognizerImpl$ActivityRecognitionIntentService"/>
-        <service android:name=".Services.googleCalendarService"/>
+        <service android:name=".ActivityRecognizerImpl$ActivityRecognitionIntentService" />
+        <service android:name=".Services.googleCalendarService" />
     </application>
-    
+
 </manifest>
