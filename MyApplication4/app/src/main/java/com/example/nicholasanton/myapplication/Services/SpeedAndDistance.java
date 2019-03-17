@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 
 import com.example.nicholasanton.myapplication.CLocation;
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
 import com.example.nicholasanton.myapplication.Interfaces.IBaseGpsListener;
 
@@ -23,10 +24,12 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
     private String actualSpeed;
     private Location prevLocation;
     private float distance;
+    private DataHandler db;
 
     @SuppressLint("MissingPermission")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        db = new DataHandler(this);
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         this.updateSpeed(null);
@@ -39,6 +42,7 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
     private void updateSpeed(CLocation location) {
         // TODO Auto-generated method stub
         float nCurrentSpeed = 0;
+        db.insertLog("Getting Speed");
 
         if(location != null) {
             location.setUseMetricunits(true);
@@ -72,6 +76,7 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
         // TODO Auto-generated method stub
         if(location != null)
         {
+            db.insertLog("Updating Last Known Speed");
             CLocation myLocation = new CLocation(location, true);
             this.updateSpeed(myLocation);
         }

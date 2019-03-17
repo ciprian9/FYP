@@ -5,7 +5,10 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.provider.ContactsContract;
 import android.telephony.SmsManager;
+
+import com.example.nicholasanton.myapplication.DataHandler;
 
 public class AutoReplyService extends Service {
 
@@ -26,9 +29,11 @@ public class AutoReplyService extends Service {
 
     private Thread theThread;
     private String sender="";
+    private DataHandler db;
 
     private void autoReply() {
         if (isMyServiceRunning(Running_Policy_Service.class) || isMyServiceRunning(Cycling_Policy_Service.class) || isMyServiceRunning(Driving_Policy_Service.class)) {
+            db.insertLog("Replied to Text");
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(sender, null, "Sorry I'm kind of busy", null, null);
         }
@@ -58,6 +63,8 @@ public class AutoReplyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        db = new DataHandler(this);
+        db.insertLog("Started AutoReply");
         if (intent.getStringExtra("sender") != null){
             sender = intent.getStringExtra("sender");
         }

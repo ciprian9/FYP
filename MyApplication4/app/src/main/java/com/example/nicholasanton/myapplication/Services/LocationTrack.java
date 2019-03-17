@@ -16,6 +16,8 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.example.nicholasanton.myapplication.DataHandler;
+
 public class LocationTrack extends Service implements LocationListener {
     private final Context mContext;
     boolean checkGPS = false;
@@ -27,6 +29,7 @@ public class LocationTrack extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
     protected LocationManager locationManager;
+    private DataHandler db;
 
     public LocationTrack(Context mContext) {
         this.mContext = mContext;
@@ -34,7 +37,7 @@ public class LocationTrack extends Service implements LocationListener {
     }
 
     private Location getLocation() {
-
+        db.insertLog("Getting Location");
         try {
             locationManager = (LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
@@ -48,6 +51,7 @@ public class LocationTrack extends Service implements LocationListener {
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (!checkGPS && !checkNetwork) {
+                db.insertLog("No service provider available");
                 Toast.makeText(mContext, "No Service Provider is available", Toast.LENGTH_SHORT).show();
             } else {
                 this.canGetLocation = true;
@@ -74,42 +78,10 @@ public class LocationTrack extends Service implements LocationListener {
                         if (loc != null) {
                             latitude = loc.getLatitude();
                             longitude = loc.getLongitude();
+                            db.insertLog("Got location");
                         }
                     }
-
-
                 }
-
-
-                /*if (checkNetwork) {
-
-
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                    }
-                    locationManager.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-
-                    if (locationManager != null) {
-                        loc = locationManager
-                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-                    }
-
-                    if (loc != null) {
-                        latitude = loc.getLatitude();
-                        longitude = loc.getLongitude();
-                    }
-                }*/
-
             }
 
 
@@ -132,6 +104,12 @@ public class LocationTrack extends Service implements LocationListener {
             latitude = loc.getLatitude();
         }
         return latitude;
+    }
+
+    @Override
+    public void onCreate() {
+        db = new DataHandler(this);
+        super.onCreate();
     }
 
     public boolean canGetLocation() {

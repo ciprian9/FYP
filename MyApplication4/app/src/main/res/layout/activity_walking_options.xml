@@ -43,7 +43,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/swRecordRoute"
         android:layout_marginTop="16dp"
-        android:text="OPEN MAP &amp; PEDOMETER" />
+        android:text="OPEN MAP &amp; PEDOMETER"
+        android:visibility="gone"/>
 
     <Switch
         android:id="@+id/swRecordRoute"

@@ -75,6 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/swAutoReply"
         android:layout_marginTop="9dp"
-        android:text="Reply To Calls" />
+        android:text="Reply To Calls"
+        android:visibility="gone" />
 
 </RelativeLayout>

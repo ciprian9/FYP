@@ -43,8 +43,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
-import com.example.nicholasanton.myapplication.PlayLists;
 import com.example.nicholasanton.myapplication.R;
 import com.example.nicholasanton.myapplication.Classes.RequestHandler;
 import com.example.nicholasanton.myapplication.Classes.SaveSettings;
@@ -60,19 +60,22 @@ public class WalkingOptions extends AppCompatActivity {
                       dist_speed = false, recordRoute = false;
     private Switch playHeadphones, startPedometer, Time, Rest, RecordRoute;
     private int accountid;
+    private String username;
+    private DataHandler db;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_walking_options);
-
+        db = new DataHandler(this);
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
                 accountid= 0;
             } else {
                 accountid= extras.getInt(Constants.ACCOUNTID_INTENT);
+                username= extras.getString(Constants.USERNAME_INTENT);
             }
         }
 
@@ -82,7 +85,9 @@ public class WalkingOptions extends AppCompatActivity {
         Rest = findViewById(R.id.swRest);
         RecordRoute = findViewById(R.id.swRecordRoute);
 
-        VarsToForm();
+        if (username.equals("tester1234")) {
+            VarsToForm();
+        }
         if (accountid != 0) {
             SaveSettings db = new SaveSettings(accountid, 1, "MusicPlayer", false, this);
             db.registerSetting(Constants.URL_SAVE_SETTING);
@@ -95,14 +100,6 @@ public class WalkingOptions extends AppCompatActivity {
             SaveSettings db4 = new SaveSettings(accountid, 1, "RecordRoute", false, this);
             db4.registerSetting(Constants.URL_SAVE_SETTING);
         };
-
-        final Button MapBtn = findViewById(R.id.btnOpenMap);
-        MapBtn.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                openTheMap();
-            }
-        });
-
 
         playHeadphones.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -176,7 +173,7 @@ public class WalkingOptions extends AppCompatActivity {
                             }
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            db.insertLog("Error Reading Settings Walking\n");
                         }
 
                     }
@@ -184,7 +181,7 @@ public class WalkingOptions extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        db.insertLog("Error Reading Settings Script Walking\n");
                     }
                 }) {
             @Override
@@ -216,20 +213,4 @@ public class WalkingOptions extends AppCompatActivity {
         readSettings("Distance_Speed", Rest);
         readSettings("RecordRoute", RecordRoute);
     }
-
-    public void openPlaylists(){
-        Intent intent = new Intent(this, PlayLists.class);
-        startActivity(intent);
-    }
-
-    public void openTheMap(){
-        Intent i = new Intent(this, MapActivity.class);
-        i.putExtra(Constants.ACCOUNTID_INTENT, accountid);
-        i.putExtra(Constants.PEDOMETER_INTENT, pedometer);
-        i.putExtra(Constants.TIME_INTENT, timeRecord);
-        i.putExtra(Constants.DISTANCE_INTENT, dist_speed);
-        i.putExtra(Constants.POLICY_ID, 1);
-        startActivity(i);
-    }
-
 }

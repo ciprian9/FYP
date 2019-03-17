@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
 import com.example.nicholasanton.myapplication.Classes.StepDetector;
 import com.example.nicholasanton.myapplication.Interfaces.StepListener;
@@ -25,6 +26,7 @@ public class pedometerService extends Service implements SensorEventListener, St
     private float distanceMeters;
     private float speed;
     private boolean pedometer, time, dist_speed;
+    private DataHandler db;
 
     Handler customHandler = new Handler();
 
@@ -56,7 +58,7 @@ public class pedometerService extends Service implements SensorEventListener, St
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        db = new DataHandler(this);
         Bundle extras = intent.getExtras();
 
         //just checking
@@ -105,6 +107,7 @@ public class pedometerService extends Service implements SensorEventListener, St
 
     @Override
     public void step(long timeNs) {
+        //db.insertLog("Step");
         numSteps++;
         long handm;
         handm = (hour * 3600) + (mins * 60) + secs;

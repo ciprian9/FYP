@@ -1,8 +1,10 @@
 package com.example.nicholasanton.myapplication.Classes;
 
+import android.content.Context;
 import android.util.Log;
 import java.util.Random;
 
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -29,6 +31,7 @@ public class SpotifyPlayer{
         this.mAccessToken = accessToken;
         this.ActivityTypeString = activityTypeString;
     }
+
 
 
     private void doInBackground() {
@@ -61,6 +64,10 @@ public class SpotifyPlayer{
         } catch (Exception e){
             Log.d("HELP1234", e.toString());
         }
+    }
+
+    public void pause(){
+        mSpotifyAppRemote.getPlayerApi().pause();
     }
 
     public void init(){

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
 
 /*
@@ -26,6 +27,7 @@ public class Walking_Policy_Service extends Service {
     private boolean dist_speed;
     private boolean musicPlayer;
     private int accountid;
+    private DataHandler db;
 
     final class TheThread implements Runnable{
         int serviceId;
@@ -46,6 +48,7 @@ public class Walking_Policy_Service extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Bundle extras = intent.getExtras();
+        db = new DataHandler(this);
 
         //just checking
         if( extras != null ) {
@@ -78,6 +81,7 @@ public class Walking_Policy_Service extends Service {
 
         try {
             if(pedometer || time || dist_speed) {
+                db.insertLog("Starting Walking Pedometer Service\n");
                 Intent i = new Intent(this, pedometerService.class);
                 i.putExtra(Constants.PEDOMETER_INTENT, pedometer);
                 i.putExtra(Constants.TIME_INTENT, time);

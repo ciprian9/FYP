@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.widget.Toast;
 
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Services.TextToSpeechService;
 
 public class SmsReceiver extends BroadcastReceiver {
@@ -15,6 +16,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        DataHandler db = new DataHandler(context);
         Bundle bundle = intent.getExtras();
         //attempt to stop the notification from the default sms application
         //android blocked access to do this todo look for new method to block notfications
@@ -29,12 +31,14 @@ public class SmsReceiver extends BroadcastReceiver {
                 SmsMessage sms = SmsMessage.createFromPdu((byte[]) pdus[i]);
 
                 //retrieving the sender number
+                db.insertLog("Get the number and message from text");
                 senderNumber = sms.getOriginatingAddress();
                 //retrieving the message
                 String message = sms.getDisplayMessageBody();
 
 
                 //START THE walking service and pass an intendt with extra data
+                db.insertLog("Starting Text To Speech Service");
                 Intent textIntent = new Intent(context, TextToSpeechService.class);
                 textIntent.putExtra("sender", senderNumber);
                 textIntent.putExtra("message", message);

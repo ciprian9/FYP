@@ -19,6 +19,21 @@
             app:showAsAction="never" />
 
         <item
+            android:id="@+id/MapPedometer"
+            android:title="Open Map &amp; Pedometer"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/Console"
+            android:title="Console"
+            app:showAsAction="never"/>
+
+        <item
+            android:id="@+id/ClearDB"
+            android:title="Clear Database"
+            app:showAsAction="never"/>
+
+        <item
             android:id="@+id/Logout"
             android:title="Log Out"
             app:showAsAction="never" />
