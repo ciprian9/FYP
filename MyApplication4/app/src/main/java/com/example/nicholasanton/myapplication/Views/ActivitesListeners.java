@@ -163,9 +163,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         final LocationListener mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(final Location location) {
-//                Log.d("LATLONG123", "Longitude: "+String.format("%.3f",location.getLongitude()));
-//                Log.d("LATLONG123", "Latitude: "+String.format("%.3f",location.getLatitude()));
-//                Log.d("LATLONG123", "Longitude HOME: "+String.format("%.3f",loc1.getLongitude()));
                 Log.d("LATLONG123", "Latitude HOME: "+String.format("%.3f",loc1.getLatitude()));
                 if (String.format("%.4f", location.getLongitude()).equals(String.format("%.4f", loc1.getLongitude()))
                         && String.format("%.4f", location.getLatitude()).equals(String.format("%.4f", loc1.getLatitude()))) {
