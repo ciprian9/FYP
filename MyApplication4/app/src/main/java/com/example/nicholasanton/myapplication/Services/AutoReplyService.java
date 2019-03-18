@@ -5,7 +5,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 
 import com.example.nicholasanton.myapplication.DataHandler;
@@ -13,7 +12,7 @@ import com.example.nicholasanton.myapplication.DataHandler;
 public class AutoReplyService extends Service {
 
     final class SecondThread implements Runnable{
-        int serviceId;
+        final int serviceId;
 
         SecondThread(int serviceId) {
             this.serviceId = serviceId;

@@ -42,9 +42,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import permissions.dispatcher.RuntimePermissions;
 import permissions.dispatcher.NeedsPermission;
@@ -60,19 +63,13 @@ public class MapActivity extends AppCompatActivity {
     private static final String TEXT_STO_STEPS = "Stopwatch: ";
     private static final String TEXT_SPE_STEPS = "Speed: ";
 
-    //Map processing
-    private SupportMapFragment mapFragment;
     private GoogleMap map;
-    private LocationRequest mLocationRequest;
-    private String walkingFileName = "latandlongsWalk.txt";
-    private String runningFileName = "latandlongsRun.txt";
-    private String cyclingFileName = "latandlongsCycle.txt";
-    private String drivingFileName = "latandlongsDrive.txt";
+    private final String walkingFileName = "latandlongsWalk.txt";
+    private final String runningFileName = "latandlongsRun.txt";
+    private final String cyclingFileName = "latandlongsCycle.txt";
+    private final String drivingFileName = "latandlongsDrive.txt";
     private ArrayList<LatLng> points; //added
-    Polyline line; //added
-    Location mCurrentLocation;
-    private long UPDATE_INTERVAL = 1000;  /* 1 sec */
-    private long FASTEST_INTERVAL = 500; /* 0.5 secs */
+    private Location mCurrentLocation;
     private NewLocationReciever receiver;
     private DataReceiver dataReceiver;
     private SpeedReciever speedReciever;
@@ -97,7 +94,7 @@ public class MapActivity extends AppCompatActivity {
 
         db.insertLog("Enter Map Activity\n");
 
-        points = new ArrayList<LatLng>();
+        points = new ArrayList<>();
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -113,7 +110,7 @@ public class MapActivity extends AppCompatActivity {
         registerReceiver(receiver, new IntentFilter("location_update"));
 
 
-        if (isMyServiceRunning(MapService.class)) {
+        if (isMyServiceRunning()) {
             Intent mapServiceIntent = new Intent(this, MapService.class);
             mapServiceIntent.putExtra("temp", true);
             mapServiceIntent.putExtra(Constants.POLICY_ID, policyID);
@@ -147,7 +144,8 @@ public class MapActivity extends AppCompatActivity {
         }
 
 
-        mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+        //Map processing
+        SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         if (mapFragment != null) {
             mapFragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
@@ -161,17 +159,17 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
+    private boolean isMyServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
+            if (MapService.class.getName().equals(service.service.getClassName())) {
                 return true;
             }
         }
         return false;
     }
 
-    public void drawTheLines() {
+    private void drawTheLines() {
         String textFromFile = "";
         if (policyID == 1) {
             textFromFile = readFile(walkingFileName);
@@ -183,13 +181,13 @@ public class MapActivity extends AppCompatActivity {
             textFromFile = readFile(drivingFileName);
         }
         String[] textFile = textFromFile.split("\n");
-        for (int i = 0; i < textFile.length; i++) {
-            points.add(removeText(textFile[i]));
+        for (String aTextFile : textFile) {
+            points.add(removeText(aTextFile));
         }
         redrawLine();
     }
 
-    public LatLng removeText(String text) {
+    private LatLng removeText(String text) {
         text = text.substring(10);
         text = text.substring(0, text.length() - 1);
         String[] split = text.split(",");
@@ -197,11 +195,10 @@ public class MapActivity extends AppCompatActivity {
         String Longitude = split[1];
         double lat = Double.parseDouble(Lattitude);
         double lng = Double.parseDouble(Longitude);
-        final LatLng latLng = new LatLng(lat, lng);
-        return latLng;
+        return new LatLng(lat, lng);
     }
 
-    public String readFile(String file) {
+    private String readFile(String file) {
         String text = "";
         try {
             FileInputStream fis = openFileInput(file);
@@ -219,7 +216,7 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
-    protected void loadMap(GoogleMap googleMap) {
+    private void loadMap(GoogleMap googleMap) {
         map = googleMap;
         if (map != null) {
             // Map is ready
@@ -281,17 +278,14 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
-    public boolean fileExists(Context context, String filename) {
+    private boolean fileExists(Context context, String filename) {
         File file = context.getFileStreamPath(filename);
-        if(file == null || !file.exists()) {
-            return false;
-        }
-        return true;
+        return file != null && file.exists();
     }
 
     @SuppressLint("NeedOnRequestPermissionsResult")
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         MapActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
@@ -315,10 +309,6 @@ public class MapActivity extends AppCompatActivity {
     /*
      * Called when the Activity becomes visible.
      */
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
 
     /*
      * Called when the Activity is no longer visible.
@@ -342,7 +332,7 @@ public class MapActivity extends AppCompatActivity {
             if (speedReciever != null){
                 unregisterReceiver(speedReciever);
             }
-            if (isMyServiceRunning(MapService.class)){
+            if (isMyServiceRunning()){
                 Intent mapServiceIntent = new Intent(this, MapService.class);
                 mapServiceIntent.putExtra("temp", false);
                 startService(mapServiceIntent);
@@ -365,8 +355,6 @@ public class MapActivity extends AppCompatActivity {
             CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(18).bearing(mCurrentLocation.getBearing()).tilt(70).build();
             CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
             map.animateCamera(cameraUpdate);
-        } else {
-
         }
         MapActivityPermissionsDispatcher.startLocationUpdatesWithPermissionCheck(this);
     }
@@ -374,9 +362,13 @@ public class MapActivity extends AppCompatActivity {
     @SuppressLint("RestrictedApi")
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void startLocationUpdates() {
-        mLocationRequest = new LocationRequest();
+        LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        /* 1 sec */
+        long UPDATE_INTERVAL = 1000;
         mLocationRequest.setInterval(UPDATE_INTERVAL);
+        /* 0.5 secs */
+        long FASTEST_INTERVAL = 500;
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
@@ -387,8 +379,6 @@ public class MapActivity extends AppCompatActivity {
         settingsClient.checkLocationSettings(locationSettingsRequest);
         //noinspection MissingPermission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            return;
         }
     }
 
@@ -396,7 +386,8 @@ public class MapActivity extends AppCompatActivity {
         map.clear();  //clears all Markers and Polylines
         PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
         options.addAll(points);
-        line = map.addPolyline(options); //add Polyline
+        //added
+        Polyline line = map.addPolyline(options);
         points.clear();
     }
 
@@ -423,6 +414,7 @@ public class MapActivity extends AppCompatActivity {
         }
 
         // Return a Dialog to the DialogFragment.
+        @NotNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return mDialog;
@@ -432,7 +424,7 @@ public class MapActivity extends AppCompatActivity {
     class NewLocationReciever extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("location_update")) {
+            if (Objects.requireNonNull(intent.getAction()).equals("location_update")) {
                 drawTheLines();
             }
         }
@@ -441,12 +433,14 @@ public class MapActivity extends AppCompatActivity {
     class SpeedReciever extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("GET_SPEED_DATA")){
+            if (Objects.requireNonNull(intent.getAction()).equals("GET_SPEED_DATA")){
                 String speed = intent.getStringExtra("Speed");
                 float distance = intent.getFloatExtra(Constants.DISTANCE_INTENT, 0);
-                TvSpeed.setText(TEXT_SPE_STEPS + speed);
+                String result = TEXT_SPE_STEPS + speed;
+                TvSpeed.setText(result);
                 TvSteps.setText("");
-                TvDistance.setText(TEXT_MET_STEPS + String.format("%.02f", distance));
+                result = TEXT_MET_STEPS + String.format("%.02f", distance);
+                TvDistance.setText(result);
                 TvTimer.setText("");
 
             }
@@ -458,23 +452,27 @@ public class MapActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("GET_PEDOMETER_DATA")) {
+            if (Objects.requireNonNull(intent.getAction()).equals("GET_PEDOMETER_DATA")) {
                 float speed = intent.getFloatExtra("speed", 0);
                 float distance = intent.getFloatExtra("dist", 0);
                 int min = intent.getIntExtra("min", 0);
                 int sec = intent.getIntExtra("sec", 0);
                 int hour = intent.getIntExtra("hour", 0);
                 int steps = intent.getIntExtra("steps", 0);
-
+                String result = "";
                 if(time) {
-                    TvTimer.setText(TEXT_STO_STEPS + String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec));
+                    result = TEXT_STO_STEPS + String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec);
+                    TvTimer.setText(result);
                 }
                 if(dist) {
-                    TvDistance.setText(TEXT_MET_STEPS + String.format("%.02f", distance));
-                    TvSpeed.setText(TEXT_SPE_STEPS + String.format("%.02f", speed));
+                    result = TEXT_MET_STEPS + String.format("%.02f", distance);
+                    TvDistance.setText(result);
+                    result = TEXT_SPE_STEPS + String.format("%.02f", speed);
+                    TvSpeed.setText(result);
                 }
                 if(pedometer) {
-                    TvSteps.setText(TEXT_NUM_STEPS + steps);
+                    result = TEXT_NUM_STEPS + steps;
+                    TvSteps.setText(result);
                 }
 
             }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,11 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="101dp"
         android:ems="10"
         android:fontFamily="sans-serif"
-        android:hint="Username"
+        android:hint="@string/etUsername"
         android:inputType="textPersonName"
         android:textAlignment="center"
         android:textColor="@android:color/black"
@@ -25,20 +26,20 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="15dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:background="@color/colorPrimaryDark"
         android:elevation="10dp"
         android:fontFamily="sans-serif"
         android:shadowColor="@android:color/darker_gray"
         android:shadowRadius="5"
-        android:text="Login"
+        android:text="@string/tvLogin"
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:targetApi="lollipop" />
 
 
     <Button
@@ -46,7 +47,6 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/saveLoginCheckBox"
-        android:layout_alignLeft="@+id/saveLoginCheckBox"
         android:layout_alignTop="@+id/NextButton"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -56,11 +56,12 @@
         android:fontFamily="sans-serif"
         android:shadowColor="@android:color/darker_gray"
         android:shadowRadius="5"
-        android:text="Register"
+        android:text="@string/btnRegister"
         android:textAlignment="center"
         android:textColor="@android:color/background_light"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:targetApi="lollipop" />
 
     <CheckBox
         android:id="@+id/saveLoginCheckBox"
@@ -68,10 +69,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/Password"
         android:layout_alignStart="@+id/Password"
-        android:layout_alignLeft="@+id/Password"
         android:layout_marginTop="19dp"
         android:fontFamily="sans-serif"
-        android:text="Remember Me"
+        android:text="@string/chkRememberMe"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold" />
@@ -82,11 +82,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/Username"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="26dp"
         android:ems="10"
         android:fontFamily="sans-serif"
-        android:hint="Password"
+        android:hint="@string/etPassword"
         android:inputType="textPassword"
         android:textAlignment="center"
         android:textColor="@android:color/black"

@@ -15,12 +15,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.ActivityRecognitionResult;
 
+import org.jetbrains.annotations.NotNull;
+
 public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final long ACTIVITY_RECOGNITION_INTERVAL = 10000;
-    private GoogleApiClient googleApiClient;
+    private final GoogleApiClient googleApiClient;
     private static ActivityRecognizerListener activityRecognizerListener;
-    private Context context;
+    private final Context context;
 
     public ActivityRecognizerImpl(Context context) {
         this.context = context;
@@ -42,12 +44,12 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
      * @param connectionResult Checks if the connection failed
      */
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NotNull ConnectionResult connectionResult) {
         //Google API connection has been failed! Stop it and warn!
-        activityRecognizerListener.connectionFailed(connectionResult.getErrorMessage());
+        activityRecognizerListener.connectionFailed();
         stopToRecognizeActivities();
     }
-
+    @SuppressWarnings("deprecation")
     @Override
     public void stopToRecognizeActivities() {
         if (googleApiClient.isConnected()) {
@@ -67,6 +69,7 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
      *
      * @param bundle Set up activity recognition and ready to detect activities
      */
+    @SuppressWarnings("deprecation")
     @Override
     public void onConnected(Bundle bundle) {
         //Google API connection has been done successfully, now we can work with it

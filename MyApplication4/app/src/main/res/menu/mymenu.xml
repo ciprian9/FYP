@@ -3,39 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/mybutton"
-        android:icon="@drawable/ic_action_gear"
         android:menuCategory="container"
         android:title=""
-        app:showAsAction="always">
+        app:showAsAction="ifRoom">
 
         <item
             android:id="@+id/ChangeGmail"
-            android:title="Change Gmail"
+            android:title="@string/itmGmail"
             app:showAsAction="never" />
 
         <item
             android:id="@+id/School_WorkLocation"
-            android:title="Set School/Work Location"
+            android:title="@string/itmSWLoc"
             app:showAsAction="never" />
 
         <item
             android:id="@+id/MapPedometer"
-            android:title="Open Map &amp; Pedometer"
+            android:title="@string/btnOpenMap"
             app:showAsAction="never" />
 
         <item
             android:id="@+id/Console"
-            android:title="Console"
+            android:title="@string/itmConsole"
             app:showAsAction="never"/>
 
         <item
             android:id="@+id/ClearDB"
-            android:title="Clear Database"
+            android:title="@string/itmClearDB"
+            app:showAsAction="never"/>
+
+        <item
+            android:id="@+id/SetMorningNight"
+            android:title="@string/itmSetMorningNight"
             app:showAsAction="never"/>
 
         <item
             android:id="@+id/Logout"
-            android:title="Log Out"
+            android:title="@string/itmLogout"
             app:showAsAction="never" />
 
     </item>

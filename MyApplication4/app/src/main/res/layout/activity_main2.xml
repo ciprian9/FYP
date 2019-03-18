@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,50 +9,43 @@
         android:id="@+id/walkingOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Walking Preferences" />
+        android:text="@string/btnWalking" />
 
     <Button
         android:id="@+id/runningOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/walkingOptions"
-        android:text="Running Preferences" />
+        android:text="@string/btnRunning" />
 
     <Button
         android:id="@+id/cyclingOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/runningOptions"
-        android:text="Cycling Preferences" />
+        android:text="@string/btnCycling" />
 
     <Button
         android:id="@+id/drivingOptions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/cyclingOptions"
-        android:text="Driving Preferences" />
+        android:text="@string/btnDriving" />
 
     <Button
         android:id="@+id/btnTestDriving"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/drivingOptions"
-        android:text="TEST DRIVING"
+        android:text="@string/btnTestDriving"
         android:visibility="gone" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="107dp"
-        android:layout_height="721dp"
-        android:text="Button"
-        android:visibility="gone"/>
 
     <Button
         android:id="@+id/btnTestWalking"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnTestDriving"
-        android:text="TEST WALKING"
+        android:text="@string/btnTestWalking"
         android:visibility="gone" />
 
     <Button
@@ -61,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnTestWalking"
-        android:text="TEST CYCLING"
+        android:text="@string/btnTestCycling"
         android:visibility="gone" />
 
     <Button
@@ -69,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnTestCycling"
-        android:text="TEST RUNNING"
+        android:text="@string/btnTestRunning"
         android:visibility="gone" />
 
     <Button
@@ -77,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnTestRunning"
-        android:text="STOP"
+        android:text="@string/btnStop"
         android:visibility="gone" />
 
 </RelativeLayout>

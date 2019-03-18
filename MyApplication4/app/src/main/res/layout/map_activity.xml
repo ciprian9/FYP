@@ -16,7 +16,7 @@ android:orientation="vertical" >
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginTop="20dp"
-            android:text="Steps:"/>
+            android:text="@string/tvSteps"/>
 
         <TextView
             android:id="@+id/tvDistance"
@@ -24,7 +24,7 @@ android:orientation="vertical" >
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_below="@id/tv_steps"
-            android:text="Distance:"/>
+            android:text="@string/tvDist"/>
 
         <TextView
             android:id="@+id/tvTimer"
@@ -32,7 +32,7 @@ android:orientation="vertical" >
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_below="@id/tvDistance"
-            android:text="Timer:"/>
+            android:text="@string/tvTimer"/>
 
         <TextView
             android:id="@+id/tvSpeed"
@@ -40,7 +40,7 @@ android:orientation="vertical" >
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_below="@id/tvTimer"
-            android:text="Speed:"/>
+            android:text="@string/tvSpeed"/>
 
 
     </RelativeLayout>

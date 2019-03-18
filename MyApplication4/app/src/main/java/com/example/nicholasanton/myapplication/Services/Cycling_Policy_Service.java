@@ -6,19 +6,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
-import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
 
 public class Cycling_Policy_Service extends Service {
 
-    private boolean showSpeed;
-    private boolean recomendDestinations;
-    private boolean musicPlayer;
-    private boolean notificationTTS;
-    private int accountid;
-
     final class TheThread implements Runnable{
-        int serviceId;
+        final int serviceId;
 
         TheThread(int serviceId) {
             this.serviceId = serviceId;
@@ -27,7 +20,7 @@ public class Cycling_Policy_Service extends Service {
         @Override
         public void run() {
             synchronized (this) {
-                doEverything();
+                //doEverything();
             }
         }
     }
@@ -36,11 +29,11 @@ public class Cycling_Policy_Service extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
         if( extras != null ) {
-            accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
-            musicPlayer = extras.getBoolean(Constants.MUSIC_INTENT);
-            showSpeed = extras.getBoolean(Constants.SPEED_INTENT);
-            recomendDestinations = extras.getBoolean(Constants.RECOMEND_INTENT);
-            notificationTTS = extras.getBoolean(Constants.TEXT_TO_SPEECH_SETTING);
+            int accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
+            boolean musicPlayer = extras.getBoolean(Constants.MUSIC_INTENT);
+            boolean showSpeed = extras.getBoolean(Constants.SPEED_INTENT);
+            boolean recomendDestinations = extras.getBoolean(Constants.RECOMEND_INTENT);
+            boolean notificationTTS = extras.getBoolean(Constants.TEXT_TO_SPEECH_SETTING);
         }
 
         Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
@@ -60,7 +53,7 @@ public class Cycling_Policy_Service extends Service {
         return null;
     }
 
-    public void doEverything() {
-        //
-    }
+//    private void doEverything() {
+//        //
+//    }
 }

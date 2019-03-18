@@ -81,7 +81,7 @@ public class TextToSpeechService extends Service {
         //AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         //audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 
-        if (sender != "" && smsMessage != ""){
+        if (!sender.equals("") && !smsMessage.equals("")){
             if (isMyServiceRunning(Running_Policy_Service.class) || isMyServiceRunning(Cycling_Policy_Service.class) || isMyServiceRunning(Driving_Policy_Service.class)) {
                 if (notificationTTS) {
                     TextMessage = TextMessage + sender + " says " + smsMessage;
@@ -115,7 +115,7 @@ public class TextToSpeechService extends Service {
         }
     }
 
-    public void SetSpeaker(){
+    private void SetSpeaker(){
         repeatTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {

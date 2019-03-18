@@ -25,12 +25,10 @@ public class Walking_Policy_Service extends Service {
     private boolean pedometer;
     private boolean time;
     private boolean dist_speed;
-    private boolean musicPlayer;
-    private int accountid;
     private DataHandler db;
 
     final class TheThread implements Runnable{
-        int serviceId;
+        final int serviceId;
 
         TheThread(int serviceId) {
             this.serviceId = serviceId;
@@ -52,8 +50,8 @@ public class Walking_Policy_Service extends Service {
 
         //just checking
         if( extras != null ) {
-            accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
-            musicPlayer = extras.getBoolean(Constants.MUSIC_INTENT);
+            int accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
+            boolean musicPlayer = extras.getBoolean(Constants.MUSIC_INTENT);
             pedometer = extras.getBoolean(Constants.PEDOMETER_INTENT);
             time = extras.getBoolean(Constants.TIME_INTENT);
             dist_speed = extras.getBoolean(Constants.DISTANCE_INTENT);
@@ -77,7 +75,7 @@ public class Walking_Policy_Service extends Service {
         return null;
     }
 
-    public void doEverything() {
+    private void doEverything() {
 
         try {
             if(pedometer || time || dist_speed) {
@@ -89,7 +87,7 @@ public class Walking_Policy_Service extends Service {
                 startService(i);
             }
         } catch (Exception e){
-            System.out.printf(e.toString());
+            System.out.print(e.toString());
         }
     }
 }

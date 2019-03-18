@@ -12,9 +12,6 @@ import com.example.nicholasanton.myapplication.R;
 
 public class DebugConsole extends AppCompatActivity {
 
-    private DataHandler db;
-    private Cursor cursor;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,22 +20,25 @@ public class DebugConsole extends AppCompatActivity {
         TextView textView = findViewById(R.id.text_view);
         textView.setMovementMethod(new ScrollingMovementMethod());
 
-        db = new DataHandler(this);
+        DataHandler db = new DataHandler(this);
 
-        cursor = db.SelectLogs();
+        Cursor cursor = db.SelectLogs();
 
+        String result = "";
         if (cursor != null){
             cursor.moveToLast();
             if (cursor.getCount()>500) {
                 for (int i=0;i<500;i++){
-                    textView.setText(textView.getText() + cursor.getString(1));
+                    result = result + cursor.getString(1);
                     cursor.moveToPrevious();
                 }
+                textView.setText(result);
             } else {
                 for (int i = 0; i <= cursor.getCount() - 1; i++) {
-                    textView.setText(textView.getText() + cursor.getString(1));
+                    result = result + cursor.getString(1);
                     cursor.moveToPrevious();
                 }
+                textView.setText(result);
             }
         }
 

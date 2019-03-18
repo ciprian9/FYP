@@ -26,6 +26,6 @@ public class bedtimeRoutineService extends Service {
             return;
         }
         AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
     }
 }

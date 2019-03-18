@@ -25,21 +25,20 @@ public class pedometerService extends Service implements SensorEventListener, St
     private int numSteps;
     private float distanceMeters;
     private float speed;
-    private boolean pedometer, time, dist_speed;
-    private DataHandler db;
 
-    Handler customHandler = new Handler();
+    private final Handler customHandler = new Handler();
 
-    long startTime=0L, timeInMilliseconds=0L, updateTime=0L, timeSwapBuff=0L;
-    int secs, mins, hour;
+    private long startTime=0L;
+    private int secs, mins, hour;
 
-    Runnable updateTimerThread = new Runnable(){
+    private final Runnable updateTimerThread = new Runnable(){
 
         @Override
         public void run() {
-            timeInMilliseconds = SystemClock.uptimeMillis()-startTime;
-            updateTime = timeSwapBuff+timeInMilliseconds;
-            secs=(int)(updateTime/1000);
+            long timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+            long timeSwapBuff = 0L;
+            long updateTime = timeSwapBuff + timeInMilliseconds;
+            secs=(int)(updateTime /1000);
             mins=secs/60;
             secs%=60;
             hour = mins / 60;
@@ -58,14 +57,14 @@ public class pedometerService extends Service implements SensorEventListener, St
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        db = new DataHandler(this);
+        DataHandler db = new DataHandler(this);
         Bundle extras = intent.getExtras();
 
         //just checking
         if( extras != null ) {
-            pedometer = extras.getBoolean(Constants.PEDOMETER_INTENT);
-            time = extras.getBoolean(Constants.TIME_INTENT);
-            dist_speed = extras.getBoolean(Constants.DISTANCE_INTENT);
+            boolean pedometer = extras.getBoolean(Constants.PEDOMETER_INTENT);
+            boolean time = extras.getBoolean(Constants.TIME_INTENT);
+            boolean dist_speed = extras.getBoolean(Constants.DISTANCE_INTENT);
         }
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -115,7 +114,7 @@ public class pedometerService extends Service implements SensorEventListener, St
         speed = distanceMeters / handm;
     }
 
-    public float getDistanceRun(long steps){
+    private float getDistanceRun(long steps){
         return (float) ((float) steps * 0.762);
     }
 

@@ -57,9 +57,8 @@ public class DataHandler extends SQLiteOpenHelper {
         //select query
         String query = "Select * from " + USER_TABLE_NAME + " WHERE " + COLUMN_USERID + " = " + 1;
         //run the query and receive the cursor filled with data
-        Cursor result = db.rawQuery(query, null);
         //return the cursor
-        return result;
+        return db.rawQuery(query, null);
     }
 
     public void DeleteLogs(){
@@ -68,17 +67,16 @@ public class DataHandler extends SQLiteOpenHelper {
     }
 
     //Update Settings record
-    public boolean updateUser(String username, String password){
+    public void updateUser(String username, String password){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_USERNAME, username);
         contentValues.put(COLUMN_PASSWORD, password);
         //The id of the setting is used, settings are added only once and updated thereafter
         db.update(USER_TABLE_NAME, contentValues, "id = ?", new String[]{"1"});
-        return true;
     }
 
-    public boolean insertUser(String username, String password){
+    public void insertUser(String username, String password){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_USERID, 1);
@@ -86,7 +84,6 @@ public class DataHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_PASSWORD, password);
         long result = db.insert(USER_TABLE_NAME, null, contentValues);
         db.close();
-        return result != -1;
     }
 
     public void DeleteUser(){
@@ -121,13 +118,12 @@ public class DataHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertLog(String message){
+    public void insertLog(String message){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_LINE_TEXT, message);
         long result = db.insert(LOGS_TABLE_NAME, null, contentValues);
         db.close();
-        return result != -1;
     }
 
     public Cursor SelectLogs(){
@@ -136,9 +132,8 @@ public class DataHandler extends SQLiteOpenHelper {
         //select query
         String query = "Select * from " + LOGS_TABLE_NAME;
         //run the query and receive the cursor filled with data
-        Cursor result = db.rawQuery(query, null);
         //return the cursor
-        return result;
+        return db.rawQuery(query, null);
     }
 
 

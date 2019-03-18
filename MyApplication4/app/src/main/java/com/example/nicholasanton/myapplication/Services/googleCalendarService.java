@@ -26,12 +26,11 @@ import java.util.Map;
 
 public class googleCalendarService extends Service {
 
-    ClipboardManager clipboard;
-    String username1;
-    private static String ROOTURL = "http://192.168.0.241/Android/php/";
-    String token;
-    String calendarid;
-    Boolean inOrOut = false;
+    private ClipboardManager clipboard;
+    private static final String ROOTURL = "http://192.168.0.241/Android/php/";
+    private String token;
+    private String calendarid;
+    private Boolean inOrOut = false;
     private DataHandler db;
 
     @Override
@@ -45,7 +44,7 @@ public class googleCalendarService extends Service {
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             calendarid = bundle.getString("calendarid");
-            username1 = bundle.getString("username");
+            String username1 = bundle.getString("username");
         }
         clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
         clipboard.addPrimaryClipChangedListener(mPrimaryChangeListener);
@@ -53,14 +52,14 @@ public class googleCalendarService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void start(){
+    private void start(){
         Intent i = new Intent(this, ActivitesListeners.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
     }
 
-
-    ClipboardManager.OnPrimaryClipChangedListener mPrimaryChangeListener = new ClipboardManager.OnPrimaryClipChangedListener() {
+    @SuppressWarnings("deprecation")
+    private final ClipboardManager.OnPrimaryClipChangedListener mPrimaryChangeListener = new ClipboardManager.OnPrimaryClipChangedListener() {
         public void onPrimaryClipChanged() {
             db.insertLog("Got Clipboard");
             start();
@@ -69,7 +68,7 @@ public class googleCalendarService extends Service {
         }
     };
 
-    public void googleCalendarConnection(final String apath, final int anAction){
+    private void googleCalendarConnection(final String apath, final int anAction){
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 apath,
                 new Response.Listener<String>() {

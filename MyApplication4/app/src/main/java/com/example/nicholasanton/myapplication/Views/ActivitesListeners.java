@@ -1,6 +1,7 @@
 package com.example.nicholasanton.myapplication.Views;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -80,7 +81,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.vision.barcode.Barcode;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
@@ -91,6 +91,9 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+
+import static com.example.nicholasanton.myapplication.Interfaces.Constants.defaultMorning;
+import static com.example.nicholasanton.myapplication.Interfaces.Constants.defaultNight;
 
 public class ActivitesListeners extends AppCompatActivity implements HomeView {
     private int accountid;
@@ -106,29 +109,22 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     public static boolean cyclingService = false;
     public static boolean drivingService = false;
     public static boolean inMeeting = false;
-    public String previousActivity = "UNKNOWN";
-    public String work;
-    public String home;
-    public LatLng workLL;
-    public LatLng homeLL;
-    public boolean yorn;
-    public boolean justDid;
-    public Location loc1;
+    private String previousActivity = "UNKNOWN";
+    private String work;
+    private String home;
+    private LatLng workLL;
+    private LatLng homeLL;
+    private Location loc1;
     private EventReciever reciever;
-    private AlarmManager alarmMgr;
-    private PendingIntent alarmIntent;
-    private AlarmManager alarmMgr2;
-    private PendingIntent alarmIntent2;
     private FirebaseJobDispatcher mDispatcher;
     private static final String CLIENT_ID = "9059d78622a94813a3b8920877c0198a";
     private static final String REDIRECT_URI = "http://example.com/callback";
-    //private static final String CLIENT_SECRET = "517ee039f5fc4e99886dd3181cf73afe";
     private static final int REQUEST_CODE = 1337;
     private SpotifyAppRemote mSpotifyAppRemote;
     private String mAccessToken;
-    BroadcastReceiver updateUIReciver;
-    String summary;
-    int hour, mins, secs, ehour, emins, esecs;
+    private BroadcastReceiver updateUIReciver;
+    private String summary;
+    private int hour, mins, secs, ehour, emins, esecs;
     private SpotifyPlayer spotifyPlayer;
     private DataHandler db;
 
@@ -161,6 +157,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
 
         final LocationListener mLocationListener = new LocationListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onLocationChanged(final Location location) {
                 Log.d("LATLONG123", "Latitude HOME: "+String.format("%.3f",loc1.getLatitude()));
@@ -222,68 +219,66 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             ReadLocation();
         }
 
-        if (username.equals("tester123")) {
-            if (accountid == -1) {
-                Button btnTestDrive = findViewById(R.id.btnTestDriving);
-                btnTestDrive.setVisibility(View.VISIBLE);
-                btnTestDrive.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(View view) {
-                        getWalkingSettings(4);
-                        db.insertLog("Test Driving Started\n");
-                    }
-                });
+        if (accountid == -1) {
+            Button btnTestDrive = findViewById(R.id.btnTestDriving);
+            btnTestDrive.setVisibility(View.VISIBLE);
+            btnTestDrive.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.M)
+                @Override
+                public void onClick(View view) {
+                    getWalkingSettings(4);
+                    db.insertLog("Test Driving Started\n");
+                }
+            });
 
-                Button btnTestBike = findViewById(R.id.btnTestCycling);
-                btnTestBike.setVisibility(View.VISIBLE);
-                btnTestBike.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(View view) {
-                        getWalkingSettings(3);
-                        db.insertLog("Test Cycling Started\n");
-                    }
-                });
+            Button btnTestBike = findViewById(R.id.btnTestCycling);
+            btnTestBike.setVisibility(View.VISIBLE);
+            btnTestBike.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.M)
+                @Override
+                public void onClick(View view) {
+                    getWalkingSettings(3);
+                    db.insertLog("Test Cycling Started\n");
+                }
+            });
 
-                Button btnTestWalk = findViewById(R.id.btnTestWalking);
-                btnTestWalk.setVisibility(View.VISIBLE);
-                btnTestWalk.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(View view) {
-                        getWalkingSettings(1);
-                        db.insertLog("Test Walking Started\n");
-                    }
-                });
+            Button btnTestWalk = findViewById(R.id.btnTestWalking);
+            btnTestWalk.setVisibility(View.VISIBLE);
+            btnTestWalk.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.M)
+                @Override
+                public void onClick(View view) {
+                    getWalkingSettings(1);
+                    db.insertLog("Test Walking Started\n");
+                }
+            });
 
-                Button btnTestRun = findViewById(R.id.btnTestRunning);
-                btnTestRun.setVisibility(View.VISIBLE);
-                btnTestRun.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(View view) {
-                        getWalkingSettings(2);
-                        db.insertLog("Test Running Started\n");
-                    }
-                });
+            Button btnTestRun = findViewById(R.id.btnTestRunning);
+            btnTestRun.setVisibility(View.VISIBLE);
+            btnTestRun.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.M)
+                @Override
+                public void onClick(View view) {
+                    getWalkingSettings(2);
+                    db.insertLog("Test Running Started\n");
+                }
+            });
 
-                Button btnStop = findViewById(R.id.btnStop);
-                btnStop.setVisibility(View.VISIBLE);
-                btnStop.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(View view) {
-                        StopWalkingPolicy();
-                        StopDrivingPolicy();
-                        spotifyPlayer.pause();
-                        db.insertLog("ALL Policies Stopped\n");
-                    }
-                });
-            }
+            Button btnStop = findViewById(R.id.btnStop);
+            btnStop.setVisibility(View.VISIBLE);
+            btnStop.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.M)
+                @Override
+                public void onClick(View view) {
+                    StopWalkingPolicy();
+                    StopDrivingPolicy();
+                    spotifyPlayer.pause();
+                    db.insertLog("ALL Policies Stopped\n");
+                }
+            });
         }
 
-        if (username.equals("tester123") || username.equals("tester1234")) {
+        if (accountid == -1 || username.equals("tester1234")) {
             musicPlayer = true;
             pedometer = true;
             timeRecord = true;
@@ -294,13 +289,11 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             callReply = true;
         }
 
-        if (!username.equals("tester123")) {
-            if (accountid != -1) {
-                ButterKnife.bind(this);
-                ((ActivityTrackerApplication) getApplication()).getObjectGraph().plus(new HomeViewModule(this)).inject(this);
-                presenter.init();
-                presenter.callTrackingService();
-            }
+        if (accountid != -1) {
+            ButterKnife.bind(this);
+            ((ActivityTrackerApplication) getApplication()).getObjectGraph().plus(new HomeViewModule(this)).inject(this);
+            presenter.init();
+            presenter.callTrackingService();
         }
 
         reciever = new EventReciever();
@@ -308,29 +301,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         mDispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
         Start();
 
-        alarmMgr = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getApplicationContext(), getTheWeather.class);
-        alarmIntent = PendingIntent.getService(getApplicationContext(), 0, intent, 0);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
-        calendar.set(Calendar.MINUTE, 00);
-
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, alarmIntent);
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
-        alarmMgr2 = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent2 = new Intent(getApplicationContext(), bedtimeRoutineService.class);
-        alarmIntent2 = PendingIntent.getService(getApplicationContext(), 0, intent2, 0);
-
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.setTimeInMillis(System.currentTimeMillis());
-        calendar2.set(Calendar.HOUR_OF_DAY, 10);
-        calendar2.set(Calendar.MINUTE, 00);
-
-        alarmMgr2.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, alarmIntent2);
+        setMorningNightRoutine(defaultMorning, defaultNight);
 
         final Button walkingOptions = findViewById(R.id.walkingOptions);
         walkingOptions.setOnClickListener(new View.OnClickListener() {
@@ -396,7 +367,38 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 });
     }
 
-    public void openTheMap(){
+    private void setMorningNightRoutine(String morningTime, String nightTime){
+        String[] strings = morningTime.split(":");
+        String morningHour = strings[0];
+        String morningMin = strings[1];
+
+        strings = nightTime.split(":");
+        String nightHour = strings[0];
+        String nightMin = strings[1];
+
+        AlarmManager alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getApplicationContext(), getTheWeather.class);
+        PendingIntent alarmIntent = PendingIntent.getService(getApplicationContext(), 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(morningHour));
+        calendar.set(Calendar.MINUTE, Integer.valueOf(morningMin));
+
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, alarmIntent);
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+        AlarmManager alarmMgr2 = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent2 = new Intent(getApplicationContext(), bedtimeRoutineService.class);
+        PendingIntent alarmIntent2 = PendingIntent.getService(getApplicationContext(), 0, intent2, 0);
+
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTimeInMillis(System.currentTimeMillis());
+        calendar2.set(Calendar.HOUR_OF_DAY, Integer.valueOf(nightHour));
+        calendar2.set(Calendar.MINUTE, Integer.valueOf(nightMin));
+    }
+
+    private void openTheMap(){
         db.insertLog("Map/Pedometer Activity Starting\n");
         Intent i = new Intent(this, MapActivity.class);
         i.putExtra(Constants.ACCOUNTID_INTENT, accountid);
@@ -407,7 +409,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         startActivity(i);
     }
 
-    public LatLng getLocationFromAddress(Context context, String strAddress) {
+    private LatLng getLocationFromAddress(Context context, String strAddress) {
         Geocoder coder = new Geocoder(context);
         List<Address> address;
         LatLng p1 = null;
@@ -452,7 +454,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             }
         }
     }
-
+    @SuppressWarnings("deprecation")
     private void connected(String ActivityTypeString) {
         AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         if (spotifyPlayer == null){
@@ -465,7 +467,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
-    public void GmailDialog() {
+    private void GmailDialog() {
         if (gmail.equalsIgnoreCase("NULL")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Do you want to input a Gmail Address?")
@@ -501,7 +503,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
-    public void setNewGmail(final String newGmailAccount) {
+    private void setNewGmail(final String newGmailAccount) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_UPDATE_ACCOUNT,
                 new Response.Listener<String>() {
@@ -586,8 +588,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             AlertDialog alert = builder.create();
             alert.show();
         } else if (id == R.id.School_WorkLocation){
-            yorn = true;
-
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Use current location or type in address?")
                     .setCancelable(false)
@@ -604,9 +604,11 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                                         public void onClick(DialogInterface dialog, int which) {
                                             String address = taskEditText.getText().toString();
                                             LatLng latlng1 = getLocationFromAddress(getApplicationContext(), address);
-                                            loc1.setLongitude(latlng1.longitude);
-                                            loc1.setLatitude(latlng1.latitude);
-                                            SetUpLocationwork(latlng1.latitude + "," + latlng1.longitude);
+                                            if (latlng1 != null) {
+                                                loc1.setLongitude(latlng1.longitude);
+                                                loc1.setLatitude(latlng1.latitude);
+                                                SetUpLocationwork(latlng1.latitude + "," + latlng1.longitude);
+                                            }
                                         }
                                     })
                                     .setNegativeButton("Cancel", null)
@@ -641,11 +643,30 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             startActivity(i);
         } else if (id == R.id.ClearDB){
             db.DeleteLogs();
+        } else if (id == R.id.SetMorningNight){
+            final EditText taskEditText = new EditText(ActivitesListeners.this);
+            final AlertDialog SecondDialog = new AlertDialog.Builder(ActivitesListeners.this)
+                    .setTitle("Input Times ( separated by , ) :")
+                    .setMessage("")
+                    .setView(taskEditText)
+                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String newTimes = taskEditText.getText().toString();
+                            String[] strings = newTimes.split(",");
+                            String MorningTime = strings[0];
+                            String NightTime = strings[1];
+                            setMorningNightRoutine(MorningTime, NightTime);
+                        }
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .create();
+            SecondDialog.show();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void ReadLocation() {
+    private void ReadLocation() {
         //db.insertLog("Reading Location...\n");
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_READ_LOCATION,
@@ -700,7 +721,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
-    public void SetUpLocationwork(final String workAdd) {
+    private void SetUpLocationwork(final String workAdd) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_ADDWORK_LOCATION,
                 new Response.Listener<String>() {
@@ -739,7 +760,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
-    public void SetUpLocation(final String homeAdd) {
+    private void SetUpLocation(final String homeAdd) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_ADD_LOCATION,
                 new Response.Listener<String>() {
@@ -778,7 +799,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
-    public void StartDrivingOptions() {
+    private void StartDrivingOptions() {
         //create a new intent that will start walkingOptions class
         Intent intent = new Intent(this, DrivingOptions.class);
         intent.putExtra("accountid", accountid);
@@ -789,7 +810,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
-    public void StartCyclingOptions() {
+    private void StartCyclingOptions() {
         //create a new intent that will start walkingOptions class
         Intent intent = new Intent(this, CyclingOptions.class);
         intent.putExtra("accountid", accountid);
@@ -821,7 +842,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void StartDrivingService() {
+    private void StartDrivingService() {
         if (recordRoute) {
             Intent i = new Intent(getApplicationContext(), MapService.class);
             i.putExtra("temp", false);
@@ -838,10 +859,12 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         intent.putExtra(Constants.TIME_INTENT, timeRecord);
         intent.putExtra(Constants.DISTANCE_INTENT, dist_speed);
         startService(intent);
-        if (musicPlayer) connected("CAR");
+        if (musicPlayer) {
+            connected("CAR");
+        }
     }
 
-    public void StartCyclingService() {
+    private void StartCyclingService() {
         if (recordRoute) {
             Intent i = new Intent(getApplicationContext(), MapService.class);
             i.putExtra("temp", false);
@@ -894,7 +917,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         readSettings(Constants.CALL_REPLY_SETTING, aPolicyID);
     }
 
-    public void readSettings(final String aName, final int aPolicyID) {
+    private void readSettings(final String aName, final int aPolicyID) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_READ_SETTING,
                 new Response.Listener<String>() {
@@ -984,7 +1007,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         super.onDestroy();
     }
 
-    public void StartWalkingService() {
+    private void StartWalkingService() {
         if (recordRoute) {
             Intent i = new Intent(getApplicationContext(), MapService.class);
             i.putExtra("temp", false);
@@ -1003,7 +1026,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
-    public void StartWalkingOptions() {
+    private void StartWalkingOptions() {
         //create a new intent that will start walkingOptions class
         Intent intent = new Intent(this, WalkingOptions.class);
         intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
@@ -1015,7 +1038,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
-    public void StartRunningService() {
+    private void StartRunningService() {
         //create a new intent that will start walkingPolicy service
         //MakeNotifications("on Foot", "on Foot");
         if (recordRoute) {
@@ -1036,7 +1059,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
-    public void StartRunningOptions() {
+    private void StartRunningOptions() {
         //create a new intent that will start walkingOptions class
         Intent intent = new Intent(this, RunningOptions.class);
         intent.putExtra("accountid", accountid);
@@ -1047,7 +1070,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
-    public void Start() {
+    private void Start() {
         db.insertLog("Starting Timer Service\n");
         startService(new Intent(ActivitesListeners.this, Timer_Service.class));
     }
@@ -1056,7 +1079,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
 //        stopService(new Intent(ActivitesListeners.this, Timer_Service.class));
 //    }
 
-    public void getEvents() {
+    private void getEvents() {
         //db.insertLog("Getting phone events\n");
         String[] projection = new String[]{CalendarContract.Events.CALENDAR_ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND, CalendarContract.Events.ALL_DAY, CalendarContract.Events.EVENT_LOCATION};
         Calendar startTime = Calendar.getInstance();
@@ -1081,14 +1104,14 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         cursor.close();
     }
 
-    public long D2MS(int month, int day, int year, int hour, int minute, int seconds) {
+    private long D2MS(int month, int day, int year, int hour, int minute, int seconds) {
         Calendar c = Calendar.getInstance();
         c.set(year, month, day, hour, minute, seconds);
 
         return c.getTimeInMillis();
     }
 
-    public void getCalendarEvents() {
+    private void getCalendarEvents() {
         //db.insertLog("Getting calendar events\n");
         IntentFilter filter = new IntentFilter();
         filter.addAction("NOW");
@@ -1246,7 +1269,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 if (!previousActivity.equalsIgnoreCase("RUNNING")) {
                     Log.d("Activity123", "RUNNING");
                     previousActivity = "RUNNING";
-                    connected("RUNNING");
                     if (username.equals("tester1234")){
                         StartRunningService();
                     } else {
@@ -1267,7 +1289,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
-    public static boolean isBluetoothHeadsetConnected() {
+    private static boolean isBluetoothHeadsetConnected() {
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()
                 && mBluetoothAdapter.getProfileConnectionState(BluetoothHeadset.HEADSET) == BluetoothHeadset.STATE_CONNECTED;

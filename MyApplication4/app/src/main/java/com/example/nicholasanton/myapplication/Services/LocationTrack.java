@@ -20,15 +20,13 @@ import com.example.nicholasanton.myapplication.DataHandler;
 
 public class LocationTrack extends Service implements LocationListener {
     private final Context mContext;
-    boolean checkGPS = false;
-    boolean checkNetwork = false;
-    boolean canGetLocation = false;
-    Location loc;
-    double latitude;
-    double longitude;
+    private boolean canGetLocation = false;
+    private Location loc;
+    private double latitude;
+    private double longitude;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
-    protected LocationManager locationManager;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60;
+    private LocationManager locationManager;
     private DataHandler db;
 
     public LocationTrack(Context mContext) {
@@ -36,18 +34,18 @@ public class LocationTrack extends Service implements LocationListener {
         getLocation();
     }
 
-    private Location getLocation() {
+    private void getLocation() {
         db.insertLog("Getting Location");
         try {
             locationManager = (LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
 
             // get GPS status
-            checkGPS = locationManager
+            boolean checkGPS = locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
             // get network provider status
-            checkNetwork = locationManager
+            boolean checkNetwork = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (!checkGPS && !checkNetwork) {
@@ -60,13 +58,7 @@ public class LocationTrack extends Service implements LocationListener {
                 if (checkGPS) {
 
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
+
                     }
                     locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
@@ -88,8 +80,6 @@ public class LocationTrack extends Service implements LocationListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return loc;
     }
 
     public double getLongitude() {

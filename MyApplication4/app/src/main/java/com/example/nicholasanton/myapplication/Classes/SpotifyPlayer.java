@@ -1,10 +1,8 @@
 package com.example.nicholasanton.myapplication.Classes;
 
-import android.content.Context;
 import android.util.Log;
 import java.util.Random;
 
-import com.example.nicholasanton.myapplication.DataHandler;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -22,9 +20,9 @@ public class SpotifyPlayer{
         }
     }
 
-    private SpotifyAppRemote mSpotifyAppRemote;
-    private String mAccessToken;
-    public String ActivityTypeString;
+    private final SpotifyAppRemote mSpotifyAppRemote;
+    private final String mAccessToken;
+    public final String ActivityTypeString;
 
     public SpotifyPlayer(SpotifyAppRemote spotifyAppRemote, String accessToken, String activityTypeString){
         this.mSpotifyAppRemote = spotifyAppRemote;
@@ -42,10 +40,10 @@ public class SpotifyPlayer{
             PlaylistsPager walking = null;
             if(ActivityTypeString.equalsIgnoreCase("WALK")) {
                 walking = spotify.searchPlaylists("walking%music");
-            } else if(ActivityTypeString.equalsIgnoreCase("RUNNING")) {
+            } else if(ActivityTypeString.equalsIgnoreCase("RUN")) {
                 walking = spotify.searchPlaylists("running%music");
             } else if(ActivityTypeString.equalsIgnoreCase("BIKE")) {
-                walking = spotify.searchPlaylists("cycling%music");
+                walking = spotify.searchPlaylists("cycling");
             } else if(ActivityTypeString.equalsIgnoreCase("CAR")) {
                 walking = spotify.searchPlaylists("driving%music");
             }

@@ -11,7 +11,7 @@ import com.android.volley.toolbox.Volley;
 public class RequestHandler {
     private static RequestHandler mInstance;
     private RequestQueue mRequestQueue;
-    private Context mCtx;
+    private final Context mCtx;
 
     private RequestHandler(Context context) {
         mCtx = context;

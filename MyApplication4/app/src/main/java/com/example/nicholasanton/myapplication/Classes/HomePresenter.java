@@ -6,8 +6,8 @@ import com.example.nicholasanton.myapplication.Interfaces.Tracker;
 import com.example.nicholasanton.myapplication.Interfaces.TrackerListener;
 
 public class HomePresenter {
-    private HomeView view;
-    private Tracker tracker;
+    private final HomeView view;
+    private final Tracker tracker;
 
     public HomePresenter(HomeView view, Tracker tracker) {
         this.view = view;

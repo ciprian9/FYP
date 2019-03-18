@@ -25,10 +25,10 @@ import java.io.FileOutputStream;
 public class MapService extends Service{
     private LocationListener listener;
     private LocationManager locationManager;
-    private String walkingFileName = "latandlongsWalk.txt";
-    private String runningFileName = "latandlongsRun.txt";
-    private String cyclingFileName = "latandlongsCycle.txt";
-    private String drivingFileName = "latandlongsDrive.txt";
+    private final String walkingFileName = "latandlongsWalk.txt";
+    private final String runningFileName = "latandlongsRun.txt";
+    private final String cyclingFileName = "latandlongsCycle.txt";
+    private final String drivingFileName = "latandlongsDrive.txt";
     private double temp1 = 0;
     private double temp2 = 0;
     private double prevLat, prevLong;
@@ -41,7 +41,7 @@ public class MapService extends Service{
         return null;
     }
 
-    public boolean fileExists(Context context, String filename) {
+    private boolean fileExists(Context context, String filename) {
         File file = context.getFileStreamPath(filename);
         return file != null && file.exists();
     }
@@ -145,7 +145,7 @@ public class MapService extends Service{
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void saveFile(String file, String text){
+    private void saveFile(String file, String text){
         try{
             FileOutputStream fos = openFileOutput(file, Context.MODE_APPEND);
             fos.write(text.getBytes());

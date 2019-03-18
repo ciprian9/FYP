@@ -10,7 +10,7 @@ import dagger.Provides;
 @Module(library = true, includes = {AppModule.class, ApiModule.class}, injects = ActivitesListeners.class)
 public class HomeViewModule {
 
-    private HomeView view;
+    private final HomeView view;
 
     public HomeViewModule(HomeView view) {
         this.view = view;

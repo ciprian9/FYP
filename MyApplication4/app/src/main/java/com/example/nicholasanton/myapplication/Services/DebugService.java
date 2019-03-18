@@ -7,7 +7,6 @@ import android.os.IBinder;
 import java.util.LinkedList;
 
 public class DebugService extends Service {
-    LinkedList<String> myStrings;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -16,12 +15,7 @@ public class DebugService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        myStrings = new LinkedList<String>();
+        LinkedList<String> myStrings = new LinkedList<>();
         return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 }

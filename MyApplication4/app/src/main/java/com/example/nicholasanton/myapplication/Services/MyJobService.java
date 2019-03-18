@@ -8,6 +8,8 @@ import android.util.Log;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
+import java.util.Objects;
+
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.inMeeting;
 
 public class MyJobService extends JobService{
@@ -18,7 +20,7 @@ public class MyJobService extends JobService{
 //		String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
 //		Log.d(TAG, currentDateTimeString);
 //		Toast.makeText(this, "This is 6:03", Toast.LENGTH_SHORT).show();
-		if (jobParameters.getExtras().getInt("StartEnd") == 0){
+		if (Objects.requireNonNull(jobParameters.getExtras()).getInt("StartEnd") == 0){
 			Log.d("some123", "starting service");
 			requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
 			inMeeting = true;

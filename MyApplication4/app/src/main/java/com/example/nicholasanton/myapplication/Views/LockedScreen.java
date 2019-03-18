@@ -9,10 +9,6 @@ import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-
-import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.R;
 
 public class LockedScreen extends AppCompatActivity {
@@ -29,8 +25,7 @@ public class LockedScreen extends AppCompatActivity {
                 if (location == null) {
                     speedTotal = 0.0;
                 } else {
-                    int speed = (int) ((location.getSpeed() * 3600) / 1000);
-                    speedTotal = speed;
+                    speedTotal = (int) ((location.getSpeed() * 3600) / 1000);
                 }
             }
 
@@ -53,9 +48,7 @@ public class LockedScreen extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (speedTotal > 20.0) {
-            //
-        } else if (speedTotal < 20.0) {
+        if (speedTotal < 20.0) {
             super.onBackPressed();
         }
     }

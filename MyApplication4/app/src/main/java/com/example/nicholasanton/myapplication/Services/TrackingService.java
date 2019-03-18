@@ -15,14 +15,17 @@ public class TrackingService extends Service {
 
     private static ActivityRecognizer activityRecognizer;
     private static ActivityType currentActivityType;
-    private static TrackingServiceBinder binder = new TrackingServiceBinder();
+    private static final TrackingServiceBinder binder = new TrackingServiceBinder();
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         activityRecognizer = new ActivityRecognizerImpl(this);
         activityRecognizer.setActivityRecognizerListener(new ActivityRecognizerListener() {
+
             @Override
-            public void connectionFailed(String errorMessage) {}
+            public void connectionFailed() {
+
+            }
 
             @Override
             public void onActivityRecognized(ActivityType activityType) {

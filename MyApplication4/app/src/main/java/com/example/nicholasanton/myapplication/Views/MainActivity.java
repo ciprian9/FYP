@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int MY_PERMISSIONS_REQUEST_SMS_RECEIVE = 10;
+    private final int MY_PERMISSIONS_REQUEST_SMS_RECEIVE = 10;
     private TextView Username;
     private TextView Password;
     private CheckBox chkRemember;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String testUname = "tester1234";
     private static final String testPass = "tester1234";
     private static final int testID = 10;
-    public DataHandler db;
+    private DataHandler db;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -190,12 +190,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-        public void OpenRegisterScreen(){
-            Intent i = new Intent(this, Register.class);
-            startActivity(i);
-        }
+    private void OpenRegisterScreen(){
+        Intent i = new Intent(this, Register.class);
+        startActivity(i);
+    }
 
-    public void GoToMenu(int accountid){
+    private void GoToMenu(int accountid){
         if(accountid != testID) {
             DataHandler db = new DataHandler(this);
             if (chkRemember.isChecked()) {
@@ -224,55 +224,55 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-        public void LogUserIn(){
-            uName    = Username.getText().toString();
-            Pass     = Password.getText().toString();
+    private void LogUserIn(){
+        uName    = Username.getText().toString();
+        Pass     = Password.getText().toString();
 
-            if(!uName.equals(testUname) && !Pass.equals(testPass)) {
-                StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                        Constants.URL_LOGIN,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    if (!jsonObject.getBoolean("error")) {
-                                        if (!jsonObject.getString("gmail").isEmpty()) {
-                                            gmail = jsonObject.getString("gmail");
-                                        } else {
-                                            gmail = "NULL";
-                                        }
-                                        Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
-                                        GoToMenu(jsonObject.getInt("id"));
+        if(!uName.equals(testUname) && !Pass.equals(testPass)) {
+            StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                    Constants.URL_LOGIN,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (!jsonObject.getBoolean("error")) {
+                                    if (!jsonObject.getString("gmail").isEmpty()) {
+                                        gmail = jsonObject.getString("gmail");
                                     } else {
-                                        Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                        gmail = "NULL";
                                     }
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                    GoToMenu(jsonObject.getInt("id"));
+                                } else {
+                                    Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                                 }
 
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                db.insertLog("Error in Logging in script");
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<>();
-                        params.put("username", uName);
-                        params.put("password", Pass);
-                        return params;
-                    }
-                };
-                RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
-            }else{
-                GoToMenu(testID);
-            }
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            db.insertLog("Error in Logging in script");
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("username", uName);
+                    params.put("password", Pass);
+                    return params;
+                }
+            };
+            RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
+        }else{
+            GoToMenu(testID);
         }
+    }
 
 
     //Check if permission was granted for SMS
