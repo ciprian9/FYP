@@ -15,11 +15,11 @@ public class StepDetector {
     private static final int STEP_DELAY_NS = 250000000;
 
     private int accelRingCounter = 0;
-    private float[] accelRingX = new float[ACCEL_RING_SIZE];
-    private float[] accelRingY = new float[ACCEL_RING_SIZE];
-    private float[] accelRingZ = new float[ACCEL_RING_SIZE];
+    private final float[] accelRingX = new float[ACCEL_RING_SIZE];
+    private final float[] accelRingY = new float[ACCEL_RING_SIZE];
+    private final float[] accelRingZ = new float[ACCEL_RING_SIZE];
     private int velRingCounter = 0;
-    private float[] velRing = new float[VEL_RING_SIZE];
+    private final float[] velRing = new float[VEL_RING_SIZE];
     private long lastStepTimeNs = 0;
     private float oldVelocityEstimate = 0;
 

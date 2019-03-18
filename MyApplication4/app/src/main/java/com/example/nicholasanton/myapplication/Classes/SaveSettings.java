@@ -16,10 +16,10 @@ import java.util.Map;
 
 public class SaveSettings {
 
-    private  int accountid, policyid;
-    private  String name;
-    private  boolean status;
-    private  Context c;
+    private  final int accountid, policyid;
+    private  final String name;
+    private  final boolean status;
+    private  final Context c;
     private boolean isOn;
 
     public SaveSettings(int accountid, int policyid, String name, boolean status, Context c){

@@ -4,7 +4,7 @@ public enum ActivityType {
 
     IN_VEHICLE(0), ON_BICYCLE(1), ON_FOOT(2), STILL(3), UNKNOWN(4), TILTING(5), DEFAULT(6), WALKING(7), RUNNING(8);
 
-    public int index;
+    private final int index;
 
     ActivityType(int index) {
         this.index = index;

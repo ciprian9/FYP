@@ -30,15 +30,11 @@ package com.example.nicholasanton.myapplication.Views;
     need to move to new policy
  */
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -54,6 +50,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class WalkingOptions extends AppCompatActivity {
     private boolean   musicPlayer = false, pedometer = false, timeRecord = false,
@@ -99,7 +96,7 @@ public class WalkingOptions extends AppCompatActivity {
             db3.registerSetting(Constants.URL_SAVE_SETTING);
             SaveSettings db4 = new SaveSettings(accountid, 1, "RecordRoute", false, this);
             db4.registerSetting(Constants.URL_SAVE_SETTING);
-        };
+        }
 
         playHeadphones.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -148,7 +145,7 @@ public class WalkingOptions extends AppCompatActivity {
 
     }
 
-    public void readSettings(final String aName, final Switch aSwitch) {
+    private void readSettings(final String aName, final Switch aSwitch) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_READ_SETTING,
                 new Response.Listener<String>() {
@@ -159,16 +156,22 @@ public class WalkingOptions extends AppCompatActivity {
                             //Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             if (aSwitch != null) {
                                 aSwitch.setChecked(Boolean.valueOf(jsonObject.getString("status")));
-                                if(aName.equals("MusicPlayer")) {
-                                    musicPlayer = Boolean.valueOf(jsonObject.getString("status"));
-                                } else if(aName.equals("Pedometer")){
-                                    pedometer = Boolean.valueOf(jsonObject.getString("status"));
-                                } else if(aName.equals("Time")){
-                                    timeRecord = Boolean.valueOf(jsonObject.getString("status"));
-                                } else if(aName.equals("Distance_Speed")){
-                                    dist_speed = Boolean.valueOf(jsonObject.getString("status"));
-                                } else if(aName.equals("RecordRoute")){
-                                    recordRoute = Boolean.valueOf(jsonObject.getString("status"));
+                                switch (aName) {
+                                    case "MusicPlayer":
+                                        musicPlayer = Boolean.valueOf(jsonObject.getString("status"));
+                                        break;
+                                    case "Pedometer":
+                                        pedometer = Boolean.valueOf(jsonObject.getString("status"));
+                                        break;
+                                    case "Time":
+                                        timeRecord = Boolean.valueOf(jsonObject.getString("status"));
+                                        break;
+                                    case "Distance_Speed":
+                                        dist_speed = Boolean.valueOf(jsonObject.getString("status"));
+                                        break;
+                                    case "RecordRoute":
+                                        recordRoute = Boolean.valueOf(jsonObject.getString("status"));
+                                        break;
                                 }
                             }
 
@@ -185,7 +188,7 @@ public class WalkingOptions extends AppCompatActivity {
                     }
                 }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("accountid", String.valueOf(accountid));
                 params.put("policyid", String.valueOf(1));
@@ -198,13 +201,13 @@ public class WalkingOptions extends AppCompatActivity {
 
     @Override
     protected void onResume(){
-        accountid = getIntent().getExtras().getInt("accountid");
+        accountid = Objects.requireNonNull(getIntent().getExtras()).getInt("accountid");
         VarsToForm();
         super.onResume();
     }
 
 
-    public void VarsToForm(){
+    private void VarsToForm(){
         //Read the database values and update the activity to reflect those values
 
         readSettings("MusicPlayer", playHeadphones);

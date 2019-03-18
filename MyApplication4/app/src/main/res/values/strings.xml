@@ -1,27 +1,57 @@
 <resources>
     <string name="app_name">My Application</string>
-    <string name="title_activity_sms">SMSActivity</string>
     <string name="google_maps_api_key">AIzaSyAUvpvX5j2KDe3OqSJscGJDpPVq21yD99o</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_cycling_options">CyclingOptions</string>
 
     <string name="pedometro_preferences">pedometro_preferences</string>
     <string name="pedometro_preferences_starttracking">pedometro_preferences_starttracking</string>
 
     <!--HomeActivity -->
-    <string name="activityhome_latitudelongitude">latitude: %1$f longitude: %2$f</string>
-    <string name="activityhome_warntracking">Tracking…</string>
-    <string name="activityhome_warntrackingpaused">The tracking has been paused</string>
 
     <!--MeasurementActivity-->
-    <string name="measurementactivity_title">Measurements</string>
-    <string name="measurementactivity_today">Today</string>
-    <string name="measurementactivity_week">Week</string>
 
     <!--MeasurementDetailFragment-->
-    <string name="measurementdetailfragment_measuredistance">Distance: %1$.2f Km</string>
-    <string name="measurementdetailfragment_measuretime">Time: %1$.2f Hours</string>
-    <string name="measurementdetailfragment_measureaveragespeed">Average Speed: %1$.2f km/h</string>
+    <string name="the_logo_of_our_program">The logo of our program</string>
+    <string name="spotifySwitch">Play Music When Headphones In</string>
+    <string name="SpeedSwitch">Show Speed</string>
+    <string name="switchReplyToCall">Reply To Calls</string>
+    <string name="switchRecordRoute">Record Route</string>
+    <string name="swtichAutoReply">Auto Reply</string>
+    <string name="switchTextToSpeech">Notification Text-to-speech</string>
+    <string name="btnOpenMap"><![CDATA[OPEN MAP & PEDOMETER]]></string>
+    <string name="switchDND">Do Not Disturb</string>
+    <string name="switchAutoReply">Reply to text</string>
+    <string name="switchCallReply">Reply to calls</string>
+    <string name="tvLogin">Login</string>
+    <string name="etUsername">Username</string>
+    <string name="btnLogin">Login</string>
+    <string name="btnRegister">Register</string>
+    <string name="chkRememberMe">Remember Me</string>
+    <string name="etPassword">Password</string>
+    <string name="btnWalking">Walking Preferences</string>
+    <string name="btnRunning">Running Preferences</string>
+    <string name="btnCycling">Cycling Preferences</string>
+    <string name="btnDriving">Driving Preferences</string>
+    <string name="btnTestDriving">TEST DRIVING</string>
+    <string name="btnTestWalking">TEST WALKING</string>
+    <string name="btnTestCycling">TEST CYCLING</string>
+    <string name="btnTestRunning">TEST RUNNING</string>
+    <string name="btnStop">STOP</string>
+    <string name="etEmail">Email</string>
+    <string name="etConfPass">Confirm Password</string>
+    <string name="btnCancel">Cancel</string>
+    <string name="swPedometer">Pedometer On/Off</string>
+    <string name="swDistSpeed"><![CDATA[Show Distance & Speed]]></string>
+    <string name="swTime">Show Time On/Off</string>
+    <string name="tvSteps">Steps:</string>
+    <string name="tvDist">Distance:</string>
+    <string name="tvTimer">Timer:</string>
+    <string name="tvSpeed">Speed:</string>
+    <string name="itmGmail">Change Gmail</string>
+    <string name="itmSWLoc">Set School/Work Location</string>
+    <string name="itmConsole">Console</string>
+    <string name="itmClearDB">Clear Database</string>
+    <string name="itmSetMorningNight">Set Morning &amp; Night Times</string>
+    <string name="itmLogout">Log Out</string>
 </resources>

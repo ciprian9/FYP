@@ -2,7 +2,7 @@ package com.example.nicholasanton.myapplication.Classes;
 
 //COPIED FROM http://www.gadgetsaint.com/android/create-pedometer-step-counter-android/#.XG69Cej7S71
 
-public class SensorFilter {
+class SensorFilter {
 
     private SensorFilter() {
     }

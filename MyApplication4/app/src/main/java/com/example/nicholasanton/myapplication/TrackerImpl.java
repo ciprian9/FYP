@@ -19,8 +19,8 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class TrackerImpl implements Tracker {
 
-    private Context context;
-    private SharedPreferences sharedPreferences;
+    private final Context context;
+    private final SharedPreferences sharedPreferences;
     private boolean isTrackingServiceBound;
     private TrackingService.TrackingServiceBinder trackingServiceBinder;
     private TrackerListener trackerListener;
@@ -62,7 +62,7 @@ public class TrackerImpl implements Tracker {
         return sharedPreferences.getBoolean(context.getString(R.string.pedometro_preferences_starttracking), false);
     }
 
-    private ServiceConnection trackingServiceConnection = new ServiceConnection() {
+    private final ServiceConnection trackingServiceConnection = new ServiceConnection() {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {

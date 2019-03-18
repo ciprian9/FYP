@@ -2,6 +2,7 @@ package com.example.nicholasanton.myapplication.Recievers;
 
 //https://github.com/Hitman666/AndroidCallBlockingTestDemo
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import com.example.nicholasanton.myapplication.Interfaces.ITelephony;
 import com.example.nicholasanton.myapplication.Services.AutoReplyService;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.callReply;
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.drivingService;
@@ -28,11 +30,11 @@ public class IncomingCallReceiver extends BroadcastReceiver {
         db.insertLog("Getting Call");
         try {
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-            String number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
+            String number = Objects.requireNonNull(intent.getExtras()).getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
             if(state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING)){
                 TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 try {
-                    Method m = tm.getClass().getDeclaredMethod("getITelephony");
+                    @SuppressLint("PrivateApi") Method m = tm.getClass().getDeclaredMethod("getITelephony");
                     m.setAccessible(true);
                     telephonyService = (ITelephony) m.invoke(tm);
                     if ((number != null)) {
@@ -50,7 +52,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                 } catch (Exception e) {
                     db.insertLog("Error Inside Call Code");
                     e.printStackTrace();
-                    System.out.printf(e.toString());
+                    System.out.print(e.toString());
                 }
             }
         } catch (Exception e) {

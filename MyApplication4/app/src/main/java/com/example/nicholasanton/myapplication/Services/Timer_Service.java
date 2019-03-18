@@ -13,8 +13,8 @@ import java.util.TimerTask;
 
 public class Timer_Service extends Service{
     private DataHandler db;
-    Timer timer = new Timer();
-    TimerTask updateProfile = new CustomTimerTask(Timer_Service.this);
+    private final Timer timer = new Timer();
+    private final TimerTask updateProfile = new CustomTimerTask(Timer_Service.this);
 
     public void onCreate() {
 

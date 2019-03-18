@@ -7,8 +7,8 @@ import android.os.Handler;
 import java.util.TimerTask;
 
 public class CustomTimerTask extends TimerTask {
-    private Context context;
-    private Handler mHandler = new Handler();
+    private final Context context;
+    private final Handler mHandler = new Handler();
 
     public CustomTimerTask(Context con) {
         this.context = con;

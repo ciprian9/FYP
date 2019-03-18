@@ -43,7 +43,7 @@ public class Function {
                 is = connection.getInputStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
             String line;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             while((line = rd.readLine()) != null) {
                 response.append(line);
                 response.append('\r');

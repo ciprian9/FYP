@@ -61,7 +61,7 @@ public class Register extends AppCompatActivity {
         });
     }
 
-    public void GatherData(){
+    private void GatherData(){
         uName    = Username.getText().toString();
         Pass     = Password.getText().toString();
         String confPass = ConfPassword.getText().toString();
@@ -83,7 +83,7 @@ public class Register extends AppCompatActivity {
         }
     }
 
-    public void registerUser(){
+    private void registerUser(){
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_REGISTER,
                 new Response.Listener<String>() {

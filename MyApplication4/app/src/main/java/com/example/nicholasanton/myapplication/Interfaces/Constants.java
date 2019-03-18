@@ -6,30 +6,10 @@ Values that are used in different parts of the code will be added here
  */
 
 public interface Constants {
-    String HEADPHONE_SETTING = "playHeadphones";
-    String USAGE_SETTING = "trackUsage";
-    String SAVE_RESOURCE_SETTING = "saveResources";
     String TEXT_TO_SPEECH_SETTING = "notificationTTS";
     String AUTO_REPLY_SETTING = "autoReply";
     String CALL_REPLY_SETTING = "callReply";
-    String BATTERY_LEVEL = "battery";
-    //String PEDOMETER_SETTING = "startPedometer";
 
-    int COLUMN_SETTINGS_ID = 0;
-    int COLUMN_SETTINGS_NAME = 1;
-    int COLUMN_SETTINGS_BATTERY  = 2;
-    int COLUMN_SETTINGS_STATUS = 3;
-    int COLUMN_SETTINGS_DONE = 4;
-
-    int COLUMN_PLAYLIST_ID = 0;
-    int COLUMN_PLAYLIST_NAME = 1;
-    int COLUMN_PLAYLIST_POLICYID = 2;
-    int COLUMN_PLAYLIST_LOCATION = 3;
-
-    int MAINMENU = 1;
-    int OPTIONS = 0;
-
-    int COLUMN_USER_ID = 0;
     int COLUMN_USERNAME = 1;
     int COLUMN_PASSWORD = 2;
 
@@ -44,14 +24,11 @@ public interface Constants {
     String ACCOUNTID_INTENT = "accountid";
     String USERNAME_INTENT = "username";
     String GMAIL_INTENT = "gmail";
-    String WHERE_INTENT = "where";
-    String PRESSED_INTENT = "pressed";
     String PEDOMETER_INTENT = "pedometer";
     String TIME_INTENT ="time";
     String DISTANCE_INTENT= "distance";
     String SPEED_INTENT = "speed";
     String RECOMEND_INTENT ="recomend";
-    String CALORIES_INTENT= "calories";
     String USERID_INTENT= "userid";
     String HOME_INTENT= "home";
     String WORK_INTENT= "work";
@@ -74,4 +51,7 @@ public interface Constants {
     String URL_ADD_LOCATION = ROOT_URL+"insertLocation.php";
     String URL_ADDWORK_LOCATION = ROOT_URL+"insertLocationWorking.php";
     String URL_READ_LOCATION = ROOT_URL+"readLocation.php";
+
+    String defaultMorning = "8:0";
+    String defaultNight = "10:0";
 }

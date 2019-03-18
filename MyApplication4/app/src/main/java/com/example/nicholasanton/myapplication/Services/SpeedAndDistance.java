@@ -21,7 +21,6 @@ import java.util.Locale;
 
 public class SpeedAndDistance extends Service implements IBaseGpsListener {
 
-    private String actualSpeed;
     private Location prevLocation;
     private float distance;
     private DataHandler db;
@@ -57,7 +56,7 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
 
         String strUnits = "meters/second";
 
-        actualSpeed = (strCurrentSpeed + " " + strUnits);
+        String actualSpeed = (strCurrentSpeed + " " + strUnits);
 
         if(prevLocation != null && prevLocation.getLongitude() != 0 && prevLocation.getLatitude() != 0){
             distance =  distance + prevLocation.distanceTo(location);

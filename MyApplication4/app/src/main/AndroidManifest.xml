@@ -58,7 +58,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:targetApi="m">
         <activity android:name=".Views.DebugConsole">
         </activity>
         <activity android:name=".Views.LockedScreen">
@@ -136,7 +137,6 @@
 
         <service android:name=".Services.TextToSpeechService" />
         <service android:name=".Services.AutoReplyService" /> <!-- <service android:name=".SaveResourcesService" /> -->
-        <service android:name=".musicService" />
         <service android:name=".Services.pedometerService" />
         <service android:name=".Services.Cycling_Policy_Service" />
 
@@ -159,6 +159,8 @@
         <service android:name=".Services.TrackingService" />
         <service android:name=".ActivityRecognizerImpl$ActivityRecognitionIntentService" />
         <service android:name=".Services.googleCalendarService" />
+        <service android:name=".Services.DebugService"/>
+        <service android:name=".Services.LocationTrack"/>
     </application>
 
 </manifest>
