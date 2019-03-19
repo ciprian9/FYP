@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -27,7 +28,7 @@ import java.util.Map;
 public class googleCalendarService extends Service {
 
     private ClipboardManager clipboard;
-    private static final String ROOTURL = "http://192.168.0.241/Android/php/";
+    private static final String ROOTURL = "http://192.168.0.10/Android/php/";
     private String token;
     private String calendarid;
     private Boolean inOrOut = false;
@@ -44,6 +45,7 @@ public class googleCalendarService extends Service {
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             calendarid = bundle.getString("calendarid");
+            //db.insertLog("Got CalendarID " + calendarid);
             String username1 = bundle.getString("username");
         }
         clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -76,10 +78,10 @@ public class googleCalendarService extends Service {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            db.insertLog("Got response from google calendar");
+                            //db.insertLog("Got response from google calendar");
                             switch (anAction){
                                 case 0:
-                                    db.insertLog("Checking if token exists");
+                                    //db.insertLog("Checking if token exists");
                                     boolean bool = jsonObject.getBoolean("exists");
                                     if (bool){
                                         googleCalendarConnection(ROOTURL+"getEvents.php", 3);
@@ -88,7 +90,7 @@ public class googleCalendarService extends Service {
                                     }
                                     break;
                                 case 1:
-                                    db.insertLog("Getting Calendar");
+                                    //db.insertLog("Getting Calendar");
                                     if(apath.equals(ROOTURL+"getcalendar.php")){
                                         if (!inOrOut) {
                                             String url = jsonObject.getString("url");
@@ -107,7 +109,7 @@ public class googleCalendarService extends Service {
                                     }
                                     break;
                                 case 3:
-                                    db.insertLog("Getting events from calendar");
+                                    //db.insertLog("Getting events from calendar");
                                     JSONArray the_json_array = jsonObject.getJSONArray("events");
                                     //textView = findViewById(R.id.textView2);
                                     int len = the_json_array.length();
@@ -145,7 +147,7 @@ public class googleCalendarService extends Service {
                                     }
                             }
                         }catch(JSONException e){
-                            e.printStackTrace();
+                            Log.e("TEST : ", e.getMessage());
                             db.insertLog("Error in google calendar code");
                         }
 
@@ -155,6 +157,7 @@ public class googleCalendarService extends Service {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         db.insertLog("Failed inside of calendar script");
+                        Log.e("TEST : ", error.getMessage());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }){

@@ -7,14 +7,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.nicholasanton.myapplication.DataHandler;
-import com.example.nicholasanton.myapplication.Interfaces.ITelephony;
 import com.example.nicholasanton.myapplication.Services.AutoReplyService;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
+
+import com.android.internal.telephony.ITelephony;
 
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.callReply;
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.drivingService;
@@ -27,10 +28,10 @@ public class IncomingCallReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         DataHandler db = new DataHandler(context);
         ITelephony telephonyService;
-        db.insertLog("Getting Call");
+        db.insertLog("Getting Call\n");
         try {
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-            String number = Objects.requireNonNull(intent.getExtras()).getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
+            String number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
             if(state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING)){
                 TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 try {
@@ -40,7 +41,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     if ((number != null)) {
                         if (runningService || cyclingService  || drivingService || inMeeting) {
                             if (callReply || inMeeting) {
-                                db.insertLog("Ending Call");
+                                db.insertLog("Ending Call\n");
                                 telephonyService.endCall();
                                 Toast.makeText(context, "Ending the call from: " + number, Toast.LENGTH_SHORT).show();
                                 Intent autoReplyIntent = new Intent(context, AutoReplyService.class);
@@ -51,13 +52,13 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     }
                 } catch (Exception e) {
                     db.insertLog("Error Inside Call Code");
-                    e.printStackTrace();
+                    Log.e("TEST : ", e.getMessage());
                     System.out.print(e.toString());
                 }
             }
         } catch (Exception e) {
             db.insertLog("Error Inside Calling Code");
-            e.printStackTrace();
+            Log.e("TEST : ", e.getMessage());
         }
     }
 }

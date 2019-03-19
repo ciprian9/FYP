@@ -112,8 +112,8 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     private String previousActivity = "UNKNOWN";
     private String work;
     private String home;
-    private LatLng workLL;
-    private LatLng homeLL;
+    private Location workLL;
+    private Location homeLL;
     private Location loc1;
     private EventReciever reciever;
     private FirebaseJobDispatcher mDispatcher;
@@ -136,6 +136,12 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        db = new DataHandler(this);
+
+        requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+        turnOffDoNotDisturb();
+
+
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
@@ -148,37 +154,44 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             if (gmail.equalsIgnoreCase("NULL")) {
                 GmailDialog();
             }
+        }else{
+            db.insertLog("Gmail is NULL");
+            Log.d("TEST : ", "GMAIL IS NULL");
         }
 
-        loc1 = new Location("School/Work");
-
         if (username.equals("tester1234")){
-            workLL = new LatLng(53.374698300000006, -6.3938991);
+            workLL = new Location("");
+            workLL.setLatitude(53.374698300000006);
+            workLL.setLongitude(-6.3938991);
+        }else{
+            loc1 = new Location("School/Work");
         }
 
         final LocationListener mLocationListener = new LocationListener() {
             @SuppressLint("DefaultLocale")
             @Override
             public void onLocationChanged(final Location location) {
-                Log.d("LATLONG123", "Latitude HOME: "+String.format("%.3f",loc1.getLatitude()));
-                if (String.format("%.4f", location.getLongitude()).equals(String.format("%.4f", loc1.getLongitude()))
-                        && String.format("%.4f", location.getLatitude()).equals(String.format("%.4f", loc1.getLatitude()))) {
-                    Log.d("LATLONG123", "INSIDE");
-                    requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
-                }
+                Log.d("TEST : ", "Latitude HOME: "+String.format("%.3f",loc1.getLatitude()));
+                db.insertLog("Checking location");
 
                 if (workLL != null) {
-                    if (String.format("%.4f", location.getLongitude()).equals(String.format("%.4f", workLL.longitude))
-                            && String.format("%.4f", location.getLatitude()).equals(String.format("%.4f", workLL.latitude))) {
-                        Log.d("LATLONG123", "INSIDE");
+                    if (location.distanceTo(workLL) < 40){
+                        Log.d("TEST : ", "Arrived to work");
+                        db.insertLog("Work found request do not disturb");
+                        requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+                    }
+                }else{
+                    if(location.distanceTo(loc1) < 40){
+                        Log.d("TEST : ", "Arrived to Work");
+                        db.insertLog("Work found request do not disturb");
                         requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
                     }
                 }
 
                 if (homeLL != null) {
-                    if (String.format("%.4f", location.getLongitude()).equals(String.format("%.4f", homeLL.longitude))
-                            && String.format("%.4f", location.getLatitude()).equals(String.format("%.4f", homeLL.latitude))) {
-                        Log.d("LATLONG123", "INSIDE");
+                    if (location.distanceTo(homeLL) < 40){
+                        Log.d("TEST : ", "Arrived Home");
+                        db.insertLog("Arrived Home\n Turning ON WIFI");
                         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                         if (!wifiManager.isWifiEnabled()) {
                             wifiManager.setWifiEnabled(true);
@@ -213,13 +226,14 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
 
         calendarList = new ArrayList<>();
 
-        db = new DataHandler(this);
 
         if (!username.equals("tester1234")) {
             ReadLocation();
         }
 
         if (accountid == -1) {
+            db.insertLog("Set Up Testing Enviroment");
+
             Button btnTestDrive = findViewById(R.id.btnTestDriving);
             btnTestDrive.setVisibility(View.VISIBLE);
             btnTestDrive.setOnClickListener(new View.OnClickListener() {
@@ -272,13 +286,15 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 public void onClick(View view) {
                     StopWalkingPolicy();
                     StopDrivingPolicy();
+                    StopCyclingPolicy();
+                    StopRunningPolicy();
                     spotifyPlayer.pause();
                     db.insertLog("ALL Policies Stopped\n");
                 }
             });
         }
 
-        if (accountid == -1 || username.equals("tester1234")) {
+        if (username.equals("tester1234")) {
             musicPlayer = true;
             pedometer = true;
             timeRecord = true;
@@ -346,7 +362,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
 
                     public void onConnected(SpotifyAppRemote spotifyAppRemote) {
                         mSpotifyAppRemote = spotifyAppRemote;
-                        Log.d("MainActivity", "Connected! Yay!");
+                        Log.d("TEST : ", "Connected!");
                         db.insertLog("Spotify Connected\n");
 
                         AuthenticationRequest.Builder builder =
@@ -360,14 +376,15 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     }
 
                     public void onFailure(Throwable throwable) {
-                        Log.e("MyActivity", throwable.getMessage(), throwable);
-                        db.insertLog("SPOTIFY ERROR CONNECTING\n");
+                        Log.e("TEST : ", throwable.getMessage(), throwable);
+                        db.insertLog("SPOTIFY ERROR CONNECTING");
                         // Something went wrong when attempting to connect! Handle errors here
                     }
                 });
     }
 
     private void setMorningNightRoutine(String morningTime, String nightTime){
+        db.insertLog("Start Day/Night routine");
         String[] strings = morningTime.split(":");
         String morningHour = strings[0];
         String morningMin = strings[1];
@@ -396,6 +413,11 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         calendar2.setTimeInMillis(System.currentTimeMillis());
         calendar2.set(Calendar.HOUR_OF_DAY, Integer.valueOf(nightHour));
         calendar2.set(Calendar.MINUTE, Integer.valueOf(nightMin));
+
+        alarmMgr2.setRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, alarmIntent2);
+
+        db.insertLog("End day / night routine");
     }
 
     private void openTheMap(){
@@ -462,12 +484,14 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             spotifyPlayer = new SpotifyPlayer(mSpotifyAppRemote, mAccessToken, ActivityTypeString);
             spotifyPlayer.init();
         } else if((!(spotifyPlayer.ActivityTypeString.equals(ActivityTypeString)) && !ActivityTypeString.isEmpty()) || (ActivityTypeString.isEmpty() && (!isBluetoothHeadsetConnected() || !audioManager.isWiredHeadsetOn()))){
+            db.insertLog("Starting Spotify Playlist\n");
             spotifyPlayer = new SpotifyPlayer(mSpotifyAppRemote, mAccessToken, ActivityTypeString);
             spotifyPlayer.init();
         }
     }
 
     private void GmailDialog() {
+        db.insertLog("Request G-mail account");
         if (gmail.equalsIgnoreCase("NULL")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Do you want to input a Gmail Address?")
@@ -504,6 +528,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     }
 
     private void setNewGmail(final String newGmailAccount) {
+        db.insertLog("Set new g-mail account");
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_UPDATE_ACCOUNT,
                 new Response.Listener<String>() {
@@ -513,14 +538,16 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                             JSONObject jsonObject = new JSONObject(response);
                             if (!jsonObject.getBoolean("error")) {
                                 db.insertLog("Gmail added\n");
+                                Log.e("TEST : ", jsonObject.getString("message"));
                                 Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                                Log.e("TEST : ", jsonObject.getString("message"));
                                 db.insertLog("Failed Adding Gmail\n");
                             }
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.e("TEST : ",e.getMessage());
                         }
 
                     }
@@ -529,6 +556,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         db.insertLog("Failed Using Update GMail Script\n");
+                        Log.e("TEST : ",error.getMessage());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -639,7 +667,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             openTheMap();
         } else if (id == R.id.Console){
             Intent i = new Intent(this, DebugConsole.class);
-            db.insertLog("Starting Debug Console\n");
             startActivity(i);
         } else if (id == R.id.ClearDB){
             db.DeleteLogs();
@@ -656,6 +683,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                             String[] strings = newTimes.split(",");
                             String MorningTime = strings[0];
                             String NightTime = strings[1];
+                            db.insertLog("Set Morning/night routine");
                             setMorningNightRoutine(MorningTime, NightTime);
                         }
                     })
@@ -685,22 +713,29 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                                 if(parts.length >= 2) {
                                     String first = parts[0];
                                     String second = parts[1];
-                                    workLL = new LatLng(Double.valueOf(first), Double.valueOf(second));
+                                    db.insertLog("Set Work Coordinates");
+                                    workLL = new Location("");
+                                    workLL.setLatitude(Double.valueOf(first));
+                                    workLL.setLongitude(Double.valueOf(second));
                                 }
 
                                 parts = home.split(",");
                                 if(parts.length >= 2) {
                                     String first = parts[0];
                                     String second = parts[1];
-                                    homeLL = new LatLng(Double.valueOf(first), Double.valueOf(second));
+                                    db.insertLog("Set Home Coordinates");
+                                    homeLL = new Location("");
+                                    homeLL.setLatitude(Double.valueOf(first));
+                                    homeLL.setLongitude(Double.valueOf(second));
                                 }
                             } else {
                                 db.insertLog("Failed Getting Work/Home LatLng\n");
+                                Log.d("TEST : ", jsonObject.getString("message"));
                                 Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             db.insertLog("Error Inside Getting Work/Home\n");
-                            e.printStackTrace();
+                            Log.d("TEST : ", e.getMessage());
                         }
                     }
                 },
@@ -708,6 +743,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         db.insertLog("Failed Using Work/Home LatLng Script\n");
+                        Log.d("TEST : ", error.getMessage());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -731,14 +767,17 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                             JSONObject jsonObject = new JSONObject(response);
                             if (!jsonObject.getBoolean("error")) {
                                 db.insertLog("Added Work Location\n");
+                                Log.d("TEST : ", jsonObject.getString("message"));
                                 Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             } else {
                                 db.insertLog("Failed Adding Work Location\n");
+                                Log.d("TEST : ", jsonObject.getString("message"));
                                 Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             db.insertLog("Failed Getting Work Response\n");
-                            e.printStackTrace();
+                            Log.d("TEST : ", e.getMessage());
+
                         }
                     }
                 },
@@ -746,6 +785,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         db.insertLog("Failed Using Work Location Script\n");
+                        Log.d("TEST : ", error.getMessage());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -770,14 +810,16 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                             JSONObject jsonObject = new JSONObject(response);
                             if (!jsonObject.getBoolean("error")) {
                                 db.insertLog("Added Home Location\n");
+                                Log.d("TEST : ", jsonObject.getString("message"));
                                 Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             } else {
                                 db.insertLog("Failed Adding Home Location\n");
+                                Log.d("TEST : ", jsonObject.getString("message"));
                                 Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             db.insertLog("Failed Getting Home Response\n");
-                            e.printStackTrace();
+                            Log.d("TEST : ", e.getMessage());
                         }
                     }
                 },
@@ -785,6 +827,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         db.insertLog("Failed Using Home Location Script\n");
+                        Log.d("TEST : ", error.getMessage());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -806,7 +849,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         try {
             startActivity(intent);
         } catch (Exception e) {
-            System.out.print(e.toString());
+            Log.e("TEST : ", e.getMessage());
         }
     }
 
@@ -817,8 +860,18 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         try {
             startActivity(intent);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("TEST : ", e.getMessage());
         }
+    }
+
+    private void requestDoNotDisturbPermission() {
+        //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
+        if (Build.VERSION.SDK_INT < 23) {
+            return;
+        }
+        db.insertLog("Getting permission for DND\n");
+        Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+        startActivityForResult(intent, 2);
     }
 
     private void requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp() {
@@ -826,9 +879,14 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         if (Build.VERSION.SDK_INT < 21) {
             return;
         }
-        db.insertLog("Turning Do Not Disturb On\n");
-        AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+        try {
+            AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            db.insertLog("Do Not Disturb On");
+        }catch(Exception e){
+            requestDoNotDisturbPermission();
+
+        }
     }
 
     private void turnOffDoNotDisturb() {
@@ -836,9 +894,9 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         if (Build.VERSION.SDK_INT < 21) {
             return;
         }
-        db.insertLog("Turning Off Do Not Disturb On\n");
         AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        db.insertLog("Do Not Disturb OFF\n");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -975,7 +1033,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
 
                         } catch (JSONException e) {
                             db.insertLog("Failed Reading Setting\n");
-                            e.printStackTrace();
+                            Log.e("TEST : ", e.getMessage());
                         }
 
                     }
@@ -984,7 +1042,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         db.insertLog("Failed Reading Setting Script\n");
-                        System.out.print(error.toString());
+                        Log.e("TEST : ", error.toString());
                     }
                 }) {
             @Override
@@ -1034,7 +1092,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         try {
             startActivity(intent);
         } catch (Exception e) {
-            System.out.print(e.toString());
+            Log.e("TEST : ", e.getMessage());
         }
     }
 
@@ -1066,7 +1124,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         try {
             startActivity(intent);
         } catch (Exception e) {
-            System.out.print(e.toString());
+            Log.e("TEST : ", e.getMessage());
         }
     }
 
@@ -1075,34 +1133,30 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         startService(new Intent(ActivitesListeners.this, Timer_Service.class));
     }
 
-//    public void Stop(View v) {
-//        stopService(new Intent(ActivitesListeners.this, Timer_Service.class));
+//    private void getEvents() {
+//        //db.insertLog("Getting phone events\n");
+//        String[] projection = new String[]{CalendarContract.Events.CALENDAR_ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND, CalendarContract.Events.ALL_DAY, CalendarContract.Events.EVENT_LOCATION};
+//        Calendar startTime = Calendar.getInstance();
+//        startTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH) - 1, 23, 59);
+//        Calendar endTime = Calendar.getInstance();
+//        endTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH), 23, 59);
+//        String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + startTime.getTimeInMillis() + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + endTime.getTimeInMillis() + " ))";
+//        Cursor cursor = this.getBaseContext().getContentResolver().query(CalendarContract.Events.CONTENT_URI, projection, selection, null, null);
+//        assert cursor != null;
+//        if (cursor.moveToFirst()) {
+//            do {
+//                try {
+//                    long start = new Date(cursor.getLong(3)).getTime();
+//                    long end = new Date(cursor.getLong(4)).getTime();
+//                    scheduleJobs(start, cursor.getString(1), 0);
+//                    scheduleJobs(end, (cursor.getString(1) + "1"), 1);
+//                } catch (Exception e) {
+//                    Log.d("TEST : ", e.toString());
+//                }
+//            } while (cursor.moveToNext());
+//        }
+//        cursor.close();
 //    }
-
-    private void getEvents() {
-        //db.insertLog("Getting phone events\n");
-        String[] projection = new String[]{CalendarContract.Events.CALENDAR_ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND, CalendarContract.Events.ALL_DAY, CalendarContract.Events.EVENT_LOCATION};
-        Calendar startTime = Calendar.getInstance();
-        startTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH) - 1, 23, 59);
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH), 23, 59);
-        String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + startTime.getTimeInMillis() + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + endTime.getTimeInMillis() + " ))";
-        Cursor cursor = this.getBaseContext().getContentResolver().query(CalendarContract.Events.CONTENT_URI, projection, selection, null, null);
-        assert cursor != null;
-        if (cursor.moveToFirst()) {
-            do {
-                try {
-                    long start = new Date(cursor.getLong(3)).getTime();
-                    long end = new Date(cursor.getLong(4)).getTime();
-                    scheduleJobs(start, cursor.getString(1), 0);
-                    scheduleJobs(end, (cursor.getString(1) + "1"), 1);
-                } catch (Exception e) {
-                    Log.d("Error : ", e.toString());
-                }
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-    }
 
     private long D2MS(int month, int day, int year, int hour, int minute, int seconds) {
         Calendar c = Calendar.getInstance();
@@ -1112,7 +1166,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     }
 
     private void getCalendarEvents() {
-        //db.insertLog("Getting calendar events\n");
+
         IntentFilter filter = new IntentFilter();
         filter.addAction("NOW");
         updateUIReciver = new BroadcastReceiver() {
@@ -1134,17 +1188,26 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
 
                 long FirstD = D2MS(thisMonth, thisDay, thisYear, hour, mins, secs);
                 long SecondD = D2MS(thisMonth, thisDay, thisYear, ehour, emins, esecs);
-
-                for (int i = 0; i < calendarList.size(); i++) {
-                    if (!calendarList.get(i).equalsIgnoreCase(summary)) {
-                        calendarList.add(summary);
-                        scheduleJobs(FirstD, summary, 0);
-                        scheduleJobs(SecondD, summary + "1", 1);
-                    }
-                }
+                boolean isThere = true;
 
                 if (calendarList.size() == 0) {
                     calendarList.add(summary);
+                    scheduleJobs(FirstD, summary, 0);
+                    scheduleJobs(SecondD, summary + "1", 1);
+                }
+
+                for (int i = 0; i < calendarList.size(); i++) {
+                    if (calendarList.get(i).equalsIgnoreCase(summary)) {
+                        isThere = true;
+                        break;
+                    }else{
+                        isThere = false;
+                    }
+                }
+
+                if(!isThere){
+                    calendarList.add(summary);
+                    db.insertLog("Schedule Event\n");
                     scheduleJobs(FirstD, summary, 0);
                     scheduleJobs(SecondD, summary + "1", 1);
                 }
@@ -1156,30 +1219,20 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         registerReceiver(updateUIReciver, filter);
 
         if (!username.equals("tester1234")) {
-            if (accountid != -1) {
-                Intent i = new Intent(this, googleCalendarService.class);
-                db.insertLog("Starting Google Calendar Service\n");
-                i.putExtra("calendarid", gmail);
-                i.putExtra("username", username);
-                startService(i);
-            }
+            Intent i = new Intent(this, googleCalendarService.class);
+            //db.insertLog("Starting Google Calendar Service\n");
+            i.putExtra("calendarid", gmail);
+            i.putExtra("username", username);
+            startService(i);
         }
     }
 
-    private void requestDoNotDisturbPermission() {
-        //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
-        if (Build.VERSION.SDK_INT < 23) {
-            return;
-        }
-        db.insertLog("Getting permission for DND\n");
-        Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-        startActivityForResult(intent, 2);
-    }
+
 
     private void scheduleJobs(long setTime, String title, int startend) {
         Bundle bun = new Bundle();
         db.insertLog("Scheduling Jobs\n");
-        requestDoNotDisturbPermission();
+        //requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
 
         bun.putInt("StartEnd", startend);
 
@@ -1200,6 +1253,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     .build();
             mDispatcher.mustSchedule(myJob);
             Toast.makeText(this, "Job Scheduled", Toast.LENGTH_SHORT).show();
+            Log.e("TEST : ", "Job Scheduled");
         }
     }
 
@@ -1209,7 +1263,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         switch (activityType) {
             case IN_VEHICLE:
                 if (!previousActivity.equalsIgnoreCase("CAR")) {
-                    Log.d("Activity123", "CAR");
+                    Log.d("TEST : ", "CAR");
                     previousActivity = "CAR";
                     if (username.equals("tester1234")){
                         StartDrivingService();
@@ -1221,7 +1275,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 break;
             case ON_BICYCLE:
                 if (!previousActivity.equalsIgnoreCase("BIKE")) {
-                    Log.d("Activity123", "BIKE");
+                    Log.d("TEST : ", "BIKE");
                     previousActivity = "BIKE";
                     if (username.equals("tester1234")){
                         StartCyclingService();
@@ -1234,7 +1288,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             case ON_FOOT:
             case WALKING:
                 if (!previousActivity.equalsIgnoreCase("WALKING")) {
-                    Log.d("Activity123", "WALKING");
+                    Log.d("TEST : ", "WALKING");
                     previousActivity = "WALKING";
                     if (username.equals("tester1234")){
                         StartWalkingService();
@@ -1246,7 +1300,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 break;
             case STILL:
                 if (!previousActivity.equalsIgnoreCase("STILL")) {
-                    Log.d("Activity123", "STILL");
+                    Log.d("TEST : ", "STILL");
                     previousActivity = "STILL";
                     db.insertLog("Starting: STILL Activity\n");
                     if (isBluetoothHeadsetConnected()) {
@@ -1260,14 +1314,14 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 break;
             case TILTING:
                 if (!previousActivity.equalsIgnoreCase("TILTING")) {
-                    Log.d("Activity123", "TILTING");
+                    Log.d("TEST : ", "TILTING");
                     previousActivity = "TILTING";
                     db.insertLog("Starting: TILTING Activity\n");
                 }
                 break;
             case RUNNING:
                 if (!previousActivity.equalsIgnoreCase("RUNNING")) {
-                    Log.d("Activity123", "RUNNING");
+                    Log.d("TEST : ", "RUNNING");
                     previousActivity = "RUNNING";
                     if (username.equals("tester1234")){
                         StartRunningService();
@@ -1281,7 +1335,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             case DEFAULT:
             default:
                 if (!previousActivity.equalsIgnoreCase("DEFAULT")) {
-                    Log.d("Activity123", "DEFAULT");
+                    Log.d("TEST : ", "DEFAULT");
                     previousActivity = "DEFAULT";
                     db.insertLog("Starting: DEFAULT Activity\n");
                 }
@@ -1298,12 +1352,14 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     @Override
     public void warnTracking() {
         db.insertLog("TRACKING STARTED\n");
+        Log.e("TEST : ","Tracking Began");
         Toast.makeText(this, "Tracking Began", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void warnTrackingHasBeenStopped() {
         db.insertLog("TRACKING STOPPED\n");
+        Log.e("TEST : ","Tracking Stopped");
         Toast.makeText(this, "Tracking Stopped", Toast.LENGTH_LONG).show();
     }
 
@@ -1311,7 +1367,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Objects.requireNonNull(intent.getAction()).equals("GET_EVENTS")) {
-                getEvents();
+                //getEvents();
                 getCalendarEvents();
             }
         }

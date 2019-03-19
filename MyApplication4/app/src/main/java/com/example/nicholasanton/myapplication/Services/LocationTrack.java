@@ -31,6 +31,7 @@ public class LocationTrack extends Service implements LocationListener {
 
     public LocationTrack(Context mContext) {
         this.mContext = mContext;
+        db = new DataHandler(mContext);
         getLocation();
     }
 
