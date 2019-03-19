@@ -88,15 +88,6 @@ public class DrivingOptions extends AppCompatActivity {
             }
         });
 
-        GPSSpeech.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SaveSettings db = new SaveSettings(accountid, 4, "GPSSpeech", isChecked, getApplicationContext());
-                db.registerSetting(Constants.URL_UPDATE_SETTING);
-                gpsSpeech = false;
-            }
-        });
-
         RecordRoute.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

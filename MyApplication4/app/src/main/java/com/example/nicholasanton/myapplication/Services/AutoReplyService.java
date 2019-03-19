@@ -9,6 +9,8 @@ import android.telephony.SmsManager;
 
 import com.example.nicholasanton.myapplication.DataHandler;
 
+import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.inMeeting;
+
 public class AutoReplyService extends Service {
 
     final class SecondThread implements Runnable{
@@ -31,7 +33,7 @@ public class AutoReplyService extends Service {
     private DataHandler db;
 
     private void autoReply() {
-        if (isMyServiceRunning(Running_Policy_Service.class) || isMyServiceRunning(Cycling_Policy_Service.class) || isMyServiceRunning(Driving_Policy_Service.class)) {
+        if (isMyServiceRunning(Running_Policy_Service.class) || isMyServiceRunning(Cycling_Policy_Service.class) || isMyServiceRunning(Driving_Policy_Service.class) || inMeeting) {
             db.insertLog("Replied to Text");
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(sender, null, "Sorry I'm kind of busy", null, null);

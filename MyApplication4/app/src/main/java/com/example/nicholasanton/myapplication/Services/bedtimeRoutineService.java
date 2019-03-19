@@ -6,8 +6,13 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.provider.ContactsContract;
+
+import com.example.nicholasanton.myapplication.DataHandler;
 
 public class bedtimeRoutineService extends Service {
+
+    private DataHandler db;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -16,12 +21,15 @@ public class bedtimeRoutineService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        turnOffDoNotDisturb();
+        db = new DataHandler(this);
+        db.insertLog("Start Night Routine");
+        turnOnDoNotDisturb();
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void turnOffDoNotDisturb() {
+    private void turnOnDoNotDisturb() {
         //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
+        db.insertLog("Silent ON");
         if (Build.VERSION.SDK_INT < 21) {
             return;
         }

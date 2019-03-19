@@ -32,14 +32,14 @@ public class SmsReceiver extends BroadcastReceiver {
                     SmsMessage sms = SmsMessage.createFromPdu((byte[]) pdus[i]);
 
                     //retrieving the sender number
-                    db.insertLog("Get the number and message from text");
+                    db.insertLog("Get the number and message from text\n");
                     senderNumber = sms.getOriginatingAddress();
                     //retrieving the message
                     String message = sms.getDisplayMessageBody();
 
 
                     //START THE walking service and pass an intendt with extra data
-                    db.insertLog("Starting Text To Speech Service");
+                    db.insertLog("Starting Text To Speech Service\n");
                     Intent textIntent = new Intent(context, TextToSpeechService.class);
                     textIntent.putExtra("sender", senderNumber);
                     textIntent.putExtra("message", message);
