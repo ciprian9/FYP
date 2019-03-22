@@ -60,7 +60,6 @@ public class pedometerService extends Service implements SensorEventListener, St
         DataHandler db = new DataHandler(this);
         Bundle extras = intent.getExtras();
 
-        //just checking
         if( extras != null ) {
             boolean pedometer = extras.getBoolean(Constants.PEDOMETER_INTENT);
             boolean time = extras.getBoolean(Constants.TIME_INTENT);
@@ -106,7 +105,6 @@ public class pedometerService extends Service implements SensorEventListener, St
 
     @Override
     public void step(long timeNs) {
-        //db.insertLog("Step");
         numSteps++;
         long handm;
         handm = (hour * 3600) + (mins * 60) + secs;

@@ -54,4 +54,18 @@
     <string name="itmClearDB">Clear Database</string>
     <string name="itmSetMorningNight">Set Morning &amp; Night Times</string>
     <string name="itmLogout">Log Out</string>
+    <string name="btnForgotPassword">Forgot Password</string>
+    <string name="itmChangePassword">Change Password</string>
+    <string name="etOldPassword">Old Password</string>
+    <string name="etNewPassword">New Password</string>
+    <string name="btnChangePwd">Change</string>
+    <string name="etSecretAnswer">Secret Answer</string>
+    <string name="forgotPassword">Forgot Password</string>
+    <string name="btnSubmit">Submit</string>
+
+    <string-array name="question_array">
+        <item>What was the name of your first pet?</item>
+        <item>Name of first street you lived on?</item>
+        <item>What primary school did you attend?</item>
+    </string-array>
 </resources>

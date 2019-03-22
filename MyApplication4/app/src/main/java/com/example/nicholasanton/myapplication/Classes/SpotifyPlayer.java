@@ -72,12 +72,4 @@ public class SpotifyPlayer{
         Thread theThread = new Thread(new SecondThread());
         theThread.start();
     }
-
-//    private class LongOperation extends AsyncTask<String, Void, String> {
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//
-//        }
-//    }
 }

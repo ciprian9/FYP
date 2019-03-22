@@ -19,7 +19,7 @@ public class LockedScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locked_screen);
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE); // Define a listener that responds to location updates
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 if (location == null) {

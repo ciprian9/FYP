@@ -28,7 +28,6 @@ public class bedtimeRoutineService extends Service {
     }
 
     private void turnOnDoNotDisturb() {
-        //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
         db.insertLog("Silent ON");
         if (Build.VERSION.SDK_INT < 21) {
             return;

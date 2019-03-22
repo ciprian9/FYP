@@ -4,7 +4,9 @@ package com.example.nicholasanton.myapplication.Views;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.Request;
@@ -28,10 +30,14 @@ public class Register extends AppCompatActivity {
     private String uName;
     private String Pass;
     private String Email;
+    private String secretQuestion;
+    private String secretAnswer;
     private TextView Username;
     private TextView E_mail;
     private TextView Password;
     private TextView ConfPassword;
+    private TextView SecrAnswer;
+    private Spinner spinner;
     private DataHandler db;
 
     @Override
@@ -39,12 +45,19 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        spinner = (Spinner) findViewById(R.id.spSecretQuestion);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.question_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
         db = new DataHandler(this);
 
         Username = findViewById(R.id.Username);
         E_mail = findViewById(R.id.email);
         Password = findViewById(R.id.Password);
         ConfPassword = findViewById(R.id.ConfirmPassword);
+        SecrAnswer = findViewById(R.id.SecretAnswer);
 
         final Button CancelBtn = findViewById(R.id.CancelBtn);
         CancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -62,10 +75,12 @@ public class Register extends AppCompatActivity {
     }
 
     private void GatherData(){
-        uName    = Username.getText().toString();
-        Pass     = Password.getText().toString();
-        String confPass = ConfPassword.getText().toString();
-        Email    = E_mail.getText().toString();
+        uName              = Username.getText().toString();
+        Pass               = Password.getText().toString();
+        String confPass    = ConfPassword.getText().toString();
+        Email              = E_mail.getText().toString();
+        secretQuestion     = String.valueOf(spinner.getSelectedItemId());
+        secretAnswer       = SecrAnswer.getText().toString();
 
         boolean CheckPassword = verifyPassword(Pass, confPass);
         if (!uName.equals("")) {
@@ -111,6 +126,8 @@ public class Register extends AppCompatActivity {
             params.put("username", uName);
             params.put("password", Pass);
             params.put("email", Email);
+            params.put("secretQuestion", secretQuestion);
+            params.put("secretAnswer", secretAnswer);
             return params;
             }
         };

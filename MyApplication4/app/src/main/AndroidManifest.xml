@@ -39,7 +39,9 @@
     <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+
     <permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
         android:protectionLevel="dangerous" />
@@ -61,6 +63,10 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
+        <activity android:name=".Views.forgotPassword">
+        </activity>
+        <activity android:name=".Views.ChangePassword">
+        </activity>
         <activity android:name=".Views.DebugConsole">
         </activity>
         <activity android:name=".Views.LockedScreen">
@@ -147,8 +153,8 @@
         <service android:name=".Services.MapService" />
         <service android:name=".Services.Driving_Policy_Service" />
         <service android:name=".Services.SpeedAndDistance" />
-        <service android:name=".Services.bedtimeRoutineService"/>
-        <service android:name=".Services.getTheWeather"/>
+        <service android:name=".Services.bedtimeRoutineService" />
+        <service android:name=".Services.getTheWeather" />
         <service
             android:name=".Services.MyJobService"
             android:exported="false">
@@ -160,8 +166,8 @@
         <service android:name=".Services.TrackingService" />
         <service android:name=".ActivityRecognizerImpl$ActivityRecognitionIntentService" />
         <service android:name=".Services.googleCalendarService" />
-        <service android:name=".Services.DebugService"/>
-        <service android:name=".Services.LocationTrack"/>
+        <service android:name=".Services.DebugService" />
+        <service android:name=".Services.LocationTrack" />
     </application>
 
 </manifest>

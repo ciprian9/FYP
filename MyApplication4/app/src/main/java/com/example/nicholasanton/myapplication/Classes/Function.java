@@ -10,23 +10,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Function {
-
-    // Project Created by Ferdousur Rahman Shajib
-    // www.androstock.com
-
-    public static boolean isNetworkAvailable(Context context)
-    {
-        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
-    }
-
-
-
     public static String excuteGet(String targetURL)
     {
         URL url;
         HttpURLConnection connection = null;
         try {
-            //Create connection
             url = new URL(targetURL);
             connection = (HttpURLConnection)url.openConnection();
             connection.setRequestProperty("content-type", "application/json;  charset=utf-8");

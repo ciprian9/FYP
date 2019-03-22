@@ -41,7 +41,7 @@ public interface Constants {
 
     String DB_FLAG = "status";
 
-    String ROOT_URL = "http://192.168.0.10/Android/v1/";
+    String ROOT_URL = "http://192.168.0.241/Android/v1/";
     String URL_REGISTER = ROOT_URL+"registerUser.php";
     String URL_LOGIN = ROOT_URL+"userLogin.php";
     String URL_SAVE_SETTING = ROOT_URL+"saveSetting.php";
@@ -51,6 +51,8 @@ public interface Constants {
     String URL_ADD_LOCATION = ROOT_URL+"insertLocation.php";
     String URL_ADDWORK_LOCATION = ROOT_URL+"insertLocationWorking.php";
     String URL_READ_LOCATION = ROOT_URL+"readLocation.php";
+
+    String GOOGLEROOTURL = "http://192.168.0.241/Android/php/";
 
     String defaultMorning = "8:0";
     String defaultNight = "10:0";

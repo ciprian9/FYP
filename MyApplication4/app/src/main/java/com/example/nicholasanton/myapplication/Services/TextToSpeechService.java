@@ -20,28 +20,12 @@ import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.n
 
 public class TextToSpeechService extends Service {
 
-//    final class TTSThread implements Runnable{
-//        int serviceId;
-//
-//        TTSThread(int serviceId) {
-//            this.serviceId = serviceId;
-//        }
-//
-//        @Override
-//        public void run(){
-//            synchronized (this){
-//                speakTheText();
-//            }
-//        }
-//    }
-
     private Cursor cursor;
     private String TextMessage = "";
     private TextToSpeech repeatTTS;
     private String sender="";
     private String smsMessage ="";
     private DataHandler db;
-    //private Thread thread;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -51,7 +35,6 @@ public class TextToSpeechService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        //thread = new Thread(new TTSThread(startId));
         Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
         db = new DataHandler(getApplicationContext());
         if (intent.getStringExtra("sender") != null){
@@ -61,7 +44,6 @@ public class TextToSpeechService extends Service {
         if (intent.getStringExtra("message") != null){
             smsMessage = intent.getStringExtra("message");
         }
-        //thread.start();
         speakTheText();
         return START_STICKY;
     }
@@ -77,10 +59,6 @@ public class TextToSpeechService extends Service {
     }
 
     private void speakTheText() {
-        //FOR API 24 USER HAS TO GRANT ACCESS TO THIS
-        //AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-        //audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-
         if (!sender.equals("") && !smsMessage.equals("")){
             if (isMyServiceRunning(Running_Policy_Service.class) || isMyServiceRunning(Cycling_Policy_Service.class) || isMyServiceRunning(Driving_Policy_Service.class)) {
                 if (notificationTTS) {
@@ -108,9 +86,6 @@ public class TextToSpeechService extends Service {
         }
         if (!repeatTTS.isSpeaking()){
             Toast.makeText(this, "Stop Talking", Toast.LENGTH_SHORT).show();
-            AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-            //audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-
             stopSelf();
         }
     }

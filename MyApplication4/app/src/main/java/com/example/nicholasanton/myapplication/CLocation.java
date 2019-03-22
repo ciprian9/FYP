@@ -8,13 +8,7 @@ public class CLocation extends Location {
 
     private boolean bUseMetricUnits;
 
-    public CLocation(Location location)
-    {
-        this(location, true);
-    }
-
     public CLocation(Location location, boolean bUseMetricUnits) {
-        // TODO Auto-generated constructor stub
         super(location);
         this.bUseMetricUnits = bUseMetricUnits;
     }
@@ -36,7 +30,6 @@ public class CLocation extends Location {
         float nDistance = super.distanceTo(dest);
         if(this.getUseMetricUnits())
         {
-            //Convert meters to feet
             nDistance = nDistance * 3.28083989501312f;
         }
         return nDistance;
@@ -48,7 +41,6 @@ public class CLocation extends Location {
         float nAccuracy = super.getAccuracy();
         if(this.getUseMetricUnits())
         {
-            //Convert meters to feet
             nAccuracy = nAccuracy * 3.28083989501312f;
         }
         return nAccuracy;
@@ -60,7 +52,6 @@ public class CLocation extends Location {
         double nAltitude = super.getAltitude();
         if(this.getUseMetricUnits())
         {
-            //Convert meters to feet
             nAltitude = nAltitude * 3.28083989501312d;
         }
         return nAltitude;
@@ -72,7 +63,6 @@ public class CLocation extends Location {
         float nSpeed = super.getSpeed() * 3.6f;
         if(this.getUseMetricUnits())
         {
-            //Convert meters/second to miles/hour
             nSpeed = nSpeed * 2.2369362920544f/3.6f;
         }
         return nSpeed;

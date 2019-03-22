@@ -54,8 +54,6 @@ import permissions.dispatcher.NeedsPermission;
 
 @RuntimePermissions
 public class MapActivity extends AppCompatActivity {
-
-    //Pedometer processing
     private boolean pedometer, time, dist;
     private TextView TvSteps, TvDistance, TvTimer, TvSpeed;
     private static final String TEXT_NUM_STEPS = "Number of Steps: ";
@@ -68,7 +66,7 @@ public class MapActivity extends AppCompatActivity {
     private final String runningFileName = "latandlongsRun.txt";
     private final String cyclingFileName = "latandlongsCycle.txt";
     private final String drivingFileName = "latandlongsDrive.txt";
-    private ArrayList<LatLng> points; //added
+    private ArrayList<LatLng> points;
     private Location mCurrentLocation;
     private NewLocationReciever receiver;
     private DataReceiver dataReceiver;
@@ -138,13 +136,9 @@ public class MapActivity extends AppCompatActivity {
         }
 
         if (savedInstanceState != null && savedInstanceState.keySet().contains(KEY_LOCATION)) {
-            // Since KEY_LOCATION was found in the Bundle, we can be sure that mCurrentLocation
-            // is not null.
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
         }
 
-
-        //Map processing
         SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         if (mapFragment != null) {
             mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -219,18 +213,14 @@ public class MapActivity extends AppCompatActivity {
     private void loadMap(GoogleMap googleMap) {
         map = googleMap;
         if (map != null) {
-            // Map is ready
             LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             Criteria criteria = new Criteria();
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
                 if (ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
 
-                    // Permission is not granted
-                    // No explanation needed; request the permission
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)) {
                         ActivityCompat.requestPermissions(this,
@@ -294,7 +284,6 @@ public class MapActivity extends AppCompatActivity {
     void getMyLocation() {
         map.clear();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
             return;
         }
         map.setMyLocationEnabled(true);
@@ -348,8 +337,6 @@ public class MapActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // Display the connection status
-
         if (mCurrentLocation != null) {
             LatLng latLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
             CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(18).bearing(mCurrentLocation.getBearing()).tilt(70).build();
@@ -377,16 +364,14 @@ public class MapActivity extends AppCompatActivity {
 
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
-        //noinspection MissingPermission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         }
     }
 
     private void redrawLine(){
-        map.clear();  //clears all Markers and Polylines
+        map.clear();
         PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
         options.addAll(points);
-        //added
         Polyline line = map.addPolyline(options);
         points.clear();
     }
@@ -396,24 +381,16 @@ public class MapActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    // Define a DialogFragment that displays the error dialog
     public static class ErrorDialogFragment extends android.support.v4.app.DialogFragment {
-
-        // Global field to contain the error dialog
         private Dialog mDialog;
-
-        // Default constructor. Sets the dialog field to null
         public ErrorDialogFragment() {
             super();
             mDialog = null;
         }
-
-        // Set the dialog to display
         public void setDialog(Dialog dialog) {
             mDialog = dialog;
         }
 
-        // Return a Dialog to the DialogFragment.
         @NotNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
