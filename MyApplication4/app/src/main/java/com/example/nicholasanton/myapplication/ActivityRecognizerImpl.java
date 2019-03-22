@@ -35,17 +35,11 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
 
     @Override
     public void startToRecognizeActivities() {
-        //Trying to connect with Google API. If it works onConnected() will be called, else onConnectionFailed() will be called.
         googleApiClient.connect();
     }
 
-    /**
-     * Called when there was an error connecting the client to the service.
-     * @param connectionResult Checks if the connection failed
-     */
     @Override
     public void onConnectionFailed(@NotNull ConnectionResult connectionResult) {
-        //Google API connection has been failed! Stop it and warn!
         activityRecognizerListener.connectionFailed();
         stopToRecognizeActivities();
     }
@@ -57,22 +51,14 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
                     googleApiClient,
                     PendingIntent.getService(context, 0,
                             new Intent(context, ActivityRecognitionIntentService.class), PendingIntent.FLAG_UPDATE_CURRENT)
-            ); //Stopping to recognize activities.
-            googleApiClient.disconnect(); //Closing connection with Google APIs
+            );
+            googleApiClient.disconnect();
         }
     }
 
-    /**
-     * After calling connect(), this method will be invoked asynchronously when the connect request has successfully completed.
-     * After this callback, the application can make requests on other methods provided by the client and expect that no user intervention
-     * is required to call methods that use account and scopes provided to the client constructor.
-     *
-     * @param bundle Set up activity recognition and ready to detect activities
-     */
     @SuppressWarnings("deprecation")
     @Override
     public void onConnected(Bundle bundle) {
-        //Google API connection has been done successfully, now we can work with it
         ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(
                 googleApiClient,
                 ACTIVITY_RECOGNITION_INTERVAL,
@@ -81,17 +67,8 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
         );
     }
 
-    /**
-     * Called when the client is temporarily in a disconnected state.
-     * This can happen if there is a problem with the remote service (e.g. a crash or resource problem causes it to be killed by the system).
-     * When called, all requests have been canceled and no outstanding listeners will be executed.
-     * GoogleApiClient will automatically attempt to restore the connection.
-     * Applications should disable UI components that require the service, and wait for a call to onConnected(Bundle) to re-enable them.
-     */
     @Override
-    public void onConnectionSuspended(int i) {
-        //Wait for the GoogleApiClient restores the connection.
-    }
+    public void onConnectionSuspended(int i) { }
 
     @Override
     public void setActivityRecognizerListener(ActivityRecognizerListener activityRecognizerListener) {
@@ -104,9 +81,6 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
             super("ACTIVITYRECOGNITION_INTENTSERVICE_NAME");
         }
 
-        /**
-         * Called when a new activity detection update is available.
-         */
         @Override
         protected void onHandleIntent(final Intent intent) {
             if (ActivityRecognitionResult.hasResult(intent)) {

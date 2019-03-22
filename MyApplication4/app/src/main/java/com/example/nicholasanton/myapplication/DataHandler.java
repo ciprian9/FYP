@@ -18,7 +18,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 
 public class DataHandler extends SQLiteOpenHelper {
-    //constants for DataHandler tables
     private static final int DATABASE_VERSION = 12;
     private static final String DATABASE_NAME = "FYP.db";
     private static final String SETTINGS_TABLE_NAME = "Settings";
@@ -38,7 +37,6 @@ public class DataHandler extends SQLiteOpenHelper {
     private static final String COLUMN_LINE_ID = "id";
     private static final String COLUMN_LINE_TEXT = "message";
 
-    //Create queries for the tables
     private static final String REMEMBER_ME_TABLE = "CREATE TABLE " + USER_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY, " + COLUMN_USERNAME + " TEXT, " + COLUMN_PASSWORD + " TEXT)";
 
 
@@ -48,16 +46,9 @@ public class DataHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    //Settings Table select statement with a where clause
-
-    //Settings Table select statement with a where clause
     public Cursor SelectUser(){
-        //create a sqlite database object
         SQLiteDatabase db = this.getWritableDatabase();
-        //select query
         String query = "Select * from " + USER_TABLE_NAME + " WHERE " + COLUMN_USERID + " = " + 1;
-        //run the query and receive the cursor filled with data
-        //return the cursor
         return db.rawQuery(query, null);
     }
 
@@ -72,7 +63,6 @@ public class DataHandler extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_USERNAME, username);
         contentValues.put(COLUMN_PASSWORD, password);
-        //The id of the setting is used, settings are added only once and updated thereafter
         db.update(USER_TABLE_NAME, contentValues, "id = ?", new String[]{"1"});
     }
 
@@ -87,27 +77,15 @@ public class DataHandler extends SQLiteOpenHelper {
     }
 
     public void DeleteUser(){
-        //The name passed in is the name of a certain audio file the user chooses to delete from the DataBase
         SQLiteDatabase db = this.getWritableDatabase();
         int temp = db.delete(USER_TABLE_NAME, COLUMN_USERID + " =?", new String[]{"1"});
     }
-
-    //Similar to the settings select
-
-    //Update Settings record
-
-    //second query for updating settings numerical values : need to consider using a generic type to combine the two, this code could prove redundant
-
-    //Delete query for audio files in the playlist
-
-    //Create the two tables : todo need to add more tables to create
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(REMEMBER_ME_TABLE);
         db.execSQL(LOGS_TABLE);
     }
 
-    //remove existing tables when schema changes
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + SETTINGS_TABLE_NAME);
@@ -136,13 +114,4 @@ public class DataHandler extends SQLiteOpenHelper {
         //return the cursor
         return db.rawQuery(query, null);
     }
-
-
-    //Insert Query for the playlist
-
-
-    //Insert Query for the Settings
-
-
-    //Similar to above this could prove redundant : todo try using generic type in order to avoid code repetition
 }

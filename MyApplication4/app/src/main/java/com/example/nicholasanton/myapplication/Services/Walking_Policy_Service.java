@@ -9,17 +9,6 @@ import android.widget.Toast;
 import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
 
-/*
-After looking at the walking option need to be able to handle any of the options being turned on, or off. Need to consider better options and handle different scenarios.
-Consider implementing the music player here. If most policies wil have a music player consider creating a super class Policy that will have the player and have classes inherit from that when the player is needed
-
- TODO
- //Service ends too early not given the chance to speak we need to keep the service running until the whole run is over
- //Try creating code for tracking usage / screen time is enough for now
-
-
- */
-
 public class Walking_Policy_Service extends Service {
 
     private boolean pedometer;
@@ -48,7 +37,6 @@ public class Walking_Policy_Service extends Service {
         Bundle extras = intent.getExtras();
         db = new DataHandler(this);
 
-        //just checking
         if( extras != null ) {
             int accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
             boolean musicPlayer = extras.getBoolean(Constants.MUSIC_INTENT);

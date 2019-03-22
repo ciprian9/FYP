@@ -38,6 +38,11 @@
             app:showAsAction="never"/>
 
         <item
+            android:id="@+id/ChangePassword"
+            android:title="@string/itmChangePassword"
+            app:showAsAction="never"/>
+
+        <item
             android:id="@+id/Logout"
             android:title="@string/itmLogout"
             app:showAsAction="never" />

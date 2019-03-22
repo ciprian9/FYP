@@ -40,7 +40,6 @@ public class SaveSettings {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            //Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             if(apath.equals(Constants.URL_READ_SETTING)){
                                     isOn = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
                             }
@@ -52,9 +51,7 @@ public class SaveSettings {
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    public void onErrorResponse(VolleyError error) {}
                 }){
             @Override
             protected Map<String, String> getParams() {

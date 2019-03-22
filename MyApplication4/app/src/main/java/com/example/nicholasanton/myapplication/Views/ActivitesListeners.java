@@ -21,6 +21,8 @@ import android.location.LocationManager;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -125,6 +127,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     private int hour, mins, secs, ehour, emins, esecs;
     private SpotifyPlayer spotifyPlayer;
     private DataHandler db;
+    private int dndStatus;
 
     @Inject
     HomePresenter presenter;
@@ -136,9 +139,18 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
 
         db = new DataHandler(this);
 
-        requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
-        turnOffDoNotDisturb();
+        try {
+            dndStatus = Settings.Global.getInt(getContentResolver(), "zen_mode");
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
 
+        if (dndStatus == 0) {
+            requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+        }
+        if (dndStatus == 1 || dndStatus == 2 || dndStatus == 3) {
+            turnOffDoNotDisturb();
+        }
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -176,13 +188,17 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     if (location.distanceTo(workLL) < 40){
                         Log.d("TEST : ", "Arrived to work");
                         db.insertLog("Work found request do not disturb");
-                        requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+                        if (dndStatus == 0) {
+                            requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+                        }
                     }
                 }else{
                     if(location.distanceTo(loc1) < 40){
                         Log.d("TEST : ", "Arrived to Work");
                         db.insertLog("Work found request do not disturb");
-                        requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+                        if (dndStatus == 0) {
+                            requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+                        }
                     }
                 }
 
@@ -376,7 +392,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     public void onFailure(Throwable throwable) {
                         Log.e("TEST : ", throwable.getMessage(), throwable);
                         db.insertLog("SPOTIFY ERROR CONNECTING");
-                        // Something went wrong when attempting to connect! Handle errors here
                     }
                 });
     }
@@ -400,9 +415,9 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(morningHour));
         calendar.set(Calendar.MINUTE, Integer.valueOf(morningMin));
 
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime()+calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, alarmIntent);
-//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
         AlarmManager alarmMgr2 = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent2 = new Intent(getApplicationContext(), bedtimeRoutineService.class);
         PendingIntent alarmIntent2 = PendingIntent.getService(getApplicationContext(), 0, intent2, 0);
@@ -412,7 +427,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         calendar2.set(Calendar.HOUR_OF_DAY, Integer.valueOf(nightHour));
         calendar2.set(Calendar.MINUTE, Integer.valueOf(nightMin));
 
-        alarmMgr2.setRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(),
+        alarmMgr2.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime()+calendar2.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, alarmIntent2);
 
         db.insertLog("End day / night routine");
@@ -434,7 +449,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         List<Address> address;
         LatLng p1 = null;
         try {
-            // May throw an IOException
             address = coder.getFromLocationName(strAddress, 5);
             if (address == null) {
                 return null;
@@ -452,25 +466,16 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
 
             switch (response.getType()) {
-                // Response was successful and contains auth token
                 case TOKEN:
-                    // Handle successful response
                     mAccessToken = response.getAccessToken();
                     break;
-
-                // Auth flow returned an error
                 case ERROR:
-                    // Handle error response
                     break;
-
-                // Most likely auth flow was cancelled
                 default:
-                    // Handle other cases
             }
         }
     }
@@ -688,12 +693,16 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     .setNegativeButton("Cancel", null)
                     .create();
             SecondDialog.show();
+        } else if (id == R.id.ChangePassword){
+            Intent i = new Intent(this, ChangePassword.class);
+            i.putExtra("username", username);
+            i.putExtra("disable", false);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void ReadLocation() {
-        //db.insertLog("Reading Location...\n");
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_READ_LOCATION,
                 new Response.Listener<String>() {
@@ -841,7 +850,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     }
 
     private void StartDrivingOptions() {
-        //create a new intent that will start walkingOptions class
         Intent intent = new Intent(this, DrivingOptions.class);
         intent.putExtra("accountid", accountid);
         try {
@@ -852,7 +860,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     }
 
     private void StartCyclingOptions() {
-        //create a new intent that will start walkingOptions class
         Intent intent = new Intent(this, CyclingOptions.class);
         intent.putExtra("accountid", accountid);
         try {
@@ -863,7 +870,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     }
 
     private void requestDoNotDisturbPermission() {
-        //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
         if (Build.VERSION.SDK_INT < 23) {
             return;
         }
@@ -873,7 +879,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     }
 
     private void requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp() {
-        //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
         if (Build.VERSION.SDK_INT < 21) {
             return;
         }
@@ -883,12 +888,10 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             db.insertLog("Do Not Disturb On");
         }catch(Exception e){
             requestDoNotDisturbPermission();
-
         }
     }
 
     private void turnOffDoNotDisturb() {
-        //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
         if (Build.VERSION.SDK_INT < 21) {
             return;
         }
@@ -905,7 +908,9 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             i.putExtra(Constants.POLICY_ID, 4);
             startService(i);
         }
-        requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+        if (dndStatus == 0) {
+            requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+        }
         Intent myIntent = new Intent(ActivitesListeners.this, LockedScreen.class);
         ActivitesListeners.this.startActivity(myIntent);
         Intent intent = new Intent(this, Driving_Policy_Service.class);
@@ -959,7 +964,9 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     private void StopDrivingPolicy() {
         stopService(new Intent(this, pedometerService.class));
         stopService(new Intent(this, MapService.class));
-        turnOffDoNotDisturb();
+        if (dndStatus == 1 || dndStatus == 2 || dndStatus == 3) {
+            turnOffDoNotDisturb();
+        }
     }
 
     private void getWalkingSettings(int aPolicyID) {
@@ -1083,7 +1090,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     }
 
     private void StartWalkingOptions() {
-        //create a new intent that will start walkingOptions class
         Intent intent = new Intent(this, WalkingOptions.class);
         intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
         intent.putExtra(Constants.USERNAME_INTENT, username);
@@ -1095,8 +1101,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     }
 
     private void StartRunningService() {
-        //create a new intent that will start walkingPolicy service
-        //MakeNotifications("on Foot", "on Foot");
         if (recordRoute) {
             Intent i = new Intent(getApplicationContext(), MapService.class);
             i.putExtra("temp", false);
@@ -1116,7 +1120,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     }
 
     private void StartRunningOptions() {
-        //create a new intent that will start walkingOptions class
         Intent intent = new Intent(this, RunningOptions.class);
         intent.putExtra("accountid", accountid);
         try {
@@ -1130,31 +1133,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         db.insertLog("Starting Timer Service\n");
         startService(new Intent(ActivitesListeners.this, Timer_Service.class));
     }
-
-//    private void getEvents() {
-//        //db.insertLog("Getting phone events\n");
-//        String[] projection = new String[]{CalendarContract.Events.CALENDAR_ID, CalendarContract.Events.TITLE, CalendarContract.Events.DESCRIPTION, CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND, CalendarContract.Events.ALL_DAY, CalendarContract.Events.EVENT_LOCATION};
-//        Calendar startTime = Calendar.getInstance();
-//        startTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH) - 1, 23, 59);
-//        Calendar endTime = Calendar.getInstance();
-//        endTime.set(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH), 23, 59);
-//        String selection = "(( " + CalendarContract.Events.DTSTART + " >= " + startTime.getTimeInMillis() + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + endTime.getTimeInMillis() + " ))";
-//        Cursor cursor = this.getBaseContext().getContentResolver().query(CalendarContract.Events.CONTENT_URI, projection, selection, null, null);
-//        assert cursor != null;
-//        if (cursor.moveToFirst()) {
-//            do {
-//                try {
-//                    long start = new Date(cursor.getLong(3)).getTime();
-//                    long end = new Date(cursor.getLong(4)).getTime();
-//                    scheduleJobs(start, cursor.getString(1), 0);
-//                    scheduleJobs(end, (cursor.getString(1) + "1"), 1);
-//                } catch (Exception e) {
-//                    Log.d("TEST : ", e.toString());
-//                }
-//            } while (cursor.moveToNext());
-//        }
-//        cursor.close();
-//    }
 
     private long D2MS(int month, int day, int year, int hour, int minute, int seconds) {
         Calendar c = Calendar.getInstance();
@@ -1175,7 +1153,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 int thisYear = calendar.get(Calendar.YEAR);
                 int thisMonth = calendar.get(Calendar.MONTH);
                 int thisDay = calendar.get(Calendar.DAY_OF_MONTH);
-                //UI update here
                 summary = intent.getStringExtra("summary");
                 hour = intent.getIntExtra("sHour", 0);
                 mins = intent.getIntExtra("sMins", 0);
@@ -1188,37 +1165,35 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 long SecondD = D2MS(thisMonth, thisDay, thisYear, ehour, emins, esecs);
                 boolean isThere = true;
 
-                if (calendarList.size() == 0) {
-                    calendarList.add(summary);
-                    scheduleJobs(FirstD, summary, 0);
-                    scheduleJobs(SecondD, summary + "1", 1);
-                }
+                if(!(System.currentTimeMillis() > SecondD)) {
+                    if (calendarList.size() == 0) {
+                        calendarList.add(summary);
+                        scheduleJobs(FirstD, summary, 0);
+                        scheduleJobs(SecondD, summary + "1", 1);
+                    }
 
-                for (int i = 0; i < calendarList.size(); i++) {
-                    if (calendarList.get(i).equalsIgnoreCase(summary)) {
-                        isThere = true;
-                        break;
-                    }else{
-                        isThere = false;
+                    for (int i = 0; i < calendarList.size(); i++) {
+                        if (calendarList.get(i).equalsIgnoreCase(summary)) {
+                            isThere = true;
+                            break;
+                        } else {
+                            isThere = false;
+                        }
+                    }
+
+                    if (!isThere) {
+                        calendarList.add(summary);
+                        db.insertLog("Schedule Event\n");
+                        scheduleJobs(FirstD, summary, 0);
+                        scheduleJobs(SecondD, summary + "1", 1);
                     }
                 }
-
-                if(!isThere){
-                    calendarList.add(summary);
-                    db.insertLog("Schedule Event\n");
-                    scheduleJobs(FirstD, summary, 0);
-                    scheduleJobs(SecondD, summary + "1", 1);
-                }
-
-//                Toast.makeText(ActivitesListeners.this, summary + "\n" + "start hour : "+hour+" - min : "+mins+" - sec : "+secs
-//                        + "\n" + "end hour : "+ehour+" - min : "+emins+" - sec : "+esecs, Toast.LENGTH_SHORT).show();
             }
         };
         registerReceiver(updateUIReciver, filter);
 
         if (!username.equals("tester1234")) {
             Intent i = new Intent(this, googleCalendarService.class);
-            //db.insertLog("Starting Google Calendar Service\n");
             i.putExtra("calendarid", gmail);
             i.putExtra("username", username);
             startService(i);
@@ -1230,18 +1205,18 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     private void scheduleJobs(long setTime, String title, int startend) {
         Bundle bun = new Bundle();
         db.insertLog("Scheduling Jobs\n");
-        //requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
 
         bun.putInt("StartEnd", startend);
 
         long time = System.currentTimeMillis();
-//        long setTime = (new Date(cursor.getLong(3))).getTime();
+        if(System.currentTimeMillis() > setTime) {
+            setTime = System.currentTimeMillis() + 1000;
+        }
         long newtime = (setTime - time);
         newtime = newtime / 1000;
         if (newtime > 0) {
             Job myJob = mDispatcher.newJobBuilder()
                     .setService(MyJobService.class)
-                    //.setTag(cursor.getString(1))
                     .setTag(title + startend)
                     .setRecurring(false)
                     .setTrigger(Trigger.executionWindow((int) newtime, (int) (newtime + 5)))
@@ -1306,7 +1281,9 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                         StopRunningPolicy();
                         StopCyclingPolicy();
                         StopDrivingPolicy();
-                        turnOffDoNotDisturb();
+                        if (dndStatus == 1 || dndStatus == 2 || dndStatus == 3) {
+                            turnOffDoNotDisturb();
+                        }
                     }
                 }
                 break;
@@ -1365,7 +1342,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Objects.requireNonNull(intent.getAction()).equals("GET_EVENTS")) {
-                //getEvents();
                 getCalendarEvents();
             }
         }

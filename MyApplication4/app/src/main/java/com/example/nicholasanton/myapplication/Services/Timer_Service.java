@@ -28,7 +28,6 @@ public class Timer_Service extends Service{
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stubs
         super.onDestroy();
         db.insertLog("Timer Service Stopped\n");
         Toast.makeText(this, "Service Stopped", Toast.LENGTH_SHORT).show();
@@ -37,7 +36,6 @@ public class Timer_Service extends Service{
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO Auto-generated method stub
         return null;
     }
 

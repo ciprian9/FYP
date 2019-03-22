@@ -21,7 +21,6 @@ public class CustomTimerTask extends TimerTask {
                 mHandler.post(new Runnable() {
                     public void run() {
                         callBroadcast();
-                        //Toast.makeText(context, "DISPLAY YOUR MESSAGE", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

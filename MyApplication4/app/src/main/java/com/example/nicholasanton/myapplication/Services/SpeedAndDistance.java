@@ -72,7 +72,6 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        // TODO Auto-generated method stub
         if(location != null)
         {
             db.insertLog("Updating Last Known Speed");
@@ -82,28 +81,16 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
     }
 
     @Override
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onProviderDisabled(String provider) {}
 
     @Override
-    public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onProviderEnabled(String provider) {}
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
 
     @Override
-    public void onGpsStatusChanged(int event) {
-        // TODO Auto-generated method stub
-
-    }
+    public void onGpsStatusChanged(int event) {}
 
     @Override
     public IBinder onBind(Intent intent) {

@@ -40,7 +40,6 @@ public class getTheWeather extends Service {
     }
 
     private void turnOffDoNotDisturb() {
-        //TO SUPPRESS API ERROR MESSAGES IN THIS FUNCTION, since Ive no time to figrure our Android SDK suppress stuff
         db.insertLog("SILENT OFF");
         if (Build.VERSION.SDK_INT < 21) {
             return;

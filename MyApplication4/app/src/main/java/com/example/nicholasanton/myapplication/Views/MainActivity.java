@@ -1,20 +1,23 @@
 package com.example.nicholasanton.myapplication.Views;
 
-import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.Request;
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private String uName;
     private String Pass;
     private String gmail;
+    private String email;
     private static final String testUname = "tester1234";
     private static final String testPass = "tester1234";
     private static final int testID = 10;
@@ -52,106 +56,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
 
-            // Permission is not granted
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                        // No explanation needed; request the permission
-                        int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 11;
-                        ActivityCompat.requestPermissions(this,
-                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                    }
-        }
+        int PERMISSION_ALL = 1;
+        String[] PERMISSIONS = {
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.RECEIVE_SMS,
+                android.Manifest.permission.READ_CALENDAR,
+                android.Manifest.permission.WRITE_CALENDAR,
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.READ_PHONE_STATE,
+                android.Manifest.permission.READ_CONTACTS
+        };
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECEIVE_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            // No explanation needed; request the permission
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.RECEIVE_SMS)) {
-                ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.RECEIVE_SMS},
-                MY_PERMISSIONS_REQUEST_SMS_RECEIVE);
-            }
-        }
-
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CALENDAR)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            // No explanation needed; request the permission
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_CALENDAR)) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_CALENDAR},
-                        MY_PERMISSIONS_REQUEST_SMS_RECEIVE);
-            }
-        }
-
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_CALENDAR)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            // No explanation needed; request the permission
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_CALENDAR)) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_CALENDAR},
-                        MY_PERMISSIONS_REQUEST_SMS_RECEIVE);
-            }
-        }
-
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            // No explanation needed; request the permission
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        11);
-            }
-        }
-
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            // No explanation needed; request the permission
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                        12);
-            }
-        }
-
-//        Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-//        startActivityForResult(intent);
-
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            // No explanation needed; request the permission
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_PHONE_STATE)) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_PHONE_STATE},
-                        13);
-            }
+        if(!hasPermissions(this, PERMISSIONS)){
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
         }
 
         Username = findViewById(R.id.Username);
@@ -172,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        //Listener for the Register Button
         final Button RegisterBtn = findViewById(R.id.RegisterButton);
         RegisterBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -188,11 +106,35 @@ public class MainActivity extends AppCompatActivity {
                 LogUserIn();
             }
         });
+
+        final Button PasswordBtn = findViewById(R.id.btnForgotPassword);
+        PasswordBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                db.insertLog("Clicked Forgot Password");
+                forgotPassword();
+            }
+        });
+    }
+
+    private void forgotPassword() {
+        Intent i = new Intent(this, forgotPassword.class);
+        startActivity(i);
     }
 
     private void OpenRegisterScreen(){
         Intent i = new Intent(this, Register.class);
         startActivity(i);
+    }
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void GoToMenu(int accountid){
@@ -274,13 +216,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    //Check if permission was granted for SMS
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == MY_PERMISSIONS_REQUEST_SMS_RECEIVE) {
-            // YES!!
             Log.i("TAG", "MY_PERMISSIONS_REQUEST_SMS_RECEIVE --> YES");
         }
     }

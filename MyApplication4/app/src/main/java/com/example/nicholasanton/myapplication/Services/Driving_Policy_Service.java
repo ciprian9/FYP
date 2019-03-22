@@ -10,20 +10,6 @@ import com.example.nicholasanton.myapplication.Interfaces.Constants;
 
 public class Driving_Policy_Service extends Service {
 
-    final class TheThread implements Runnable{
-        final int serviceId;
-
-        TheThread(int serviceId) {
-            this.serviceId = serviceId;
-        }
-
-        @Override
-        public void run() {
-            synchronized (this) {
-                //doEverything();
-            }
-        }
-    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -36,11 +22,6 @@ public class Driving_Policy_Service extends Service {
             boolean recomendDestinations = extras.getBoolean(Constants.RECOMEND_INTENT);
             boolean notificationTTS = extras.getBoolean(Constants.TEXT_TO_SPEECH_SETTING);
         }
-
-
-        Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
-        Thread theThread = new Thread(new Driving_Policy_Service.TheThread(startId));
-        theThread.start();
         return START_STICKY;
     }
 
@@ -54,8 +35,4 @@ public class Driving_Policy_Service extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
-//    private void doEverything() {
-//        //
-//    }
 }

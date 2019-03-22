@@ -25,10 +25,11 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.nicholasanton.myapplication.Interfaces.Constants.GOOGLEROOTURL;
+
 public class googleCalendarService extends Service {
 
     private ClipboardManager clipboard;
-    private static final String ROOTURL = "http://192.168.0.10/Android/php/";
     private String token;
     private String calendarid;
     private Boolean inOrOut = false;
@@ -45,12 +46,11 @@ public class googleCalendarService extends Service {
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             calendarid = bundle.getString("calendarid");
-            //db.insertLog("Got CalendarID " + calendarid);
             String username1 = bundle.getString("username");
         }
         clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
         clipboard.addPrimaryClipChangedListener(mPrimaryChangeListener);
-        googleCalendarConnection(ROOTURL+"tokenExists.php", 0);
+        googleCalendarConnection(GOOGLEROOTURL+"tokenExists.php", 0);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -66,7 +66,7 @@ public class googleCalendarService extends Service {
             db.insertLog("Got Clipboard");
             start();
             token = (String) clipboard.getText();
-            googleCalendarConnection(ROOTURL+"createToken.php", 2);
+            googleCalendarConnection(GOOGLEROOTURL+"createToken.php", 2);
         }
     };
 
@@ -78,20 +78,17 @@ public class googleCalendarService extends Service {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            //db.insertLog("Got response from google calendar");
                             switch (anAction){
                                 case 0:
-                                    //db.insertLog("Checking if token exists");
                                     boolean bool = jsonObject.getBoolean("exists");
                                     if (bool){
-                                        googleCalendarConnection(ROOTURL+"getEvents.php", 3);
+                                        googleCalendarConnection(GOOGLEROOTURL+"getEvents.php", 3);
                                     } else {
-                                        googleCalendarConnection(ROOTURL+"getcalendar.php", 1);
+                                        googleCalendarConnection(GOOGLEROOTURL+"getcalendar.php", 1);
                                     }
                                     break;
                                 case 1:
-                                    //db.insertLog("Getting Calendar");
-                                    if(apath.equals(ROOTURL+"getcalendar.php")){
+                                    if(apath.equals(GOOGLEROOTURL+"getcalendar.php")){
                                         if (!inOrOut) {
                                             String url = jsonObject.getString("url");
                                             Intent i = new Intent(Intent.ACTION_VIEW);
@@ -105,13 +102,11 @@ public class googleCalendarService extends Service {
                                 case 2:
                                     db.insertLog("Creating Token");
                                     if (jsonObject.getString("message").equalsIgnoreCase("ok") && !jsonObject.getBoolean("error")){
-                                        googleCalendarConnection(ROOTURL+"getEvents.php", 3);
+                                        googleCalendarConnection(GOOGLEROOTURL+"getEvents.php", 3);
                                     }
                                     break;
                                 case 3:
-                                    //db.insertLog("Getting events from calendar");
                                     JSONArray the_json_array = jsonObject.getJSONArray("events");
-                                    //textView = findViewById(R.id.textView2);
                                     int len = the_json_array.length();
                                     for (int i = 0; i < len; i++) {
                                         JSONObject another_json_object = the_json_array.getJSONObject(i);

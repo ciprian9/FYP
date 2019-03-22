@@ -30,6 +30,11 @@ package com.example.nicholasanton.myapplication.Views;
     need to move to new policy
  */
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.CompoundButton;
@@ -81,6 +86,33 @@ public class WalkingOptions extends AppCompatActivity {
         Time =  findViewById(R.id.swGPSSpeech);
         Rest = findViewById(R.id.swRest);
         RecordRoute = findViewById(R.id.swRecordRoute);
+
+        if(appInstalledOrNot("com.spotify.music")){
+            playHeadphones.setEnabled(true);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Do you want to install Spotify?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music")));
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.spotify.music")));
+                            }
+
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+            playHeadphones.setEnabled(false);
+        }
+
 
         if (username.equals("tester1234")) {
             VarsToForm();
@@ -142,7 +174,17 @@ public class WalkingOptions extends AppCompatActivity {
                 recordRoute = isChecked;
             }
         });
+    }
 
+    private boolean appInstalledOrNot(String uri) {
+        PackageManager pm = getPackageManager();
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+
+        return false;
     }
 
     private void readSettings(final String aName, final Switch aSwitch) {
@@ -153,7 +195,6 @@ public class WalkingOptions extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            //Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             if (aSwitch != null) {
                                 aSwitch.setChecked(Boolean.valueOf(jsonObject.getString("status")));
                                 switch (aName) {
@@ -208,8 +249,6 @@ public class WalkingOptions extends AppCompatActivity {
 
 
     private void VarsToForm(){
-        //Read the database values and update the activity to reflect those values
-
         readSettings("MusicPlayer", playHeadphones);
         readSettings("Pedometer", startPedometer);
         readSettings("Time", Time);

@@ -1,5 +1,10 @@
 package com.example.nicholasanton.myapplication.Views;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.CompoundButton;
@@ -32,8 +37,7 @@ public class DrivingOptions extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_driving_options); //This is cycle options not running so there is no calories burned switch meaning CaloriesBurnet is null causing it to crash
-        //fix the layout  then you can uncomment the listener for calories burned
+        setContentView(R.layout.activity_driving_options);
         db = new DataHandler(this);
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -51,6 +55,32 @@ public class DrivingOptions extends AppCompatActivity {
         NotficationTTS = findViewById(R.id.swNotificationTTS);
         AutoReply = findViewById(R.id.swAutoReply);
         CallReply = findViewById(R.id.swCallReply);
+
+        if(appInstalledOrNot("com.spotify.music")){
+            playHeadphones.setEnabled(true);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Do you want to install Spotify?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.spotify.music")));
+                            } catch (android.content.ActivityNotFoundException anfe) {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.spotify.music")));
+                            }
+
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+            playHeadphones.setEnabled(false);
+        }
 
         VarsToForm();
         if (accountid != 0) {
@@ -125,6 +155,17 @@ public class DrivingOptions extends AppCompatActivity {
         });
     }
 
+    private boolean appInstalledOrNot(String uri) {
+        PackageManager pm = getPackageManager();
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+
+        return false;
+    }
+
     private void readSettings(final String aName, final Switch aSwitch) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_READ_SETTING,
@@ -133,7 +174,6 @@ public class DrivingOptions extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            //Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             if (aSwitch != null) {
                                 aSwitch.setChecked(Boolean.valueOf(jsonObject.getString("status")));
                                 switch (aName) {
@@ -190,12 +230,9 @@ public class DrivingOptions extends AppCompatActivity {
 
 
     private void VarsToForm(){
-        //Read the database values and update the activity to reflect those values
-
         readSettings("MusicPlayer", playHeadphones);
         readSettings("DoNotDisturb", DoNotDisturb);
         readSettings("GPSSpeech", GPSSpeech);
-        //readSettings("CaloriesBurnt", CaloriesBurnt);
         readSettings("RecordRoute", RecordRoute);
         readSettings("NotificationTTS", NotficationTTS);
         readSettings("AutoReply", AutoReply);
