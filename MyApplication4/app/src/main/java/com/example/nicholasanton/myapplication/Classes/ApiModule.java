@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Classes;
 
+/**
+ * Used in conjunction with activity recognition classes
+ * */
+
 import android.content.Context;
 
 import com.example.nicholasanton.myapplication.ActivityRecognizerImpl;

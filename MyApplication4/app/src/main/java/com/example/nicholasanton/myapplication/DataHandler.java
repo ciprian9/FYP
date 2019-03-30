@@ -1,21 +1,14 @@
-package com.example.nicholasanton.myapplication;/*
-Need to implemeant a dataHandler that will create a SQLite database
-This will be used to store settings and any other data we may require
-functions below may require more or less parameters and different return types this is just a mock up
+package com.example.nicholasanton.myapplication;
 
-
-TODO
-Need to add PolicyID to the Settings Table
-Need to create a Policy Table
-
- */
+/**
+ * Class that manages the local SQLite database
+ * */
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 
 public class DataHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 12;
@@ -46,12 +39,14 @@ public class DataHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    //Selects user using SQL
     public Cursor SelectUser(){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "Select * from " + USER_TABLE_NAME + " WHERE " + COLUMN_USERID + " = " + 1;
         return db.rawQuery(query, null);
     }
 
+    //Deletes all the logs from the db
     public void DeleteLogs(){
         SQLiteDatabase db = this.getWritableDatabase();
         int temp = db.delete(LOGS_TABLE_NAME, "1", null);
@@ -66,6 +61,7 @@ public class DataHandler extends SQLiteOpenHelper {
         db.update(USER_TABLE_NAME, contentValues, "id = ?", new String[]{"1"});
     }
 
+    //adds a user to the db
     public void insertUser(String username, String password){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -76,6 +72,7 @@ public class DataHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    //deletes a user from the db
     public void DeleteUser(){
         SQLiteDatabase db = this.getWritableDatabase();
         int temp = db.delete(USER_TABLE_NAME, COLUMN_USERID + " =?", new String[]{"1"});
@@ -96,6 +93,7 @@ public class DataHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    //inserts a log to the db
     public void insertLog(String message){
         message = message + "\n";
         SQLiteDatabase db = this.getWritableDatabase();

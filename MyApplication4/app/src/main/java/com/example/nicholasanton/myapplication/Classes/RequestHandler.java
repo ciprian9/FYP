@@ -1,6 +1,10 @@
 package com.example.nicholasanton.myapplication.Classes;
 
-//https://www.youtube.com/watch?v=5vy55k542NM&list=PLk7v1Z2rk4hjQaV062aE_CW68xgXdYFpV
+/**
+ * Used to request data from the MySQL database
+ * Video Used to Help : https://www.youtube.com/watch?v=5vy55k542NM&list=PLk7v1Z2rk4hjQaV062aE_CW68xgXdYFpV
+ * */
+
 
 import android.content.Context;
 

@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Timer;
 
+/**
+ *  Will run every 10 second using a timer to get the events of the user
+ *  */
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;

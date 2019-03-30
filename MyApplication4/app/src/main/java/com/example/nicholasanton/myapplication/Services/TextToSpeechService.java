@@ -1,11 +1,13 @@
 package com.example.nicholasanton.myapplication.Services;
 
+/**
+ * Will speak whatever message the user has received by sms
+ * */
+
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.media.AudioManager;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -20,7 +22,6 @@ import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.n
 
 public class TextToSpeechService extends Service {
 
-    private Cursor cursor;
     private String TextMessage = "";
     private TextToSpeech repeatTTS;
     private String sender="";
@@ -58,6 +59,7 @@ public class TextToSpeechService extends Service {
         return false;
     }
 
+    //Will Start speaking the text and auto reply if the user has the setting selected
     private void speakTheText() {
         if (!sender.equals("") && !smsMessage.equals("")){
             if (isMyServiceRunning(Running_Policy_Service.class) || isMyServiceRunning(Cycling_Policy_Service.class) || isMyServiceRunning(Driving_Policy_Service.class)) {
@@ -74,6 +76,7 @@ public class TextToSpeechService extends Service {
         }
     }
 
+    //Speaks the text
     private void speak(){
         db.insertLog("Speaking Text Message");
         float pitchOfVoice = (float) 0.7;
@@ -90,6 +93,7 @@ public class TextToSpeechService extends Service {
         }
     }
 
+    //Sets the speaker
     private void SetSpeaker(){
         repeatTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override

@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Recievers;
 
+/**
+ * Will listen for incoming messages and if enabled will start text to speech service
+ * */
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +15,6 @@ import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Services.TextToSpeechService;
 
 public class SmsReceiver extends BroadcastReceiver {
-
-    public static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
     @Override
     public void onReceive(Context context, Intent intent) {

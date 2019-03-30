@@ -1,12 +1,15 @@
 package com.example.nicholasanton.myapplication.Services;
 
+/**
+ * Will run this service when the night time is reached
+ * */
+
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.IBinder;
-import android.provider.ContactsContract;
 
 import com.example.nicholasanton.myapplication.DataHandler;
 

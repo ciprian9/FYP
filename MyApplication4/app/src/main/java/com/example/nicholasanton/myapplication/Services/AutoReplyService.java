@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Services;
 
+/**
+ * Will reply to a text or call if it is enabled and if any services are running
+ * */
+
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
@@ -32,6 +36,7 @@ public class AutoReplyService extends Service {
     private String sender="";
     private DataHandler db;
 
+    //replies to a number
     private void autoReply() {
         if (isMyServiceRunning(Running_Policy_Service.class) || isMyServiceRunning(Cycling_Policy_Service.class) || isMyServiceRunning(Driving_Policy_Service.class) || inMeeting) {
             db.insertLog("Replied to Text");
@@ -51,6 +56,7 @@ public class AutoReplyService extends Service {
         theThread.interrupt();
     }
 
+    //checks if service is running
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

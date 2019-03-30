@@ -1,6 +1,9 @@
 package com.example.nicholasanton.myapplication.Services;
 
-//https://gist.github.com/enginebai/adcae1f17d3b2114590c
+/**
+ * Uses code from : https://gist.github.com/enginebai/adcae1f17d3b2114590c
+ * Will update files with the users movements that will then be used to update the map
+ * */
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -53,6 +56,7 @@ public class MapService extends Service{
         super.onCreate();
     }
 
+    //Create files if they do not exist and will then populate them everytime the user moves
     @SuppressLint("MissingPermission")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Services;
 
+/**
+ * Will start at the morning time and give the user a notification with the weather of the day
+ * */
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -53,6 +57,7 @@ public class getTheWeather extends Service {
         task.execute(query);
     }
 
+    //Send notification with the weather
     private void sendNotification(String Temp) {
         db.insertLog("Build Notification");
 
@@ -82,6 +87,7 @@ public class getTheWeather extends Service {
         mNotificationManager.notify(1, mBuilder.build());
     }
 
+    //Gets the weather using a url
     class DownloadWeather extends AsyncTask< String, Void, String > {
         protected String doInBackground(String...args) {
             String OPEN_WEATHER_MAP_API = "cbfdb21fa1793c10b14b6b6d00fbef03";

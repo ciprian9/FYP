@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication;
 
+/**
+ * Class for the listener of the tracker
+ * */
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;

@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Enums;
 
+/**
+ * Gets the activity type of the user based on an integer and returns the type
+ * */
+
 public enum ActivityType {
 
     IN_VEHICLE(0), ON_BICYCLE(1), ON_FOOT(2), STILL(3), UNKNOWN(4), TILTING(5), DEFAULT(6), WALKING(7), RUNNING(8);

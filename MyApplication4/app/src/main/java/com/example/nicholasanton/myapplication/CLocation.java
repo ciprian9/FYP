@@ -1,6 +1,9 @@
 package com.example.nicholasanton.myapplication;
 
-//COPIED FROM https://stackoverflow.com/questions/15570542/determining-the-speed-of-a-vehicle-using-gps-in-androidhttps://stackoverflow.com/questions/15570542/determining-the-speed-of-a-vehicle-using-gps-in-android
+/**
+ * Uses code from : https://stackoverflow.com/questions/15570542/determining-the-speed-of-a-vehicle-using-gps-in-android
+ * Class that will get values for the pedometer service
+ * */
 
 import android.location.Location;
 
@@ -24,6 +27,7 @@ public class CLocation extends Location {
         this.bUseMetricUnits = bUseMetricUntis;
     }
 
+    //gets distance from one location to another
     @Override
     public float distanceTo(Location dest) {
         // TODO Auto-generated method stub
@@ -35,6 +39,7 @@ public class CLocation extends Location {
         return nDistance;
     }
 
+    //gets accuracy of a user
     @Override
     public float getAccuracy() {
         // TODO Auto-generated method stub
@@ -46,6 +51,7 @@ public class CLocation extends Location {
         return nAccuracy;
     }
 
+    //gets altitude of a user
     @Override
     public double getAltitude() {
         // TODO Auto-generated method stub
@@ -57,6 +63,7 @@ public class CLocation extends Location {
         return nAltitude;
     }
 
+    //gets speed of user
     @Override
     public float getSpeed() {
         // TODO Auto-generated method stub

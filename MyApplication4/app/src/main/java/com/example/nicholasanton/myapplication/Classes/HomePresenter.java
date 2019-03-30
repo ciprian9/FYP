@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Classes;
 
+/**
+ * File to start Activity recognition
+ * */
+
 import com.example.nicholasanton.myapplication.Enums.ActivityType;
 import com.example.nicholasanton.myapplication.Interfaces.HomeView;
 import com.example.nicholasanton.myapplication.Interfaces.Tracker;
@@ -9,11 +13,13 @@ public class HomePresenter {
     private final HomeView view;
     private final Tracker tracker;
 
+    //Constructor for the class that retrieves HomeView and Tracker object that copies to local variables
     public HomePresenter(HomeView view, Tracker tracker) {
         this.view = view;
         this.tracker = tracker;
     }
 
+    //Starts the listener for activity
     public void init() {
         tracker.setTrackerListener(new TrackerListener() {
             @Override
@@ -26,7 +32,6 @@ public class HomePresenter {
             }
         });
     }
-
 
     private void startTrackingService() {
         view.warnTracking();

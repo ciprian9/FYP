@@ -1,7 +1,10 @@
 package com.example.nicholasanton.myapplication.Services;
 
-//COPIED FROM http://www.gadgetsaint.com/android/create-pedometer-step-counter-android/#.XG65DOj7S70
-//USED ALGORITHM FROM http://www.lewisgavin.co.uk/Step-Tracker-Android/
+/**
+ *  Used code from : http://www.gadgetsaint.com/android/create-pedometer-step-counter-android/#.XG65DOj7S70
+ *  Used Algorithm from : http://www.lewisgavin.co.uk/Step-Tracker-Android
+ *  Class to get the speed and the amount of steps the user produces and then forwards the information to a view
+ *  */
 
 import android.app.Service;
 import android.content.Intent;
@@ -9,13 +12,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 
-import com.example.nicholasanton.myapplication.DataHandler;
-import com.example.nicholasanton.myapplication.Interfaces.Constants;
 import com.example.nicholasanton.myapplication.Classes.StepDetector;
 import com.example.nicholasanton.myapplication.Interfaces.StepListener;
 
@@ -32,7 +32,7 @@ public class pedometerService extends Service implements SensorEventListener, St
     private int secs, mins, hour;
 
     private final Runnable updateTimerThread = new Runnable(){
-
+        //Main function that will send data as a broadcast to the reciever to display the information
         @Override
         public void run() {
             long timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
@@ -55,39 +55,20 @@ public class pedometerService extends Service implements SensorEventListener, St
         }
     };
 
+    //Main function that will register the listeners so the program will be enabled to listen for
+    //steps of the user
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        DataHandler db = new DataHandler(this);
-        Bundle extras = intent.getExtras();
-
-        if( extras != null ) {
-            boolean pedometer = extras.getBoolean(Constants.PEDOMETER_INTENT);
-            boolean time = extras.getBoolean(Constants.TIME_INTENT);
-            boolean dist_speed = extras.getBoolean(Constants.DISTANCE_INTENT);
-        }
-
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         simpleStepDetector = new StepDetector();
         simpleStepDetector.registerListener(this);
-
 
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_FASTEST);
         startTime = SystemClock.uptimeMillis();
         customHandler.postDelayed(updateTimerThread, 0);
         return super.onStartCommand(intent, flags, startId);
     }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public void onDestroy(){
-        customHandler.removeCallbacks(updateTimerThread);
-    }
-
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -103,6 +84,7 @@ public class pedometerService extends Service implements SensorEventListener, St
 
     }
 
+    //Everytime a step occurs this function will be called
     @Override
     public void step(long timeNs) {
         numSteps++;
@@ -112,8 +94,19 @@ public class pedometerService extends Service implements SensorEventListener, St
         speed = distanceMeters / handm;
     }
 
+    //Returns the distance ran using simple maths formula
     private float getDistanceRun(long steps){
         return (float) ((float) steps * 0.762);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public void onDestroy(){
+        customHandler.removeCallbacks(updateTimerThread);
     }
 
 }

@@ -1,13 +1,14 @@
 package com.example.nicholasanton.myapplication.Views;
 
-import android.app.AlertDialog;
+/**
+ * Starting activity that lets the user login
+ * */
+
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
@@ -17,7 +18,6 @@ import android.util.Log;
 import android.widget.Button;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.Request;
@@ -34,11 +34,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 public class MainActivity extends AppCompatActivity {
 
-    private final int MY_PERMISSIONS_REQUEST_SMS_RECEIVE = 10;
     private TextView Username;
     private TextView Password;
     private CheckBox chkRemember;
@@ -57,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Getting all permissions at once
         int PERMISSION_ALL = 1;
         String[] PERMISSIONS = {
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -116,17 +114,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Starts the forgotPassword Activity
     private void forgotPassword() {
         Intent i = new Intent(this, forgotPassword.class);
         startActivity(i);
     }
 
+    //Lets the user register
     private void OpenRegisterScreen(){
         Intent i = new Intent(this, Register.class);
         startActivity(i);
     }
 
-    public static boolean hasPermissions(Context context, String... permissions) {
+    //checks if the user has permissions
+    private static boolean hasPermissions(Context context, String... permissions) {
         if (context != null && permissions != null) {
             for (String permission : permissions) {
                 if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
@@ -137,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //Opens activitieslisteners that will then start to listen for activity changes
     private void GoToMenu(int accountid){
         if(accountid != testID) {
             DataHandler db = new DataHandler(this);
@@ -166,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //logs user in using database values that are accessed using PHP scripts
     private void LogUserIn(){
         uName    = Username.getText().toString();
         Pass     = Password.getText().toString();
@@ -219,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        int MY_PERMISSIONS_REQUEST_SMS_RECEIVE = 10;
         if (requestCode == MY_PERMISSIONS_REQUEST_SMS_RECEIVE) {
             Log.i("TAG", "MY_PERMISSIONS_REQUEST_SMS_RECEIVE --> YES");
         }

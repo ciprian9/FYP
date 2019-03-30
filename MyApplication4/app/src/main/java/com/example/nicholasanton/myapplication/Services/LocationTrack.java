@@ -1,19 +1,21 @@
 package com.example.nicholasanton.myapplication.Services;
 
-import android.Manifest;
+/**
+ * Used to get the location of the user every period of time
+ * */
+
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.example.nicholasanton.myapplication.DataHandler;
@@ -26,7 +28,6 @@ public class LocationTrack extends Service implements LocationListener {
     private double longitude;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60;
-    private LocationManager locationManager;
     private DataHandler db;
 
     public LocationTrack(Context mContext) {
@@ -35,10 +36,11 @@ public class LocationTrack extends Service implements LocationListener {
         getLocation();
     }
 
+    @SuppressLint("MissingPermission")
     private void getLocation() {
         db.insertLog("Getting Location");
         try {
-            locationManager = (LocationManager) mContext
+            LocationManager locationManager = (LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
 
             // get GPS status
@@ -57,22 +59,16 @@ public class LocationTrack extends Service implements LocationListener {
 
                 // if GPS Enabled get lat/long using GPS Services
                 if (checkGPS) {
-
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                    }
                     locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    if (locationManager != null) {
-                        loc = locationManager
-                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        if (loc != null) {
-                            latitude = loc.getLatitude();
-                            longitude = loc.getLongitude();
-                            db.insertLog("Got location");
-                        }
+                    loc = locationManager
+                            .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if (loc != null) {
+                        latitude = loc.getLatitude();
+                        longitude = loc.getLongitude();
+                        db.insertLog("Got location");
                     }
                 }
             }

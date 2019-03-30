@@ -1,6 +1,9 @@
 package com.example.nicholasanton.myapplication.Views;
 
-//USED FROM: https://gist.github.com/enginebai/adcae1f17d3b2114590c
+/**
+ * Used code from : https://gist.github.com/enginebai/adcae1f17d3b2114590c
+ * Activity that shows everything that has been happening while the app has been running
+ * */
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -163,6 +166,7 @@ public class MapActivity extends AppCompatActivity {
         return false;
     }
 
+    //Draw lines on the map according to what the file has
     private void drawTheLines() {
         String textFromFile = "";
         if (policyID == 1) {
@@ -181,6 +185,7 @@ public class MapActivity extends AppCompatActivity {
         redrawLine();
     }
 
+    //removes text and extracts the lat and lng
     private LatLng removeText(String text) {
         text = text.substring(10);
         text = text.substring(0, text.length() - 1);
@@ -192,6 +197,7 @@ public class MapActivity extends AppCompatActivity {
         return new LatLng(lat, lng);
     }
 
+    //read file containing the users movements
     private String readFile(String file) {
         String text = "";
         try {
@@ -209,7 +215,7 @@ public class MapActivity extends AppCompatActivity {
         return text;
     }
 
-
+    //Loading the map with users current location and draws the lines
     private void loadMap(GoogleMap googleMap) {
         map = googleMap;
         if (map != null) {
@@ -268,6 +274,7 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    //checks if txt files exist
     private boolean fileExists(Context context, String filename) {
         File file = context.getFileStreamPath(filename);
         return file != null && file.exists();
@@ -280,6 +287,7 @@ public class MapActivity extends AppCompatActivity {
         MapActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
+    //Gets users location
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     void getMyLocation() {
         map.clear();
@@ -295,13 +303,6 @@ public class MapActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    /*
-     * Called when the Activity becomes visible.
-     */
-
-    /*
-     * Called when the Activity is no longer visible.
-     */
     @Override
     protected void onStop() {
         map.clear();
@@ -346,6 +347,7 @@ public class MapActivity extends AppCompatActivity {
         MapActivityPermissionsDispatcher.startLocationUpdatesWithPermissionCheck(this);
     }
 
+    //Listens for the users updates
     @SuppressLint("RestrictedApi")
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void startLocationUpdates() {
@@ -368,6 +370,7 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    //adds points to the line
     private void redrawLine(){
         map.clear();
         PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
@@ -381,23 +384,7 @@ public class MapActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    public static class ErrorDialogFragment extends android.support.v4.app.DialogFragment {
-        private Dialog mDialog;
-        public ErrorDialogFragment() {
-            super();
-            mDialog = null;
-        }
-        public void setDialog(Dialog dialog) {
-            mDialog = dialog;
-        }
-
-        @NotNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return mDialog;
-        }
-    }
-
+    //listens for location updates
     class NewLocationReciever extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -407,6 +394,7 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    //will get the speed, distance and steps of user
     class SpeedReciever extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -425,8 +413,8 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
+    //will set the steps, distance, speed and time
     class DataReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Objects.requireNonNull(intent.getAction()).equals("GET_PEDOMETER_DATA")) {
@@ -436,7 +424,7 @@ public class MapActivity extends AppCompatActivity {
                 int sec = intent.getIntExtra("sec", 0);
                 int hour = intent.getIntExtra("hour", 0);
                 int steps = intent.getIntExtra("steps", 0);
-                String result = "";
+                String result;
                 if(time) {
                     result = TEXT_STO_STEPS + String.format("%02d", hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec);
                     TvTimer.setText(result);

@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Classes;
 
+/**
+ * Used in conjunction with activity recognition that will return view
+ * */
+
 import com.example.nicholasanton.myapplication.Interfaces.HomeView;
 import com.example.nicholasanton.myapplication.Interfaces.Tracker;
 import com.example.nicholasanton.myapplication.Views.ActivitesListeners;

@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Services;
 
+/**
+ * Will only run if the user is cycling
+ * */
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;

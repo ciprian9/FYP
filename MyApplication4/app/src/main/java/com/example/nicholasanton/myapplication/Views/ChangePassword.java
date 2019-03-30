@@ -1,7 +1,9 @@
 package com.example.nicholasanton.myapplication.Views;
 
-import android.content.Intent;
-import android.net.Uri;
+/**
+ * Activity that prompts user to change their password and then change it in the Database
+ * */
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,27 +19,21 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.nicholasanton.myapplication.Classes.RequestHandler;
 import com.example.nicholasanton.myapplication.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.nicholasanton.myapplication.Interfaces.Constants.GOOGLEROOTURL;
 import static com.example.nicholasanton.myapplication.Interfaces.Constants.ROOT_URL;
 
 public class ChangePassword extends AppCompatActivity {
-
-    private String password;
-    private String oldPassword;
     private String newPassword;
     private String confirmPassword;
     private String username;
     private EditText oldPswd;
     private EditText newPswd;
     private EditText cofPswd;
-    private boolean Disable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +43,14 @@ public class ChangePassword extends AppCompatActivity {
         oldPswd = findViewById(R.id.OldPassword);
         newPswd = findViewById(R.id.Password);
         cofPswd = findViewById(R.id.ConfirmPassword);
-
+        boolean disable = false;
         Bundle bundle = getIntent().getExtras();
-        username = bundle.getString("username");
-        Disable = bundle.getBoolean("disable");
+        if (bundle != null) {
+            username = bundle.getString("username");
+            disable = bundle.getBoolean("disable");
+        }
 
-        if (Disable){
+        if (disable){
             oldPswd.setEnabled(false);
         } else {
             oldPswd.setEnabled(true);
@@ -62,7 +60,6 @@ public class ChangePassword extends AppCompatActivity {
         btnChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                oldPassword = oldPswd.getText().toString();
                 newPassword = newPswd.getText().toString();
                 confirmPassword = cofPswd.getText().toString();
                 ChangePasswordConnection(ROOT_URL+ "checkPassword.php", 0);
@@ -71,6 +68,7 @@ public class ChangePassword extends AppCompatActivity {
 
     }
 
+    //Will check if the password is valid and then change it in the database using PHP scripts
     private void ChangePasswordConnection(final String apath, final int anAction){
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 apath,

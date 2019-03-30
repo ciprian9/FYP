@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Services;
 
+/**
+ *  Will return the users activity to wherever it is being called
+ *  */
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;

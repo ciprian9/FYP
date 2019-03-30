@@ -1,6 +1,9 @@
 package com.example.nicholasanton.myapplication.Interfaces;
 
-//COPIED FROM https://stackoverflow.com/questions/15570542/determining-the-speed-of-a-vehicle-using-gps-in-android
+/**
+ * Used code from : https://stackoverflow.com/questions/15570542/determining-the-speed-of-a-vehicle-using-gps-in-android
+ * Used to initialize procedures for the determining the speed of vehicles
+ * */
 
 import android.location.GpsStatus;
 import android.location.Location;

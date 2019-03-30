@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Interfaces;
 
+/**
+ * Will track Activities
+ * */
+
 public interface Tracker {
     void stopTrackingService();
 
