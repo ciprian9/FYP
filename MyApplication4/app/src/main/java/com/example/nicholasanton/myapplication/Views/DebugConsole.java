@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Views;
 
+/**
+ * Activity that shows everything that has been happening while the app has been running
+ * */
+
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +28,7 @@ public class DebugConsole extends AppCompatActivity {
 
         Cursor cursor = db.SelectLogs();
 
+        //Wont let there be more than 500 lines and it more will show the newest lines
         String result = "";
         if (cursor != null){
             cursor.moveToLast();

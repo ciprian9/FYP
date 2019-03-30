@@ -1,5 +1,8 @@
 package com.example.nicholasanton.myapplication.Views;
 
+/**
+ * Starting activity that lets the user register
+ * */
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +27,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class Register extends AppCompatActivity {
 
     private String uName;
@@ -45,7 +47,7 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        spinner = (Spinner) findViewById(R.id.spSecretQuestion);
+        spinner = findViewById(R.id.spSecretQuestion);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.question_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -74,6 +76,7 @@ public class Register extends AppCompatActivity {
         });
     }
 
+    //gets the data from all the boxes
     private void GatherData(){
         uName              = Username.getText().toString();
         Pass               = Password.getText().toString();
@@ -98,6 +101,7 @@ public class Register extends AppCompatActivity {
         }
     }
 
+    //adds the data gathers to the database as a new user using PHP
     private void registerUser(){
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_REGISTER,
@@ -134,6 +138,7 @@ public class Register extends AppCompatActivity {
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
+    //makes sure user registers a valid user
     private boolean verifyPassword(String Pass, String ConfPass){
         if (Pass.equals("")){
             return false;

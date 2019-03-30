@@ -1,7 +1,10 @@
 package com.example.nicholasanton.myapplication.Views;
 
+/**
+ * Activity will let user change password if they forgot it based on a secret q&a
+ * */
+
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,14 +22,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.nicholasanton.myapplication.Classes.RequestHandler;
 import com.example.nicholasanton.myapplication.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.nicholasanton.myapplication.Interfaces.Constants.GOOGLEROOTURL;
 import static com.example.nicholasanton.myapplication.Interfaces.Constants.ROOT_URL;
 
 public class forgotPassword extends AppCompatActivity {
@@ -69,6 +70,7 @@ public class forgotPassword extends AppCompatActivity {
         });
     }
 
+    //gets the password from the database if the answer is right
     private void getPassword() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 ROOT_URL+"forgotPassword.php",

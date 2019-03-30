@@ -1,6 +1,9 @@
 package com.example.nicholasanton.myapplication.Services;
 
-//https://stackoverflow.com/questions/15570542/determining-the-speed-of-a-vehicle-using-gps-in-android
+/**
+ *  Used Code from : https://stackoverflow.com/questions/15570542/determining-the-speed-of-a-vehicle-using-gps-in-android
+ *  Will get the users speed and distance
+ *  */
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -38,6 +41,7 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    //Gets the speed
     private void updateSpeed(CLocation location) {
         // TODO Auto-generated method stub
         float nCurrentSpeed = 0;
@@ -70,6 +74,7 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
         sendBroadcast(tempIntent);
     }
 
+    //Calls function to get the speed
     @Override
     public void onLocationChanged(Location location) {
         if(location != null)

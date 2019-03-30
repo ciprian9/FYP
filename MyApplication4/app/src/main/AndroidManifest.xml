@@ -166,7 +166,6 @@
         <service android:name=".Services.TrackingService" />
         <service android:name=".ActivityRecognizerImpl$ActivityRecognitionIntentService" />
         <service android:name=".Services.googleCalendarService" />
-        <service android:name=".Services.DebugService" />
         <service android:name=".Services.LocationTrack" />
     </application>
 

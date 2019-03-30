@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Classes;
 
+/**
+ * Used in conjunction with activity recognition classes that will return the appropriate objects
+ * */
+
 import android.app.Application;
 import android.content.Context;
 
@@ -15,8 +19,7 @@ public class AppModule {
         AppModule.app = app;
     }
 
-    AppModule() {
-    }
+    AppModule() {}
 
     @Provides
     Application provideApplication() {

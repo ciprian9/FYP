@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Services;
 
+/**
+ * Will start a timer every 10 seconds
+ * */
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -17,7 +21,6 @@ public class Timer_Service extends Service{
     private final TimerTask updateProfile = new CustomTimerTask(Timer_Service.this);
 
     public void onCreate() {
-
         super.onCreate();
         db = new DataHandler(this);
         db.insertLog("Timer Service Started\n");

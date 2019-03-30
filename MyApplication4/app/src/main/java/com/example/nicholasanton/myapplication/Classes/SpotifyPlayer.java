@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Classes;
 
+/**
+ * Class that plays the right spotify playlist based on what activity the user is performing
+ * */
+
 import android.util.Log;
 import java.util.Random;
 
@@ -30,8 +34,7 @@ public class SpotifyPlayer{
         this.ActivityTypeString = activityTypeString;
     }
 
-
-
+    //Function that will play the appropriate playlist based on the activity of the user
     private void doInBackground() {
         try {
             SpotifyApi api = new SpotifyApi();
@@ -64,10 +67,12 @@ public class SpotifyPlayer{
         }
     }
 
+    //Pause the current playing song
     public void pause(){
         mSpotifyAppRemote.getPlayerApi().pause();
     }
 
+    //Start the thread to initialize the spotify player
     public void init(){
         Thread theThread = new Thread(new SecondThread());
         theThread.start();

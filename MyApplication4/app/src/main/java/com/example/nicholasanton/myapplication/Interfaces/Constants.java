@@ -1,9 +1,9 @@
 package com.example.nicholasanton.myapplication.Interfaces;
 
-/*
-If a value is hard to remember or is over used stick it in here
-Values that are used in different parts of the code will be added here
- */
+/**
+ * If a value is hard to remember or is over used stick it in here
+ * Values that are used in different parts of the code will be added here
+ * */
 
 public interface Constants {
     String TEXT_TO_SPEECH_SETTING = "notificationTTS";
@@ -18,6 +18,7 @@ public interface Constants {
     int CYCLING_POLICY = 3;
     int DRIVING_POLICY = 4;
 
+    //Names of columns in db
     String PARAM_NAME = "name";
     String POLICY_ID = "policyid";
     String MUSIC_INTENT = "music";
@@ -41,6 +42,7 @@ public interface Constants {
 
     String DB_FLAG = "status";
 
+    //URLS for the user,setting and location tables
     String ROOT_URL = "http://192.168.0.241/Android/v1/";
     String URL_REGISTER = ROOT_URL+"registerUser.php";
     String URL_LOGIN = ROOT_URL+"userLogin.php";
@@ -52,8 +54,10 @@ public interface Constants {
     String URL_ADDWORK_LOCATION = ROOT_URL+"insertLocationWorking.php";
     String URL_READ_LOCATION = ROOT_URL+"readLocation.php";
 
+    //URL for the Google Calendar php files
     String GOOGLEROOTURL = "http://192.168.0.241/Android/php/";
 
+    //Default Night Morning Routines
     String defaultMorning = "8:0";
     String defaultNight = "10:0";
 }

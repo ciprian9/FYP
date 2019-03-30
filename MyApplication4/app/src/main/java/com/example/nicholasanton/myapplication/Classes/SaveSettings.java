@@ -1,6 +1,8 @@
 package com.example.nicholasanton.myapplication.Classes;
 
-//https://www.youtube.com/watch?v=5vy55k542NM&list=PLk7v1Z2rk4hjQaV062aE_CW68xgXdYFpV
+/**
+ * File used to retrieve data from other files and save them into the settings column of the database
+ * Video Used for Help : https://www.youtube.com/watch?v=5vy55k542NM&list=PLk7v1Z2rk4hjQaV062aE_CW68xgXdYFpV*/
 
 import android.content.Context;
 import com.android.volley.Request;
@@ -31,7 +33,7 @@ public class SaveSettings {
         this.isOn = false;
     }
 
-
+    //Used to access run the PHP script using the path provided
     public void registerSetting(final String apath){
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 apath,
@@ -53,6 +55,7 @@ public class SaveSettings {
                     @Override
                     public void onErrorResponse(VolleyError error) {}
                 }){
+            //Passes all the required parameters
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();

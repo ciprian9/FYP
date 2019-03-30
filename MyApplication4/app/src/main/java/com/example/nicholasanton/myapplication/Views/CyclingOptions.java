@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Views;
 
+/**
+ * Activity that lets user configure the options for cycling
+ * */
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,7 +12,6 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Switch;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -55,7 +58,8 @@ public class CyclingOptions extends AppCompatActivity {
         AutoReply = findViewById(R.id.swAutoReply);
         CallReply = findViewById(R.id.swCallReply);
 
-        if(appInstalledOrNot("com.spotify.music")){
+        //Prompts user to install spotify if not already
+        if(appInstalledOrNot()){
             playHeadphones.setEnabled(true);
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -152,17 +156,20 @@ public class CyclingOptions extends AppCompatActivity {
         });
     }
 
-    private boolean appInstalledOrNot(String uri) {
+    //Code to check if application is installed
+    private boolean appInstalledOrNot() {
         PackageManager pm = getPackageManager();
         try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo("com.spotify.music", PackageManager.GET_ACTIVITIES);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
 
         return false;
     }
 
+    //Will read settings from database using PHP script and update the view
     private void readSettings(final String aName, final Switch aSwitch) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_READ_SETTING,
@@ -224,7 +231,6 @@ public class CyclingOptions extends AppCompatActivity {
         };
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
-
 
     private void VarsToForm(){
         readSettings("MusicPlayer", playHeadphones);

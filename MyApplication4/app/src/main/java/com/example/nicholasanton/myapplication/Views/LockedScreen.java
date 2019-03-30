@@ -1,5 +1,10 @@
 package com.example.nicholasanton.myapplication.Views;
 
+/**
+ * Class that will appear when the user is driving and will only allow the user to exit when
+ * he is going under 20 km/hr.
+ * */
+
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -21,6 +26,7 @@ public class LockedScreen extends AppCompatActivity {
         setContentView(R.layout.activity_locked_screen);
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
+            //Simple function that will get the speed of the user
             public void onLocationChanged(Location location) {
                 if (location == null) {
                     speedTotal = 0.0;
@@ -46,6 +52,7 @@ public class LockedScreen extends AppCompatActivity {
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
     }
 
+    //Listener for the back button that will check if the user is going under 20km/hr it will let the user exit but otherwise it wont
     @Override
     public void onBackPressed() {
         if (speedTotal < 20.0) {

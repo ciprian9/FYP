@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication;
 
+/**
+ * Class that starts all the activity recognition classes
+ * */
+
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -76,7 +80,6 @@ public class ActivityRecognizerImpl implements ActivityRecognizer, GoogleApiClie
     }
 
     public static class ActivityRecognitionIntentService extends IntentService {
-
         public ActivityRecognitionIntentService() {
             super("ACTIVITYRECOGNITION_INTENTSERVICE_NAME");
         }

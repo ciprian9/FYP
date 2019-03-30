@@ -1,7 +1,8 @@
 package com.example.nicholasanton.myapplication.Classes;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
+/**
+ * Used to get the weather details using the provided url that will return json
+ * */
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -10,6 +11,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Function {
+
+    //Gets data from the URL and returns the data retrieved from the URL as JSON
     public static String excuteGet(String targetURL)
     {
         URL url;

@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Services;
 
+/**
+ *  Will start the service every time the user is running and if enabled will run the pedometer service
+ *  */
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +29,7 @@ public class Running_Policy_Service extends Service {
         @Override
         public void run() {
             synchronized (this) {
-                doEverything();
+                startServices();
             }
         }
     }
@@ -36,12 +40,9 @@ public class Running_Policy_Service extends Service {
         Bundle extras = intent.getExtras();
 
         if( extras != null ) {
-            int accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
-            boolean musicPlayer = extras.getBoolean(Constants.MUSIC_INTENT);
             pedometer = extras.getBoolean(Constants.PEDOMETER_INTENT);
             time = extras.getBoolean(Constants.TIME_INTENT);
             dist_speed = extras.getBoolean(Constants.DISTANCE_INTENT);
-            boolean notificationTTS = extras.getBoolean(Constants.TEXT_TO_SPEECH_SETTING);
         }
 
 
@@ -62,8 +63,7 @@ public class Running_Policy_Service extends Service {
         return null;
     }
 
-    private void doEverything() {
-
+    private void startServices() {
         try {
             if(pedometer || time || dist_speed) {
                 DataHandler db = new DataHandler(this);

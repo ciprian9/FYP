@@ -1,34 +1,8 @@
 package com.example.nicholasanton.myapplication.Views;
 
-/*
-    This class needs to be used to set the options for the walking policy. If the application is running and the current activity is walking the policy will come into action, this page will decide what the policy will do
-    the following boolean values will be used to store the value of the options. This together with the playlist button will be used to config this policy
-    This class needs to implement a datahandler class that will write each of these settings to the database, the values will then be read and set again when the user will reopen the page
-    functions needed are VarsToForm and FormToVars
-
-
-    TODO
-    Add a battery percent level for the save resources
-    Add Pedometer count the ammount of steps made
-    possibly add distance walked aswell
-    add a map that will record the route walked so you can view it on a map
-
-    Issues to be fixed
-    Database connection lost need to fix it ✓
-    Need to add the media player to the Policy.class
-    Need to inherit walking policy from policy to use the media player
-    Need a loop to play each song (need to figure out how to only play once the audio file is finished playing)
-    Need to start tracking usage (for now the ammount of time spent on each app according to android and record how many times we have opened the app)
-    need to find a way to block incoming notifications e.g. text messages and turn the message to text-to-speech
-    possibly allow the user to respond using voice
-
-
-    TODO
-    battery percent field ✓
-    if we get track usage done we need a button to view the usage
-    we need to rearage the window
-    need to move to new policy
- */
+/**
+ * Activity that lets user configure the options for walking
+ * */
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -87,7 +61,8 @@ public class WalkingOptions extends AppCompatActivity {
         Rest = findViewById(R.id.swRest);
         RecordRoute = findViewById(R.id.swRecordRoute);
 
-        if(appInstalledOrNot("com.spotify.music")){
+        //Prompts user to install spotify if not already
+        if(appInstalledOrNot()){
             playHeadphones.setEnabled(true);
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -176,17 +151,20 @@ public class WalkingOptions extends AppCompatActivity {
         });
     }
 
-    private boolean appInstalledOrNot(String uri) {
+    //Code to check if application is installed
+    private boolean appInstalledOrNot() {
         PackageManager pm = getPackageManager();
         try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo("com.spotify.music", PackageManager.GET_ACTIVITIES);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
 
         return false;
     }
 
+    //Will read settings from database using PHP script and update the view
     private void readSettings(final String aName, final Switch aSwitch) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_READ_SETTING,

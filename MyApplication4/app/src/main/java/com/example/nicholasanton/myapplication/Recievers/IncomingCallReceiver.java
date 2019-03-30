@@ -1,6 +1,9 @@
 package com.example.nicholasanton.myapplication.Recievers;
 
-//https://github.com/Hitman666/AndroidCallBlockingTestDemo
+/**
+ * Used code from : https://github.com/Hitman666/AndroidCallBlockingTestDemo
+ * Will listen for incoming calls and if enabled will end the call
+ * */
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -15,7 +18,7 @@ import com.example.nicholasanton.myapplication.Services.AutoReplyService;
 
 import java.lang.reflect.Method;
 
-import com.android.internal.telephony.ITelephony;
+import com.example.nicholasanton.myapplication.ITelephony;
 
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.callReply;
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.drivingService;
@@ -24,6 +27,7 @@ import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.r
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.cyclingService;
 
 public class IncomingCallReceiver extends BroadcastReceiver {
+    //Listener for the call
     @Override
     public void onReceive(Context context, Intent intent) {
         DataHandler db = new DataHandler(context);
@@ -39,6 +43,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     m.setAccessible(true);
                     telephonyService = (ITelephony) m.invoke(tm);
                     if ((number != null)) {
+                        //If one of the services are running then the call will end
                         if (runningService || cyclingService  || drivingService || inMeeting) {
                             if (callReply || inMeeting) {
                                 db.insertLog("Ending Call\n");

@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Services;
 
+/**
+ *  Will start the service every time the user is walking and if enabled will run the pedometer service
+ *  */
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,7 +30,7 @@ public class Walking_Policy_Service extends Service {
         @Override
         public void run() {
             synchronized (this) {
-                doEverything();
+                startPedometer();
             }
         }
     }
@@ -38,8 +42,6 @@ public class Walking_Policy_Service extends Service {
         db = new DataHandler(this);
 
         if( extras != null ) {
-            int accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
-            boolean musicPlayer = extras.getBoolean(Constants.MUSIC_INTENT);
             pedometer = extras.getBoolean(Constants.PEDOMETER_INTENT);
             time = extras.getBoolean(Constants.TIME_INTENT);
             dist_speed = extras.getBoolean(Constants.DISTANCE_INTENT);
@@ -63,8 +65,7 @@ public class Walking_Policy_Service extends Service {
         return null;
     }
 
-    private void doEverything() {
-
+    private void startPedometer() {
         try {
             if(pedometer || time || dist_speed) {
                 db.insertLog("Starting Walking Pedometer Service\n");

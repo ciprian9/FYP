@@ -1,5 +1,9 @@
 package com.example.nicholasanton.myapplication.Services;
 
+/**
+ * Will check if the user has a gmail account and if true then will do required and checks that will then get the calendar events
+ * */
+
 import android.app.Service;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -60,6 +64,7 @@ public class googleCalendarService extends Service {
         startActivity(i);
     }
 
+    //Listens for when the user copys something and then calls the create a token script
     @SuppressWarnings("deprecation")
     private final ClipboardManager.OnPrimaryClipChangedListener mPrimaryChangeListener = new ClipboardManager.OnPrimaryClipChangedListener() {
         public void onPrimaryClipChanged() {
@@ -79,6 +84,7 @@ public class googleCalendarService extends Service {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             switch (anAction){
+                                //Checks if user has a token
                                 case 0:
                                     boolean bool = jsonObject.getBoolean("exists");
                                     if (bool){
@@ -87,6 +93,7 @@ public class googleCalendarService extends Service {
                                         googleCalendarConnection(GOOGLEROOTURL+"getcalendar.php", 1);
                                     }
                                     break;
+                                //Will Get the calendar of the user
                                 case 1:
                                     if(apath.equals(GOOGLEROOTURL+"getcalendar.php")){
                                         if (!inOrOut) {
@@ -99,12 +106,14 @@ public class googleCalendarService extends Service {
                                         }
                                     }
                                     break;
+                                //Will create the token if the user does not have one
                                 case 2:
                                     db.insertLog("Creating Token");
                                     if (jsonObject.getString("message").equalsIgnoreCase("ok") && !jsonObject.getBoolean("error")){
                                         googleCalendarConnection(GOOGLEROOTURL+"getEvents.php", 3);
                                     }
                                     break;
+                                //Get the events of the user in the calendar
                                 case 3:
                                     JSONArray the_json_array = jsonObject.getJSONArray("events");
                                     int len = the_json_array.length();

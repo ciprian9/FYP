@@ -1,5 +1,10 @@
 package com.example.nicholasanton.myapplication.Views;
 
+/**
+ *  This is the most used activity that will run activities, services etc
+ *  */
+
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -74,7 +79,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -177,6 +181,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             loc1 = new Location("School/Work");
         }
 
+        //Checking for home or work location using a listener
         final LocationListener mLocationListener = new LocationListener() {
             @SuppressLint("DefaultLocale")
             @Override
@@ -245,6 +250,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             ReadLocation();
         }
 
+        //Sets hidden buttons to visible for the tester account
         if (accountid == -1) {
             db.insertLog("Set Up Testing Enviroment");
 
@@ -300,8 +306,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 public void onClick(View view) {
                     StopWalkingPolicy();
                     StopDrivingPolicy();
-                    StopCyclingPolicy();
-                    StopRunningPolicy();
                     spotifyPlayer.pause();
                     db.insertLog("ALL Policies Stopped\n");
                 }
@@ -396,6 +400,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 });
     }
 
+    //Sets alarms that will start services at certain times
     private void setMorningNightRoutine(String morningTime, String nightTime){
         db.insertLog("Start Day/Night routine");
         String[] strings = morningTime.split(":");
@@ -433,6 +438,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         db.insertLog("End day / night routine");
     }
 
+    //Opens the map activity
     private void openTheMap(){
         db.insertLog("Map/Pedometer Activity Starting\n");
         Intent i = new Intent(this, MapActivity.class);
@@ -444,6 +450,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         startActivity(i);
     }
 
+    //Get latitude and longitude from an address
     private LatLng getLocationFromAddress(Context context, String strAddress) {
         Geocoder coder = new Geocoder(context);
         List<Address> address;
@@ -462,6 +469,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         return p1;
     }
 
+    //Used for spotify tokens
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -479,6 +487,8 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             }
         }
     }
+
+    //will start playing spotify playlists when connected to spotify
     @SuppressWarnings("deprecation")
     private void connected(String ActivityTypeString) {
         AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
@@ -493,6 +503,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //Will show 2 dialogs that will ask the user to input a gmail address
     private void GmailDialog() {
         db.insertLog("Request G-mail account");
         if (gmail.equalsIgnoreCase("NULL")) {
@@ -530,6 +541,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //will add the gmail account to the database using php scripts
     private void setNewGmail(final String newGmailAccount) {
         db.insertLog("Set new g-mail account");
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
@@ -580,10 +592,12 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         return super.onCreateOptionsMenu(menu);
     }
 
+    //listens for the user to press the options menu in the top right
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        //Checking for what the user presssed
         if (id == R.id.ChangeGmail) {
             final EditText taskEditText = new EditText(ActivitesListeners.this);
             final AlertDialog SecondDialog = new AlertDialog.Builder(ActivitesListeners.this)
@@ -702,6 +716,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         return super.onOptionsItemSelected(item);
     }
 
+    //Reads the work and home location from the database and stores the values
     private void ReadLocation() {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_READ_LOCATION,
@@ -764,6 +779,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
+    //Adding work location to the database
     private void SetUpLocationwork(final String workAdd) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_ADDWORK_LOCATION,
@@ -807,6 +823,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
+    //Adds home location to the database
     private void SetUpLocation(final String homeAdd) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_ADD_LOCATION,
@@ -849,6 +866,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
+    //Starts the activity with driving options
     private void StartDrivingOptions() {
         Intent intent = new Intent(this, DrivingOptions.class);
         intent.putExtra("accountid", accountid);
@@ -859,6 +877,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //Starts the activity with cycling options
     private void StartCyclingOptions() {
         Intent intent = new Intent(this, CyclingOptions.class);
         intent.putExtra("accountid", accountid);
@@ -869,6 +888,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //Requests permission to turn on and off do not disturb
     private void requestDoNotDisturbPermission() {
         if (Build.VERSION.SDK_INT < 23) {
             return;
@@ -878,6 +898,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         startActivityForResult(intent, 2);
     }
 
+    //turns on do not disturb
     private void requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp() {
         if (Build.VERSION.SDK_INT < 21) {
             return;
@@ -891,6 +912,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //turns off do not disturb
     private void turnOffDoNotDisturb() {
         if (Build.VERSION.SDK_INT < 21) {
             return;
@@ -900,6 +922,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         db.insertLog("Do Not Disturb OFF\n");
     }
 
+    //Will start only when the user is driving and will perform selected options
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void StartDrivingService() {
         if (recordRoute) {
@@ -925,6 +948,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //Will start only when the user is cycling and will perform selected options
     private void StartCyclingService() {
         if (recordRoute) {
             Intent i = new Intent(getApplicationContext(), MapService.class);
@@ -946,21 +970,14 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+
+    //Stops walking, cycling and running policies
     private void StopWalkingPolicy() {
         stopService(new Intent(this, pedometerService.class));
         stopService(new Intent(this, MapService.class));
     }
 
-    private void StopRunningPolicy() {
-        stopService(new Intent(this, pedometerService.class));
-        stopService(new Intent(this, MapService.class));
-    }
-
-    private void StopCyclingPolicy() {
-        stopService(new Intent(this, pedometerService.class));
-        stopService(new Intent(this, MapService.class));
-    }
-
+    //Stops driving policy and turns off dnd
     private void StopDrivingPolicy() {
         stopService(new Intent(this, pedometerService.class));
         stopService(new Intent(this, MapService.class));
@@ -969,6 +986,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //Reads user settings from the database
     private void getWalkingSettings(int aPolicyID) {
         readSettings(Constants.MUSIC_SETTING, aPolicyID);
         readSettings(Constants.PEDOMETER_SETTING, aPolicyID);
@@ -980,6 +998,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         readSettings(Constants.CALL_REPLY_SETTING, aPolicyID);
     }
 
+    //Will read user settings from the database using php scripts
     private void readSettings(final String aName, final int aPolicyID) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_READ_SETTING,
@@ -1013,6 +1032,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                                     break;
                                 case Constants.CALL_REPLY_SETTING:
                                     callReply = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
+                                    //starts policies depending on what action the user is performing
                                     switch (aPolicyID) {
                                         case 1:
                                             db.insertLog("Starting Walking Service\n");
@@ -1062,6 +1082,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         RequestHandler.getInstance(this).addToRequestQueue(stringRequest);
     }
 
+    //unregisters recievers and destroys the view
     @Override
     protected void onDestroy() {
         db.insertLog("Destroying ActivitiesListeners\n");
@@ -1070,6 +1091,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         super.onDestroy();
     }
 
+    //Will start only when the user is walking and will perform selected options
     private void StartWalkingService() {
         if (recordRoute) {
             Intent i = new Intent(getApplicationContext(), MapService.class);
@@ -1089,6 +1111,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //Starts the activity with walking options
     private void StartWalkingOptions() {
         Intent intent = new Intent(this, WalkingOptions.class);
         intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
@@ -1100,6 +1123,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //Will start only when the user is running and will perform selected options
     private void StartRunningService() {
         if (recordRoute) {
             Intent i = new Intent(getApplicationContext(), MapService.class);
@@ -1119,6 +1143,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //Starts the activity with running options
     private void StartRunningOptions() {
         Intent intent = new Intent(this, RunningOptions.class);
         intent.putExtra("accountid", accountid);
@@ -1129,11 +1154,13 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //starts the timer every 10 seconds
     private void Start() {
         db.insertLog("Starting Timer Service\n");
         startService(new Intent(ActivitesListeners.this, Timer_Service.class));
     }
 
+    //turns a date into milliseconds
     private long D2MS(int month, int day, int year, int hour, int minute, int seconds) {
         Calendar c = Calendar.getInstance();
         c.set(year, month, day, hour, minute, seconds);
@@ -1141,8 +1168,8 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         return c.getTimeInMillis();
     }
 
+    //gets google calendar events using gmail address
     private void getCalendarEvents() {
-
         IntentFilter filter = new IntentFilter();
         filter.addAction("NOW");
         updateUIReciver = new BroadcastReceiver() {
@@ -1200,8 +1227,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
-
-
+    //schedules jobs using supplied times
     private void scheduleJobs(long setTime, String title, int startend) {
         Bundle bun = new Bundle();
         db.insertLog("Scheduling Jobs\n");
@@ -1230,6 +1256,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //will start the services based on the activity the user is performing
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void show(ActivityType activityType) {
@@ -1278,8 +1305,6 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     db.insertLog("Starting: STILL Activity\n");
                     if (isBluetoothHeadsetConnected()) {
                         StopWalkingPolicy();
-                        StopRunningPolicy();
-                        StopCyclingPolicy();
                         StopDrivingPolicy();
                         if (dndStatus == 1 || dndStatus == 2 || dndStatus == 3) {
                             turnOffDoNotDisturb();
@@ -1318,12 +1343,14 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 
+    //checks if phone is bluetooth connected
     private static boolean isBluetoothHeadsetConnected() {
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()
                 && mBluetoothAdapter.getProfileConnectionState(BluetoothHeadset.HEADSET) == BluetoothHeadset.STATE_CONNECTED;
     }
 
+    //starting tracking
     @Override
     public void warnTracking() {
         db.insertLog("TRACKING STARTED\n");
@@ -1331,6 +1358,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         Toast.makeText(this, "Tracking Began", Toast.LENGTH_LONG).show();
     }
 
+    //stops tracking
     @Override
     public void warnTrackingHasBeenStopped() {
         db.insertLog("TRACKING STOPPED\n");
@@ -1338,6 +1366,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         Toast.makeText(this, "Tracking Stopped", Toast.LENGTH_LONG).show();
     }
 
+    //gets events based on a reciever every 10 seconds
     class EventReciever extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

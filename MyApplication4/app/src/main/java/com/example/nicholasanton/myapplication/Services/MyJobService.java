@@ -1,7 +1,10 @@
 package com.example.nicholasanton.myapplication.Services;
 
+/**
+ * Will turn do not disturb on or off depending on the time that the user has selected
+ * */
+
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
 import android.util.Log;
@@ -16,11 +19,11 @@ import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.i
 
 public class MyJobService extends JobService{
 	private static final String TAG = "MyJobService";
-	private DataHandler db;
 
+	//Checks weather to turn the Do not Disturb on or off
 	@Override
 	public boolean onStartJob(JobParameters jobParameters) {
-		db = new DataHandler(this);
+		DataHandler db = new DataHandler(this);
 		if (Objects.requireNonNull(jobParameters.getExtras()).getInt("StartEnd") == 0){
 			Log.d("TEST : ", "starting service");
 			db.insertLog("Turning Do Not Disturb Mode On");

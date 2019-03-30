@@ -1,6 +1,9 @@
 package com.example.nicholasanton.myapplication.Classes;
 
-//COPIED FROM http://www.gadgetsaint.com/android/create-pedometer-step-counter-android/#.XG65DOj7S70
+/**
+ * Used code from : http://www.gadgetsaint.com/android/create-pedometer-step-counter-android/#.XG65DOj7S70
+ * Gets weather the user has stepped or not
+ * */
 
 import com.example.nicholasanton.myapplication.Interfaces.StepListener;
 
@@ -28,7 +31,7 @@ public class StepDetector {
         this.listener = listener;
     }
 
-
+    //Gets the users steps
     public void updateAccel(long timeNs, float x, float y, float z) {
         float[] currentAccel = new float[3];
         currentAccel[0] = x;
