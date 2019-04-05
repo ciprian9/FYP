@@ -37,7 +37,6 @@ public enum ActivityType {
                 return "Running";
         }
     }
-
     public int getIndex() {
         return index;
     }

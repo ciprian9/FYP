@@ -30,7 +30,6 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-
     <permission android:name="android.permission.GET_ACCOUNTS" />
     <permission android:name="android.permission.WRITE_CALENDAR" />
     <permission android:name="android.permission.READ_CALENDAR" />
@@ -59,7 +58,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/NoBar"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
@@ -140,6 +139,7 @@
 
         <activity
             android:name=".Views.ActivitesListeners"
+            android:theme="@style/AppTheme"
             android:launchMode="singleTop" />
 
         <service android:name=".Services.TextToSpeechService" />
@@ -167,6 +167,7 @@
         <service android:name=".ActivityRecognizerImpl$ActivityRecognitionIntentService" />
         <service android:name=".Services.googleCalendarService" />
         <service android:name=".Services.LocationTrack" />
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
     </application>
 
 </manifest>

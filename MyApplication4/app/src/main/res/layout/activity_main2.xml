@@ -82,6 +82,7 @@
         android:text="@string/btnTestWalking"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/drivingOptions" />
 
@@ -95,6 +96,7 @@
         android:layout_marginBottom="144dp"
         android:text="@string/btnTestRunning"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnTestWalking" />
@@ -109,6 +111,7 @@
         android:layout_marginBottom="72dp"
         android:text="@string/btnTestDriving"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnTestCycling" />
@@ -121,6 +124,7 @@
         android:layout_marginTop="11dp"
         android:layout_marginEnd="162dp"
         android:layout_marginBottom="16dp"
+        android:visibility="gone"
         android:text="@string/btnStop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -139,5 +143,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/btnTestRunning" />
 </android.support.constraint.ConstraintLayout>

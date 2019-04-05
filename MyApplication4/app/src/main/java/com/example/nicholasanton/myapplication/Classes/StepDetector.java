@@ -2,7 +2,8 @@ package com.example.nicholasanton.myapplication.Classes;
 
 /**
  * Used code from : http://www.gadgetsaint.com/android/create-pedometer-step-counter-android/#.XG65DOj7S70
- * Gets weather the user has stepped or not
+ * A Step detector class which will accept updates from accelerometer sensor and deploy the filter
+ * to detect if a step has been covered by the user.
  * */
 
 import com.example.nicholasanton.myapplication.Interfaces.StepListener;
@@ -31,13 +32,14 @@ public class StepDetector {
         this.listener = listener;
     }
 
-    //Gets the users steps
+    // Gets the users steps
     public void updateAccel(long timeNs, float x, float y, float z) {
         float[] currentAccel = new float[3];
         currentAccel[0] = x;
         currentAccel[1] = y;
         currentAccel[2] = z;
 
+        // First step is to update our guess of where the global z vector is.
         accelRingCounter++;
         accelRingX[accelRingCounter % ACCEL_RING_SIZE] = currentAccel[0];
         accelRingY[accelRingCounter % ACCEL_RING_SIZE] = currentAccel[1];
@@ -54,12 +56,16 @@ public class StepDetector {
         worldZ[1] = worldZ[1] / normalization_factor;
         worldZ[2] = worldZ[2] / normalization_factor;
 
+        // Gets the current Z axis of the user
         float currentZ = SensorFilter.dot(worldZ, currentAccel) - normalization_factor;
         velRingCounter++;
         velRing[velRingCounter % VEL_RING_SIZE] = currentZ;
 
+        // Gets the velocity estimate of the user
         float velocityEstimate = SensorFilter.sum(velRing);
 
+        // Checks if the velocity is bigger and the old velocity is smaller than the step threshold
+        // that will decide if the step should be counted as one or not
         if (velocityEstimate > STEP_THRESHOLD && oldVelocityEstimate <= STEP_THRESHOLD
                 && (timeNs - lastStepTimeNs > STEP_DELAY_NS)) {
             listener.step(timeNs);

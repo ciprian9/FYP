@@ -589,6 +589,14 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.mymenu, menu);
+        if (accountid == -1) {
+            MenuItem item1 = menu.findItem(R.id.ClearDB);
+            MenuItem item2 = menu.findItem(R.id.SetMorningNight);
+            MenuItem item3 = menu.findItem(R.id.Console);
+            item1.setVisible(true);
+            item2.setVisible(true);
+            item3.setVisible(true);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

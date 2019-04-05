@@ -25,16 +25,19 @@
         <item
             android:id="@+id/Console"
             android:title="@string/itmConsole"
+            android:visible="false"
             app:showAsAction="never"/>
 
         <item
             android:id="@+id/ClearDB"
             android:title="@string/itmClearDB"
+            android:visible="false"
             app:showAsAction="never"/>
 
         <item
             android:id="@+id/SetMorningNight"
             android:title="@string/itmSetMorningNight"
+            android:visible="false"
             app:showAsAction="never"/>
 
         <item
