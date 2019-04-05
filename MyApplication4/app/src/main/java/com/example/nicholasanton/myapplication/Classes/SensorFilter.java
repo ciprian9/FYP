@@ -2,7 +2,7 @@ package com.example.nicholasanton.myapplication.Classes;
 
 /**
  * Used Code From : http://www.gadgetsaint.com/android/create-pedometer-step-counter-android/#.XG69Cej7S71
- * Used to make sure there are no false steps
+ * Class with an algorithm to filter out values that has close approximation to steps
  * */
 
 class SensorFilter {

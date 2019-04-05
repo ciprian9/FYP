@@ -17,7 +17,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.example.nicholasanton.myapplication.Classes.Function;
+import com.example.nicholasanton.myapplication.Classes.GetURLWeather;
 import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.R;
 
@@ -91,7 +91,7 @@ public class getTheWeather extends Service {
     class DownloadWeather extends AsyncTask< String, Void, String > {
         protected String doInBackground(String...args) {
             String OPEN_WEATHER_MAP_API = "cbfdb21fa1793c10b14b6b6d00fbef03";
-            return Function.excuteGet("http://api.openweathermap.org/data/2.5/weather?q=" + args[0] +
+            return GetURLWeather.excuteGet("http://api.openweathermap.org/data/2.5/weather?q=" + args[0] +
                     "&units=metric&appid=" + OPEN_WEATHER_MAP_API);
         }
         @Override

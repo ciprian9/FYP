@@ -21,11 +21,13 @@ public class AppModule {
 
     AppModule() {}
 
+    //Returns the application
     @Provides
     Application provideApplication() {
         return app;
     }
 
+    //Returns the context of the application
     @Provides
     Context provideContext() {
         return app;

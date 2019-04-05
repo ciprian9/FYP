@@ -13,17 +13,18 @@ public class HomePresenter {
     private final HomeView view;
     private final Tracker tracker;
 
-    //Constructor for the class that retrieves HomeView and Tracker object that copies to local variables
     public HomePresenter(HomeView view, Tracker tracker) {
         this.view = view;
         this.tracker = tracker;
     }
 
-    //Starts the listener for activity
+    //Starts activity recognition
     public void init() {
         tracker.setTrackerListener(new TrackerListener() {
+            //Will only run if tracking has been recognized
             @Override
             public void onTracked(ActivityType activityType) {
+                //Checks if the activity type is valid and if it is then use it
                 if (activityType != null) {
                     view.show(activityType);
                 } else {
@@ -33,16 +34,19 @@ public class HomePresenter {
         });
     }
 
+    //Start the tracking service
     private void startTrackingService() {
         view.warnTracking();
         tracker.startTrackingService();
     }
 
+    //Stop the tracking service
     private void stopTrackingService() {
         tracker.stopTrackingService();
         view.warnTrackingHasBeenStopped();
     }
 
+    //Procedure to check if the tracker is currently tracking then stop it and it not then start it
     public void callTrackingService() {
         if (tracker.isTracking()) {
             stopTrackingService();

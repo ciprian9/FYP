@@ -22,6 +22,7 @@ public class RequestHandler {
         mRequestQueue = getRequestQueue();
     }
 
+    //Used to get the context and then add it to the queue to be able to get the data back
     public static synchronized RequestHandler getInstance(Context context) {
         if (mInstance == null) {
             mInstance = new RequestHandler(context);
@@ -29,6 +30,7 @@ public class RequestHandler {
         return mInstance;
     }
 
+    //Returns a RequestQueue object to be able to start sending requests
     private RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
@@ -36,6 +38,7 @@ public class RequestHandler {
         return mRequestQueue;
     }
 
+    //Adds the request to the queue
     public <T> void addToRequestQueue(Request<T> req) {
         getRequestQueue().add(req);
     }

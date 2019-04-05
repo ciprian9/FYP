@@ -2,6 +2,7 @@ package com.example.nicholasanton.myapplication.Classes;
 
 /**
  * Used in conjunction with activity recognition that will return view
+ * Source : https://github.com/tassioauad/CoachTracker
  * */
 
 import com.example.nicholasanton.myapplication.Interfaces.HomeView;
@@ -20,6 +21,7 @@ public class HomeViewModule {
         this.view = view;
     }
 
+    //Returns a home presenter object with the tracker inside of it to be used
     @Provides
     HomePresenter provideHomePresenter(Tracker tracker) {
         return new HomePresenter(view, tracker);

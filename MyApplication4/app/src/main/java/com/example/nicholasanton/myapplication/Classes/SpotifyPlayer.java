@@ -15,6 +15,7 @@ import kaaes.spotify.webapi.android.models.PlaylistsPager;
 
 public class SpotifyPlayer{
 
+    //Creates a thread to be able to run this at the same time as other things
     final class SecondThread implements Runnable{
         @Override
         public void run() {
@@ -34,14 +35,18 @@ public class SpotifyPlayer{
         this.ActivityTypeString = activityTypeString;
     }
 
-    //Function that will play the appropriate playlist based on the activity of the user
+    //Procedure that will play the appropriate playlist based on the activity of the user
     private void doInBackground() {
         try {
             SpotifyApi api = new SpotifyApi();
+            //Set the access token to be able to connect to the spotify
             api.setAccessToken(mAccessToken);
             SpotifyService spotify = api.getService();
             PlaylistsPager walking = null;
+            // Checks if the current activity is an action being performed and if so it will play
+            // appropriate music
             if(ActivityTypeString.equalsIgnoreCase("WALK")) {
+                //Will use spotify to search for the right playlist
                 walking = spotify.searchPlaylists("walking%music");
             } else if(ActivityTypeString.equalsIgnoreCase("RUN")) {
                 walking = spotify.searchPlaylists("running%music");
@@ -50,6 +55,7 @@ public class SpotifyPlayer{
             } else if(ActivityTypeString.equalsIgnoreCase("CAR")) {
                 walking = spotify.searchPlaylists("driving%music");
             }
+            //Used to get a random number
             Random rand = new Random();
             int n = 0;
             if (walking != null) {
@@ -57,6 +63,7 @@ public class SpotifyPlayer{
             }
             if (!ActivityTypeString.isEmpty()) {
                 if (walking != null) {
+                    //Will play a random playlist depending on what number is randomly picked
                     mSpotifyAppRemote.getPlayerApi().play(walking.playlists.items.get(n).uri);
                 }
             } else {

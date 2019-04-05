@@ -92,7 +92,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ConfirmPassword"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp"/>
+        android:prompt="Secret Question"
+        android:layout_marginTop="29dp" />
 
     <EditText
         android:id="@+id/SecretAnswer"

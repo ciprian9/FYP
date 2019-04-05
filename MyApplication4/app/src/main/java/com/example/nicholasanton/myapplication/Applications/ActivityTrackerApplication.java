@@ -1,7 +1,8 @@
 package com.example.nicholasanton.myapplication.Applications;
 
 /**
- * Class that creates an objectGraph object and returns it to where its needed
+ * Class that creates an ObjectGraph because it is essential to obtain an instance of a class with
+ * injected attributes and then returns it to activities listeners to inject data into the variable
  * */
 
 import android.app.Application;
@@ -18,7 +19,6 @@ public class ActivityTrackerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         objectGraph = ObjectGraph.create(
                 new AppModule(ActivityTrackerApplication.this),
                 new ApiModule()

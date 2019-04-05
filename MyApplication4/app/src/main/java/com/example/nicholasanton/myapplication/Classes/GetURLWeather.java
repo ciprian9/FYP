@@ -1,7 +1,7 @@
 package com.example.nicholasanton.myapplication.Classes;
 
 /**
- * Used to get the weather details using the provided url that will return json
+ * Used to get the weather details using the provided url that will return the string in json
  * */
 
 import java.io.BufferedReader;
@@ -10,15 +10,17 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class Function {
+public class GetURLWeather {
 
-    //Gets data from the URL and returns the data retrieved from the URL as JSON
     public static String excuteGet(String targetURL)
     {
         URL url;
+        //Create HTTPUrlConnection Object
         HttpURLConnection connection = null;
         try {
+            //Adds the url to a url object
             url = new URL(targetURL);
+            //sets the constraints of what the url can return
             connection = (HttpURLConnection)url.openConnection();
             connection.setRequestProperty("content-type", "application/json;  charset=utf-8");
             connection.setRequestProperty("Content-Language", "en-US");
@@ -28,6 +30,7 @@ public class Function {
 
             InputStream is;
             int status = connection.getResponseCode();
+            //If the response is not okay then will add the stream to the InputStream
             if (status != HttpURLConnection.HTTP_OK)
                 is = connection.getErrorStream();
             else
@@ -35,11 +38,13 @@ public class Function {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
             String line;
             StringBuilder response = new StringBuilder();
+            //add the lines received from the url to a StringBuilder object
             while((line = rd.readLine()) != null) {
                 response.append(line);
                 response.append('\r');
             }
             rd.close();
+            //return the json
             return response.toString();
         } catch (Exception e) {
             return null;

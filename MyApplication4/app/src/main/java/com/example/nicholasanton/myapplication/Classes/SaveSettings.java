@@ -35,23 +35,27 @@ public class SaveSettings {
 
     //Used to access run the PHP script using the path provided
     public void registerSetting(final String apath){
+        //Runs the PHP script that is passed and listens for a response
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 apath,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            //Turns the string returned into a jsonObject so the program can read it
                             JSONObject jsonObject = new JSONObject(response);
                             if(apath.equals(Constants.URL_READ_SETTING)){
                                     isOn = Boolean.valueOf(jsonObject.getString(Constants.DB_FLAG));
                             }
                         }catch(JSONException e){
+                            //Will only print out an error if anything from above fails
                             e.printStackTrace();
                         }
 
                     }
                 },
                 new Response.ErrorListener() {
+                    //Will run if there is an error inside of the PHP script
                     @Override
                     public void onErrorResponse(VolleyError error) {}
                 }){
@@ -68,6 +72,7 @@ public class SaveSettings {
                 return params;
             }
         };
+        //Adds to the request queue to be able to get data back as soon as possible
         RequestHandler.getInstance(c).addToRequestQueue(stringRequest);
     }
 }
