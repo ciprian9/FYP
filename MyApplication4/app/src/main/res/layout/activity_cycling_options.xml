@@ -3,21 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Views.CyclingOptions">
+    tools:context=".Views.CyclingOptions"
+    android:background="@drawable/background">
 
     <Switch
         android:id="@+id/swPlayHeadphones"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/spotifySwitch"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/spotifySwitch" />
 
     <Switch
         android:id="@+id/swNotificationTTS"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/swPlayHeadphones"
-        android:layout_marginTop="9dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
         android:layout_marginBottom="10dp"
         android:text="@string/switchTextToSpeech" />
 
@@ -26,7 +32,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/swNotificationTTS"
-        android:layout_marginTop="11dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
         android:text="@string/swtichAutoReply" />
 
     <Switch
@@ -34,7 +42,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/swAutoReply"
-        android:layout_marginTop="7dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
         android:layout_marginBottom="10dp"
         android:text="@string/SpeedSwitch" />
 
@@ -44,7 +54,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/swDoNotDisturb"
-        android:layout_marginTop="9dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
         android:text="@string/switchRecordRoute" />
 
     <Switch
@@ -52,7 +64,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/swRecordRoute"
-        android:layout_marginTop="6dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
         android:text="@string/switchReplyToCall" />
 
     <Button
@@ -63,5 +77,14 @@
         android:layout_marginTop="10dp"
         android:text="@string/btnOpenMap"
         android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="133dp"
+        android:layout_height="122dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/cyclingclipart"
+        android:text="" />
 
 </RelativeLayout>

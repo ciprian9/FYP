@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".Views.WalkingOptions">
 
     <Switch
         android:id="@+id/swPlayHeadphones"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/spotifySwitch"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/spotifySwitch" />
 
     <Switch
         android:id="@+id/swDoNotDisturb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/swPlayHeadphones"
-        android:text="@string/swPedometer"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/swPedometer" />
 
     <Switch
         android:id="@+id/swRest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/swGPSSpeech"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
         android:text="@string/swDistSpeed"
         tools:text="@string/swDistSpeed" />
 
@@ -33,8 +42,10 @@
         android:id="@+id/swGPSSpeech"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/swTime"
-        android:layout_below="@+id/swDoNotDisturb"/>
+        android:layout_below="@+id/swDoNotDisturb"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:text="@string/swTime" />
 
     <Button
         android:id="@+id/btnOpenMap"
@@ -43,15 +54,26 @@
         android:layout_below="@+id/swRecordRoute"
         android:layout_marginTop="16dp"
         android:text="@string/btnOpenMap"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <Switch
         android:id="@+id/swRecordRoute"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/swRest"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
         android:text="@string/switchRecordRoute" />
+
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="133dp"
+        android:layout_height="122dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/walkingclipart"
+        android:text="" />
 
 
 </RelativeLayout>

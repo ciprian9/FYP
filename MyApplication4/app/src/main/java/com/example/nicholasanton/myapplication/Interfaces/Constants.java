@@ -9,6 +9,8 @@ public interface Constants {
     String TEXT_TO_SPEECH_SETTING = "notificationTTS";
     String AUTO_REPLY_SETTING = "autoReply";
     String CALL_REPLY_SETTING = "callReply";
+    String CALL_REPLY_MESSAGE = "Sorry, I'm a bit busy.";
+    String MEETING_MESSAGE = "Sorry, I'm in a meeting now.";
 
     int COLUMN_USERNAME = 1;
     int COLUMN_PASSWORD = 2;

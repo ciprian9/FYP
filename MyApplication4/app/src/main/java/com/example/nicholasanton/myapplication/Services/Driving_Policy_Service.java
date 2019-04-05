@@ -10,22 +10,37 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.example.nicholasanton.myapplication.DataHandler;
 import com.example.nicholasanton.myapplication.Interfaces.Constants;
+import com.example.nicholasanton.myapplication.Views.ActivitesListeners;
+import com.example.nicholasanton.myapplication.Views.LockedScreen;
 
 public class Driving_Policy_Service extends Service {
+    private boolean recordRoute;
 
+    final class TheThread implements Runnable{
+        final int serviceId;
+
+        TheThread(int serviceId) {
+            this.serviceId = serviceId;
+        }
+
+        @Override
+        public void run() {
+            synchronized (this) {
+                startServices();
+            }
+        }
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
-
         if( extras != null ) {
-            int accountid = extras.getInt(Constants.ACCOUNTID_INTENT);
-            boolean musicPlayer = extras.getBoolean(Constants.MUSIC_INTENT);
-            boolean showSpeed = extras.getBoolean(Constants.SPEED_INTENT);
-            boolean recomendDestinations = extras.getBoolean(Constants.RECOMEND_INTENT);
-            boolean notificationTTS = extras.getBoolean(Constants.TEXT_TO_SPEECH_SETTING);
+            recordRoute = extras.getBoolean(Constants.RECORD_ROUTE);
         }
+        Thread theThread = new Thread(new Driving_Policy_Service.TheThread(startId));
+        theThread.start();
         return START_STICKY;
     }
 
@@ -38,5 +53,20 @@ public class Driving_Policy_Service extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    private void startServices() {
+        try {
+            if (recordRoute) {
+                Intent i = new Intent(getApplicationContext(), MapService.class);
+                i.putExtra("temp", false);
+                i.putExtra(Constants.POLICY_ID, 4);
+                startService(i);
+            }
+            Intent myIntent = new Intent(getApplicationContext(), LockedScreen.class);
+            getApplicationContext().startActivity(myIntent);
+        } catch (Exception e){
+            System.out.print(e.toString());
+        }
     }
 }

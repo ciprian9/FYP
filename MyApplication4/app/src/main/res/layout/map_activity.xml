@@ -1,50 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical" >
-
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight=".5"
-        android:background="#1995c6">
+        android:background="@drawable/background">
 
         <TextView
             android:id="@+id/tv_steps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
             android:gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="@string/tvSteps"/>
+            android:text="@string/tvSteps"
+            android:textSize="26sp" />
 
         <TextView
             android:id="@+id/tvDistance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_below="@id/tv_steps"
-            android:text="@string/tvDist"/>
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/tvDist"
+            android:textSize="26sp" />
 
         <TextView
             android:id="@+id/tvTimer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_below="@id/tvDistance"
-            android:text="@string/tvTimer"/>
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/tvTimer"
+            android:textSize="26sp" />
 
         <TextView
             android:id="@+id/tvSpeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_below="@id/tvTimer"
-            android:text="@string/tvSpeed"/>
-
-
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/tvSpeed"
+            android:textSize="26sp" />
     </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -58,9 +61,4 @@ android:orientation="vertical" >
             />
 
     </RelativeLayout>
-
-
-
-
-
 </LinearLayout>

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.nicholasanton.myapplication.DataHandler;
+import com.example.nicholasanton.myapplication.Interfaces.Constants;
 import com.example.nicholasanton.myapplication.Services.AutoReplyService;
 
 import java.lang.reflect.Method;
@@ -27,17 +28,20 @@ import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.r
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.cyclingService;
 
 public class IncomingCallReceiver extends BroadcastReceiver {
+    private TelephonyManager tm;
+    private ITelephony telephonyService;
+    private DataHandler db;
     //Listener for the call
     @Override
     public void onReceive(Context context, Intent intent) {
-        DataHandler db = new DataHandler(context);
-        ITelephony telephonyService;
+        db = new DataHandler(context);
+
         db.insertLog("Getting Call\n");
         try {
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
             String number = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
             if(state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING)){
-                TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
                 try {
                     @SuppressLint("PrivateApi") Method m = tm.getClass().getDeclaredMethod("getITelephony");
                     m.setAccessible(true);
@@ -45,13 +49,10 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                     if ((number != null)) {
                         //If one of the services are running then the call will end
                         if (runningService || cyclingService  || drivingService || inMeeting) {
-                            if (callReply || inMeeting) {
-                                db.insertLog("Ending Call\n");
-                                telephonyService.endCall();
-                                Toast.makeText(context, "Ending the call from: " + number, Toast.LENGTH_SHORT).show();
-                                Intent autoReplyIntent = new Intent(context, AutoReplyService.class);
-                                autoReplyIntent.putExtra("sender", number);
-                                context.startService(autoReplyIntent);
+                            if (callReply) {
+                                SendMsg(context, number, Constants.CALL_REPLY_MESSAGE);
+                            } else if (inMeeting){
+                                SendMsg(context, number, Constants.MEETING_MESSAGE);
                             }
                         }
                     }
@@ -65,5 +66,15 @@ public class IncomingCallReceiver extends BroadcastReceiver {
             db.insertLog("Error Inside Calling Code");
             Log.e("TEST : ", e.getMessage());
         }
+    }
+
+    private void SendMsg(Context context, String number, String message){
+        db.insertLog("Ending Call\n");
+        telephonyService.endCall();
+        Toast.makeText(context, "Ending the call from: " + number, Toast.LENGTH_SHORT).show();
+        Intent autoReplyIntent = new Intent(context, AutoReplyService.class);
+        autoReplyIntent.putExtra("sender", number);
+        autoReplyIntent.putExtra("message", message);
+        context.startService(autoReplyIntent);
     }
 }

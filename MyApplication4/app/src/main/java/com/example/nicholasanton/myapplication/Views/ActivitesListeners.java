@@ -925,23 +925,11 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     //Will start only when the user is driving and will perform selected options
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void StartDrivingService() {
-        if (recordRoute) {
-            Intent i = new Intent(getApplicationContext(), MapService.class);
-            i.putExtra("temp", false);
-            i.putExtra(Constants.POLICY_ID, 4);
-            startService(i);
-        }
         if (dndStatus == 0) {
             requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
         }
-        Intent myIntent = new Intent(ActivitesListeners.this, LockedScreen.class);
-        ActivitesListeners.this.startActivity(myIntent);
         Intent intent = new Intent(this, Driving_Policy_Service.class);
-        intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
-        intent.putExtra(Constants.MUSIC_INTENT, musicPlayer);
-        intent.putExtra(Constants.PEDOMETER_INTENT, pedometer);
-        intent.putExtra(Constants.TIME_INTENT, timeRecord);
-        intent.putExtra(Constants.DISTANCE_INTENT, dist_speed);
+        intent.putExtra(Constants.RECORD_ROUTE, recordRoute);
         startService(intent);
         if (musicPlayer) {
             connected("CAR");
@@ -950,20 +938,8 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
 
     //Will start only when the user is cycling and will perform selected options
     private void StartCyclingService() {
-        if (recordRoute) {
-            Intent i = new Intent(getApplicationContext(), MapService.class);
-            i.putExtra("temp", false);
-            i.putExtra(Constants.POLICY_ID, 3);
-            startService(i);
-        }
-        Intent speed = new Intent(this, SpeedAndDistance.class);
-        startService(speed);
         Intent intent = new Intent(this, Cycling_Policy_Service.class);
-        intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
-        intent.putExtra(Constants.MUSIC_INTENT, musicPlayer);
-        intent.putExtra(Constants.PEDOMETER_INTENT, pedometer);
-        intent.putExtra(Constants.TIME_INTENT, timeRecord);
-        intent.putExtra(Constants.DISTANCE_INTENT, dist_speed);
+        intent.putExtra(Constants.RECORD_ROUTE, recordRoute);
         startService(intent);
         if (musicPlayer) {
             connected("BIKE");
