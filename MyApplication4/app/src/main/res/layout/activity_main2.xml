@@ -1,75 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Views.MainActivity">
+    tools:context=".Views.MainActivity"
+    android:background="@drawable/background">
 
     <Button
         android:id="@+id/walkingOptions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/btnWalking" />
+        android:layout_width="105dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="87dp"
+        android:layout_marginTop="117dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/walkingclipart"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.243" />
 
     <Button
         android:id="@+id/runningOptions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/walkingOptions"
-        android:text="@string/btnRunning" />
-
-    <Button
-        android:id="@+id/cyclingOptions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/runningOptions"
-        android:text="@string/btnCycling" />
+        android:layout_width="105dp"
+        android:layout_height="97dp"
+        android:layout_marginStart="87dp"
+        android:layout_marginTop="117dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/runningclipart"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.621"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.246" />
 
     <Button
         android:id="@+id/drivingOptions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/cyclingOptions"
-        android:text="@string/btnDriving" />
+        android:layout_width="105dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="87dp"
+        android:layout_marginTop="117dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/drivingclipart"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.621"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.49" />
 
     <Button
-        android:id="@+id/btnTestDriving"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/drivingOptions"
-        android:text="@string/btnTestDriving"
-        android:visibility="gone" />
+        android:id="@+id/cyclingOptions"
+        android:layout_width="105dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="87dp"
+        android:layout_marginTop="117dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/cyclingclipart"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.49" />
 
     <Button
         android:id="@+id/btnTestWalking"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnTestDriving"
+        android:layout_width="180dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="161dp"
+        android:layout_marginTop="41dp"
+        android:layout_marginEnd="162dp"
+        android:layout_marginBottom="179dp"
         android:text="@string/btnTestWalking"
-        android:visibility="gone" />
-
-    <Button
-        android:id="@+id/btnTestCycling"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnTestWalking"
-        android:text="@string/btnTestCycling"
-        android:visibility="gone" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/drivingOptions" />
 
     <Button
         android:id="@+id/btnTestRunning"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnTestCycling"
+        android:layout_width="180dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="161dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="162dp"
+        android:layout_marginBottom="144dp"
         android:text="@string/btnTestRunning"
-        android:visibility="gone" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTestWalking" />
+
+    <Button
+        android:id="@+id/btnTestDriving"
+        android:layout_width="180dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="161dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="162dp"
+        android:layout_marginBottom="72dp"
+        android:text="@string/btnTestDriving"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTestCycling" />
 
     <Button
         android:id="@+id/btnStop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnTestRunning"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="161dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="162dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/btnStop"
-        android:visibility="gone" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTestDriving" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/btnTestCycling"
+        android:layout_width="180dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="161dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="162dp"
+        android:layout_marginBottom="108dp"
+        android:text="@string/btnTestCycling"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTestRunning" />
+</android.support.constraint.ConstraintLayout>
