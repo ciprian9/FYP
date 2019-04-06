@@ -33,6 +33,7 @@ public class getTheWeather extends Service {
         return null;
     }
 
+    //Will turn off do not disturb and then start getting the weather
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         db = new DataHandler(this);
@@ -43,6 +44,7 @@ public class getTheWeather extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    //Will access the audio manager of the device and then turn the ringer off
     private void turnOffDoNotDisturb() {
         db.insertLog("SILENT OFF");
         if (Build.VERSION.SDK_INT < 21) {
@@ -52,6 +54,7 @@ public class getTheWeather extends Service {
         audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
+    //Will start to get the weather by executing the function to retrieve json
     private void taskLoadUp(String query) {
         getTheWeather.DownloadWeather task = new getTheWeather.DownloadWeather();
         task.execute(query);
@@ -61,6 +64,7 @@ public class getTheWeather extends Service {
     private void sendNotification(String Temp) {
         db.insertLog("Build Notification");
 
+        //Will set all the settings including settings and vibration settings for the notification
         String id = "1";
         CharSequence name = "my Channel";
         String description = "Description";
@@ -77,6 +81,7 @@ public class getTheWeather extends Service {
             mNotificationManager.createNotificationChannel(mChannel);
         }
 
+        //Adds the data to the notification such as the icon, title and the actual weather
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext(), "111")
                         .setSmallIcon(R.mipmap.ic_launcher)
@@ -87,7 +92,7 @@ public class getTheWeather extends Service {
         mNotificationManager.notify(1, mBuilder.build());
     }
 
-    //Gets the weather using a url
+    //Creates the class that will generate the url using the api key and the city that the user is in
     class DownloadWeather extends AsyncTask< String, Void, String > {
         protected String doInBackground(String...args) {
             String OPEN_WEATHER_MAP_API = "cbfdb21fa1793c10b14b6b6d00fbef03";
@@ -96,15 +101,18 @@ public class getTheWeather extends Service {
         }
         @Override
         protected void onPostExecute(String xml) {
+            //Sets do not disturb on
             AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
             audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 
+            //Add the JSON to a JSONObjext and then extracts the weather and sends it to the function to create a notification
             try {
                 JSONObject json = new JSONObject(xml);
                 JSONObject main = json.getJSONObject("main");
                 String temp = (String.format("%.2f", main.getDouble("temp")) + "°");
                 sendNotification(temp);
             } catch (JSONException e) {
+                //If any errors occur then it will log the error
                 Log.d("TEST : ", e.toString());
             }
         }

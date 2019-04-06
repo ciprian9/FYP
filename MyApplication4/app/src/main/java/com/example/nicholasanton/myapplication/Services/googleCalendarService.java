@@ -1,7 +1,7 @@
 package com.example.nicholasanton.myapplication.Services;
 
 /**
- * Will check if the user has a gmail account and if true then will do required and checks that will then get the calendar events
+ * Will check if the user has a gmail account and if true then will do required and checks that will then get the calendar events using the Google Calendar API provided by Google
  * */
 
 import android.app.Service;
@@ -44,20 +44,25 @@ public class googleCalendarService extends Service {
         return null;
     }
 
+    //Will recieve several values needed from the main application to be able to get the calendar
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         db = new DataHandler(this);
         Bundle bundle = intent.getExtras();
+        //Checks if it got data back and if so it will put values inside of variables
         if (bundle != null) {
             calendarid = bundle.getString("calendarid");
             String username1 = bundle.getString("username");
         }
+        //Will create a clipboardmanager object to later on be able to listen for when the user has copied the token
         clipboard = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
         clipboard.addPrimaryClipChangedListener(mPrimaryChangeListener);
+        //Will proceed to check if the user has a token based on the calendarId
         googleCalendarConnection(GOOGLEROOTURL+"tokenExists.php", 0);
         return super.onStartCommand(intent, flags, startId);
     }
 
+    //Will start the ActivitiesListeners activity so the user can proceed with whatever he would like to do
     private void start(){
         Intent i = new Intent(this, ActivitesListeners.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
