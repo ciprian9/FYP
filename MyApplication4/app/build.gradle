@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.nicholasanton.myapplication"
+        applicationId 'com.example.ciprian.myapplication'
         minSdkVersion 19
         targetSdkVersion 28
         multiDexEnabled true
@@ -17,6 +17,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 ext {
@@ -27,12 +29,12 @@ ext {
 
 dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
-    implementation group: 'com.android.support', name: 'customtabs', version: '28.0.0'
-    implementation group: 'com.android.support', name: 'mediarouter-v7', version: '28.0.0'
+    implementation 'com.android.support:customtabs:28.0.0'
+    implementation 'com.android.support:mediarouter-v7:28.0.0'
     configurations {
         all*.exclude group: 'com.android.support', module: 'support-v13'
     }
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
@@ -69,7 +71,6 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
-
     annotationProcessor 'com.squareup.dagger:dagger-compiler:1.2.2'
     annotationProcessor 'com.jakewharton:butterknife:8.8.1'
     implementation 'com.jakewharton:butterknife:8.8.1'

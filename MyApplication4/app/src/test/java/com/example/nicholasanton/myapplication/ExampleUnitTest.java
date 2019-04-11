@@ -1,4 +1,4 @@
-package com.example.nicholasanton.myapplication;
+package com.example.ciprian.myapplication;
 
 import org.junit.Test;
 
