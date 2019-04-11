@@ -23,7 +23,9 @@ public class TrackingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //create an instance of activity recognition
         activityRecognizer = new ActivityRecognizerImpl(this);
+        //set the listener for activity recognition
         activityRecognizer.setActivityRecognizerListener(new ActivityRecognizerListener() {
 
             @Override
@@ -33,10 +35,12 @@ public class TrackingService extends Service {
 
             @Override
             public void onActivityRecognized(ActivityType activityType) {
+                //if connection was successful retrieve the current activity
                 currentActivityType = activityType;
             }
         });
 
+        //start the activity recognizer to determine current activity
         activityRecognizer.startToRecognizeActivities();
 
         return Service.START_STICKY;
@@ -50,6 +54,7 @@ public class TrackingService extends Service {
 
     @Override
     public void onDestroy() {
+        //stop activity tracking
         activityRecognizer.stopToRecognizeActivities();
         super.onDestroy();
     }

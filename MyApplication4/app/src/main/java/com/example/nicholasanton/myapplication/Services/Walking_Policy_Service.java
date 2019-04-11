@@ -40,7 +40,7 @@ public class Walking_Policy_Service extends Service {
 
         Bundle extras = intent.getExtras();
         db = new DataHandler(this);
-
+        //retrieve user preferences
         if( extras != null ) {
             pedometer = extras.getBoolean(Constants.PEDOMETER_INTENT);
             time = extras.getBoolean(Constants.TIME_INTENT);
@@ -49,6 +49,7 @@ public class Walking_Policy_Service extends Service {
 
 
         Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
+        //create and start thread
         Thread theThread = new Thread(new TheThread(startId));
         theThread.start();
         return START_STICKY;
@@ -67,6 +68,7 @@ public class Walking_Policy_Service extends Service {
 
     private void startPedometer() {
         try {
+            //if these preferences are on either one or multiple then start the pedometer service
             if(pedometer || time || dist_speed) {
                 db.insertLog("Starting Walking Pedometer Service\n");
                 Intent i = new Intent(this, pedometerService.class);

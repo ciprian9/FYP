@@ -7,84 +7,88 @@
     tools:context=".Views.MainActivity"
     android:background="@drawable/background">
 
-    <Button
+    <ImageButton
         android:id="@+id/walkingOptions"
-        android:layout_width="105dp"
-        android:layout_height="90dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="87dp"
         android:layout_marginTop="117dp"
         android:layout_marginBottom="2dp"
-        android:background="@drawable/walkingclipart"
-        android:text=""
+        android:background="@drawable/imagebutton_border"
+        android:src="@drawable/walkingclipart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.06"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.243" />
+        app:layout_constraintVertical_bias="0.24000001" />
 
-    <Button
+    <ImageButton
         android:id="@+id/runningOptions"
-        android:layout_width="105dp"
-        android:layout_height="97dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="87dp"
         android:layout_marginTop="117dp"
         android:layout_marginBottom="2dp"
-        android:background="@drawable/runningclipart"
+        android:background="@drawable/imagebutton_border"
+        android:src="@drawable/runningclipart"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.621"
+        app:layout_constraintHorizontal_bias="0.56"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.246" />
+        app:layout_constraintVertical_bias="0.24000001" />
 
-    <Button
+    <ImageButton
         android:id="@+id/drivingOptions"
-        android:layout_width="105dp"
-        android:layout_height="90dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="87dp"
         android:layout_marginTop="117dp"
         android:layout_marginBottom="2dp"
-        android:background="@drawable/drivingclipart"
+        android:background="@drawable/imagebutton_border"
+        android:src="@drawable/drivingclipart"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.621"
+        app:layout_constraintHorizontal_bias="0.56"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.49" />
+        app:layout_constraintVertical_bias="0.45" />
 
-    <Button
+    <ImageButton
         android:id="@+id/cyclingOptions"
-        android:layout_width="105dp"
-        android:layout_height="90dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="87dp"
         android:layout_marginTop="117dp"
         android:layout_marginBottom="2dp"
-        android:background="@drawable/cyclingclipart"
+        android:background="@drawable/imagebutton_border"
+        android:src="@drawable/cyclingclipart"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.06"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.49" />
+        app:layout_constraintVertical_bias="0.45" />
 
     <Button
         android:id="@+id/btnTestWalking"
         android:layout_width="180dp"
         android:layout_height="35dp"
         android:layout_marginStart="161dp"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="200dp"
         android:layout_marginEnd="162dp"
         android:layout_marginBottom="179dp"
         android:text="@string/btnTestWalking"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/drivingOptions" />
+        app:layout_constraintTop_toBottomOf="@+id/drivingOptions"
+        app:layout_constraintVertical_bias="0.85" />
 
     <Button
         android:id="@+id/btnTestRunning"
@@ -95,8 +99,8 @@
         android:layout_marginEnd="162dp"
         android:layout_marginBottom="144dp"
         android:text="@string/btnTestRunning"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnTestWalking" />
@@ -110,8 +114,8 @@
         android:layout_marginEnd="162dp"
         android:layout_marginBottom="72dp"
         android:text="@string/btnTestDriving"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnTestCycling" />
@@ -124,8 +128,8 @@
         android:layout_marginTop="11dp"
         android:layout_marginEnd="162dp"
         android:layout_marginBottom="16dp"
-        android:visibility="gone"
         android:text="@string/btnStop"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -140,9 +144,26 @@
         android:layout_marginEnd="162dp"
         android:layout_marginBottom="108dp"
         android:text="@string/btnTestCycling"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/btnTestRunning" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="195dp"
+        android:layout_marginEnd="156dp"
+        android:layout_marginBottom="25dp"
+        android:text="Preferences"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/walkingOptions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

@@ -44,9 +44,11 @@ public class WalkingOptions extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_walking_options);
+        //data handler for logging for debugging purposes
         db = new DataHandler(this);
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
+            //if present read the account id and username or set account id to 0
             if(extras == null) {
                 accountid= 0;
             } else {
@@ -55,6 +57,7 @@ public class WalkingOptions extends AppCompatActivity {
             }
         }
 
+        //set switches for user preferences
         playHeadphones =  findViewById(R.id.swPlayHeadphones);
         startPedometer = findViewById(R.id.swDoNotDisturb);
         Time =  findViewById(R.id.swGPSSpeech);
@@ -65,6 +68,7 @@ public class WalkingOptions extends AppCompatActivity {
         if(appInstalledOrNot()){
             playHeadphones.setEnabled(true);
         } else {
+            //display a dialog to as to install spotify
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Do you want to install Spotify?")
                     .setCancelable(false)
@@ -85,13 +89,15 @@ public class WalkingOptions extends AppCompatActivity {
                     });
             AlertDialog alert = builder.create();
             alert.show();
+            //disable music player
             playHeadphones.setEnabled(false);
         }
 
-
-        if (username.equals("tester1234")) {
+        //check for the debugging account
+        if (username.equals("local")) {
             VarsToForm();
         }
+        //if user is logged in create the settings for the user if not existent already
         if (accountid != 0) {
             SaveSettings db = new SaveSettings(accountid, 1, "MusicPlayer", false, this);
             db.registerSetting(Constants.URL_SAVE_SETTING);
@@ -105,6 +111,7 @@ public class WalkingOptions extends AppCompatActivity {
             db4.registerSetting(Constants.URL_SAVE_SETTING);
         }
 
+        //set up all the switches
         playHeadphones.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -153,6 +160,7 @@ public class WalkingOptions extends AppCompatActivity {
 
     //Code to check if application is installed
     private boolean appInstalledOrNot() {
+        //check if the spotify package is installed or not
         PackageManager pm = getPackageManager();
         try {
             pm.getPackageInfo("com.spotify.music", PackageManager.GET_ACTIVITIES);
@@ -208,6 +216,7 @@ public class WalkingOptions extends AppCompatActivity {
                 }) {
             @Override
             protected Map<String, String> getParams() {
+                //pass in html parameters
                 Map<String, String> params = new HashMap<>();
                 params.put("accountid", String.valueOf(accountid));
                 params.put("policyid", String.valueOf(1));
@@ -227,6 +236,7 @@ public class WalkingOptions extends AppCompatActivity {
 
 
     private void VarsToForm(){
+        //read all the settings for the user preferences
         readSettings("MusicPlayer", playHeadphones);
         readSettings("Pedometer", startPedometer);
         readSettings("Time", Time);

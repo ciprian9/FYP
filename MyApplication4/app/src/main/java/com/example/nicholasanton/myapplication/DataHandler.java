@@ -11,6 +11,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataHandler extends SQLiteOpenHelper {
+
+    //variables for colums and SQLite Database creation
     private static final int DATABASE_VERSION = 12;
     private static final String DATABASE_NAME = "FYP.db";
     private static final String SETTINGS_TABLE_NAME = "Settings";
@@ -30,16 +32,17 @@ public class DataHandler extends SQLiteOpenHelper {
     private static final String COLUMN_LINE_ID = "id";
     private static final String COLUMN_LINE_TEXT = "message";
 
+    //creation string for User table
     private static final String REMEMBER_ME_TABLE = "CREATE TABLE " + USER_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY, " + COLUMN_USERNAME + " TEXT, " + COLUMN_PASSWORD + " TEXT)";
 
-
+    //creation string for logs table
     private static final String LOGS_TABLE = "CREATE TABLE " + LOGS_TABLE_NAME + " (" + COLUMN_LINE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT , " + COLUMN_LINE_TEXT  + ")";
 
     public DataHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    //Selects user using SQL
+    //Selects user using SQL from the remember me table
     public Cursor SelectUser(){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "Select * from " + USER_TABLE_NAME + " WHERE " + COLUMN_USERID + " = " + 1;
@@ -52,7 +55,7 @@ public class DataHandler extends SQLiteOpenHelper {
         int temp = db.delete(LOGS_TABLE_NAME, "1", null);
     }
 
-    //Update Settings record
+    //Update remember me username and password
     public void updateUser(String username, String password){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -79,12 +82,14 @@ public class DataHandler extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
+        //create tables
         db.execSQL(REMEMBER_ME_TABLE);
         db.execSQL(LOGS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        //remove existing tables for upgrade
         db.execSQL("DROP TABLE IF EXISTS " + SETTINGS_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PLAYLIST_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);

@@ -38,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -173,7 +174,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             Log.d("TEST : ", "GMAIL IS NULL");
         }
 
-        if (username.equals("tester1234")){
+        if (username.equals("local")){
             workLL = new Location("");
             workLL.setLatitude(53.374698300000006);
             workLL.setLongitude(-6.3938991);
@@ -246,7 +247,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         calendarList = new ArrayList<>();
 
 
-        if (!username.equals("tester1234")) {
+        if (!username.equals("local")) {
             ReadLocation();
         }
 
@@ -306,13 +307,17 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 public void onClick(View view) {
                     StopWalkingPolicy();
                     StopDrivingPolicy();
-                    spotifyPlayer.pause();
+                    try {
+                        spotifyPlayer.pause();
+                    }catch (Exception e){
+
+                    }
                     db.insertLog("ALL Policies Stopped\n");
                 }
             });
         }
 
-        if (username.equals("tester1234")) {
+        if (username.equals("local")) {
             musicPlayer = true;
             pedometer = true;
             timeRecord = true;
@@ -337,7 +342,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
 
         setMorningNightRoutine(defaultMorning, defaultNight);
 
-        final Button walkingOptions = findViewById(R.id.walkingOptions);
+        final ImageButton walkingOptions = findViewById(R.id.walkingOptions);
         walkingOptions.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 StartWalkingOptions();
@@ -345,7 +350,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             }
         });
 
-        final Button runningOptions = findViewById(R.id.runningOptions);
+        final ImageButton runningOptions = findViewById(R.id.runningOptions);
         runningOptions.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 StartRunningOptions();
@@ -353,7 +358,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             }
         });
 
-        final Button cyclingOptions = findViewById(R.id.cyclingOptions);
+        final ImageButton cyclingOptions = findViewById(R.id.cyclingOptions);
         cyclingOptions.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 StartCyclingOptions();
@@ -361,7 +366,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             }
         });
 
-        final Button drivingOptions = findViewById(R.id.drivingOptions);
+        final ImageButton drivingOptions = findViewById(R.id.drivingOptions);
         drivingOptions.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 StartDrivingOptions();
@@ -1203,7 +1208,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         };
         registerReceiver(updateUIReciver, filter);
 
-        if (!username.equals("tester1234")) {
+        if (!username.equals("local")) {
             Intent i = new Intent(this, googleCalendarService.class);
             i.putExtra("calendarid", gmail);
             i.putExtra("username", username);
@@ -1249,7 +1254,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 if (!previousActivity.equalsIgnoreCase("CAR")) {
                     Log.d("TEST : ", "CAR");
                     previousActivity = "CAR";
-                    if (username.equals("tester1234")){
+                    if (username.equals("local")){
                         StartDrivingService();
                     } else {
                         getWalkingSettings(Constants.DRIVING_POLICY);
@@ -1261,7 +1266,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 if (!previousActivity.equalsIgnoreCase("BIKE")) {
                     Log.d("TEST : ", "BIKE");
                     previousActivity = "BIKE";
-                    if (username.equals("tester1234")){
+                    if (username.equals("local")){
                         StartCyclingService();
                     } else {
                         getWalkingSettings(Constants.CYCLING_POLICY);
@@ -1274,7 +1279,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 if (!previousActivity.equalsIgnoreCase("WALKING")) {
                     Log.d("TEST : ", "WALKING");
                     previousActivity = "WALKING";
-                    if (username.equals("tester1234")){
+                    if (username.equals("local")){
                         StartWalkingService();
                     } else {
                         getWalkingSettings(Constants.WALKING_POLICY);
@@ -1307,7 +1312,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 if (!previousActivity.equalsIgnoreCase("RUNNING")) {
                     Log.d("TEST : ", "RUNNING");
                     previousActivity = "RUNNING";
-                    if (username.equals("tester1234")){
+                    if (username.equals("local")){
                         StartRunningService();
                     } else {
                         getWalkingSettings(Constants.RUNNING_POLICY);

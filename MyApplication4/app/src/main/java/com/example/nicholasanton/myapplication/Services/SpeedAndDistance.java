@@ -32,9 +32,12 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         db = new DataHandler(this);
+        //Get an instance of the Location Manager
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        //request the current location from the GPS proviced
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         this.updateSpeed(null);
+        //Create a previous location object to store the previous location
         prevLocation = new Location("prevLocation");
         updateSpeed(null);
 
@@ -48,26 +51,30 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
         db.insertLog("Getting Speed");
 
         if(location != null) {
+            //use the location object to retrieve the appoximate speed in metric units
             location.setUseMetricunits(true);
             nCurrentSpeed = location.getSpeed();
 
         }
 
+        //format the result using a StringBuilder
         Formatter fmt = new Formatter(new StringBuilder());
         fmt.format(Locale.US, "%5.1f", nCurrentSpeed);
         String strCurrentSpeed = fmt.toString();
         strCurrentSpeed = strCurrentSpeed.replace(' ', '0');
 
         String strUnits = "meters/second";
-
+        //concatinate strings to provide the result string
         String actualSpeed = (strCurrentSpeed + " " + strUnits);
 
+        //add the distnace from current location to the previous location to the distance variable
         if(prevLocation != null && prevLocation.getLongitude() != 0 && prevLocation.getLatitude() != 0){
             distance =  distance + prevLocation.distanceTo(location);
         }
 
         prevLocation = location;
 
+        //set up a broadcast to let the map activity know the data has changed
         Intent tempIntent = new Intent("GET_SPEED_DATA");
         tempIntent.putExtra("Speed", actualSpeed);
         tempIntent.putExtra(Constants.DISTANCE_INTENT, distance);
@@ -79,6 +86,7 @@ public class SpeedAndDistance extends Service implements IBaseGpsListener {
     public void onLocationChanged(Location location) {
         if(location != null)
         {
+            //if location has changed update the speed
             db.insertLog("Updating Last Known Speed");
             CLocation myLocation = new CLocation(location, true);
             this.updateSpeed(myLocation);
