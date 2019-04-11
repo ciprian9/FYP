@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private String Pass;
     private String gmail;
     private String email;
-    private static final String testUname = "tester1234";
-    private static final String testPass = "tester1234";
+    private static final String testUname = "local";
+    private static final String testPass = "local";
     private static final int testID = 10;
     private DataHandler db;
 

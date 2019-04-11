@@ -44,6 +44,7 @@ public class MapService extends Service{
         return null;
     }
 
+    //Checks if a file exists in the local storage device
     private boolean fileExists(Context context, String filename) {
         File file = context.getFileStreamPath(filename);
         return file != null && file.exists();
@@ -56,36 +57,50 @@ public class MapService extends Service{
         super.onCreate();
     }
 
-    //Create files if they do not exist and will then populate them everytime the user moves
+    //Create files if they do not exist and will then populate them every time the user moves
     @SuppressLint("MissingPermission")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle extras = intent.getExtras();
 
+        //gets the values that have been passed through
         if( extras != null ) {
             temp = extras.getBoolean("temp");
             policyID = extras.getInt(Constants.POLICY_ID);
         }
 
+        //Creates a file object and another file object that contains the current directory
         File dir = getFilesDir();
         File file = null;
+        /*
+        * checks for the right policy and if the temp variable is false
+        * POLICY ID DICTIONARY :
+        * 1 = Walking
+        * 2 = Running
+        * 3 = Cycling
+        * 4 = Driving
+        * */
         if (policyID == 1 && !temp) {
             if (fileExists(this, walkingFileName)){
+                //creates the file object with the appropriate file inside of it
                 db.insertLog("New Walking File Created");
                 file = new File(dir, walkingFileName);
             }
         } else if (policyID == 2 && !temp) {
             if (fileExists(this, runningFileName)) {
+                //creates the file object with the appropriate file inside of it
                 db.insertLog("New Running File Created");
                 file = new File(dir, runningFileName);
             }
         } else if (policyID == 3 && !temp){
             if (fileExists(this, cyclingFileName)) {
+                //creates the file object with the appropriate file inside of it
                 db.insertLog("New Cycling File Created");
                 file = new File(dir, cyclingFileName);
             }
         } else if (policyID == 4 && !temp){
             if (fileExists(this, drivingFileName)) {
+                //creates the file object with the appropriate file inside of it
                 db.insertLog("New Driving File Created");
                 file = new File(dir, drivingFileName);
             }
@@ -94,12 +109,14 @@ public class MapService extends Service{
             boolean deleted = file.delete();
         }
 
+        //listens for when the location of the user has changed
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 temp1 = location.getLatitude();
                 temp2 = location.getLongitude();
                 LatLng latLng = new LatLng(temp1, temp2);
+                //checks if the current latitude and longitude is great enough of a change from the previous set to save the new lat and lng inside of the file
                 if ((temp1 >= (prevLat + 0.000005) || temp1 <= (prevLat - 0.000005)) ||
                         (temp2 >= (prevLong + 0.000005) || temp2 <= (prevLong - 0.000005))){
                     if (policyID == 1) {
@@ -134,6 +151,7 @@ public class MapService extends Service{
 
             }
 
+            //if the provider is disabled then open the settings page to enable it
             @Override
             public void onProviderDisabled(String s) {
                 Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -143,12 +161,12 @@ public class MapService extends Service{
         };
 
         locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, listener);
 
         return super.onStartCommand(intent, flags, startId);
     }
 
+    //saves the right file name with the passed in file text to the current directory
     private void saveFile(String file, String text){
         try{
             FileOutputStream fos = openFileOutput(file, Context.MODE_APPEND);

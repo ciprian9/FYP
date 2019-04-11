@@ -2,6 +2,8 @@ package com.example.nicholasanton.myapplication.Views;
 
 /**
  * Activity that shows everything that has been happening while the app has been running
+ * Displays log information saved in every activity, service and class of the application
+ * Displayed in a list for easier debugging the application
  * */
 
 import android.database.Cursor;

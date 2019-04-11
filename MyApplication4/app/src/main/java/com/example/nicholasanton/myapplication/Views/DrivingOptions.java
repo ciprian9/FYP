@@ -183,31 +183,34 @@ public class DrivingOptions extends AppCompatActivity {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (aSwitch != null) {
-                                aSwitch.setChecked(Boolean.valueOf(jsonObject.getString("status")));
                                 switch (aName) {
                                     case "MusicPlayer":
                                         musicPlayer = Boolean.valueOf(jsonObject.getString("status"));
+                                        playHeadphones.setChecked(musicPlayer);
                                         break;
                                     case "DoNotDisturb":
                                         doNotDisturb = Boolean.valueOf(jsonObject.getString("status"));
+                                        DoNotDisturb.setChecked(doNotDisturb);
                                         break;
                                     case "GPSSpeech":
                                         gpsSpeech = Boolean.valueOf(jsonObject.getString("status"));
-                                        break;
-                                    case "CaloriesBurnt":
-                                        caloriesBurnt = Boolean.valueOf(jsonObject.getString("status"));
+                                        GPSSpeech.setChecked(gpsSpeech);
                                         break;
                                     case "RecordRoute":
                                         recordRoute = Boolean.valueOf(jsonObject.getString("status"));
+                                        RecordRoute.setChecked(recordRoute);
                                         break;
                                     case "NotificationTTS":
                                         notificationTTS = Boolean.valueOf(jsonObject.getString("status"));
+                                        NotficationTTS.setChecked(notificationTTS);
                                         break;
                                     case "AutoReply":
                                         autoReply = Boolean.valueOf(jsonObject.getString("status"));
+                                        AutoReply.setChecked(autoReply);
                                         break;
                                     case "CallReply":
                                         callReply = Boolean.valueOf(jsonObject.getString("status"));
+                                        CallReply.setChecked(callReply);
                                         break;
                                 }
                             }

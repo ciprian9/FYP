@@ -20,10 +20,12 @@ public class CustomTimerTask extends TimerTask {
 
     @Override
     public void run() {
+        //create the thread for the timer
         new Thread(new Runnable() {
             public void run() {
                 mHandler.post(new Runnable() {
                     public void run() {
+                        //call to callBroadcast
                         callBroadcast();
                     }
                 });
@@ -32,6 +34,7 @@ public class CustomTimerTask extends TimerTask {
     }
 
     private void callBroadcast(){
+        //send a broadcast to activities listener to download the events from google calendar
         Intent i = new Intent("GET_EVENTS");
         context.sendBroadcast(i);
     }

@@ -76,7 +76,11 @@ public class SpotifyPlayer{
 
     //Pause the current playing song
     public void pause(){
-        mSpotifyAppRemote.getPlayerApi().pause();
+        try {
+            mSpotifyAppRemote.getPlayerApi().pause();
+        } catch (Exception e){
+
+        }
     }
 
     //Start the thread to initialize the spotify player

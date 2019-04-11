@@ -1,7 +1,7 @@
 package com.example.nicholasanton.myapplication.Services;
 
 /**
- * Used to get the location of the user every period of time
+ * This class is used to get the current location of the user by using the GPS
  * */
 
 import android.annotation.SuppressLint;
@@ -43,11 +43,11 @@ public class LocationTrack extends Service implements LocationListener {
             LocationManager locationManager = (LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
 
-            // get GPS status
+            // gets the GPS status
             boolean checkGPS = locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-            // get network provider status
+            // gets the network provider status
             boolean checkNetwork = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
@@ -57,7 +57,7 @@ public class LocationTrack extends Service implements LocationListener {
             } else {
                 this.canGetLocation = true;
 
-                // if GPS Enabled get lat/long using GPS Services
+                // if the GPS is Enabled get the lat & lng using the GPS Services
                 if (checkGPS) {
                     locationManager.requestLocationUpdates(
                             LocationManager.GPS_PROVIDER,
@@ -79,6 +79,7 @@ public class LocationTrack extends Service implements LocationListener {
         }
     }
 
+    //get longitude from the location object loc
     public double getLongitude() {
         if (loc != null) {
             longitude = loc.getLongitude();
@@ -86,6 +87,7 @@ public class LocationTrack extends Service implements LocationListener {
         return longitude;
     }
 
+    //get latitude from the location object loc
     public double getLatitude() {
         if (loc != null) {
             latitude = loc.getLatitude();
@@ -93,6 +95,7 @@ public class LocationTrack extends Service implements LocationListener {
         return latitude;
     }
 
+    //Create a datahandler object so we can insert lines into the console
     @Override
     public void onCreate() {
         db = new DataHandler(this);
@@ -103,27 +106,28 @@ public class LocationTrack extends Service implements LocationListener {
         return this.canGetLocation;
     }
 
+    //Creates an alert dialog that will allow the user to enable gps if wanted
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
         alertDialog.setTitle("GPS is not Enabled!");
         alertDialog.setMessage("Do you want to turn on GPS?");
-
+        //Listens if the user clicks yes and if so brings the settings for location on the screen
         alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);
             }
         });
-
+        //Listens if the user clicks no and if so closes the dialog
         alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-
         alertDialog.show();
     }
 
+    //AUTO-GENERATED
     @Override
     public IBinder onBind(Intent intent) {
         return null;

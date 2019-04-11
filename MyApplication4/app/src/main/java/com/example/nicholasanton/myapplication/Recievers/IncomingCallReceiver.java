@@ -19,17 +19,17 @@ import com.example.nicholasanton.myapplication.Services.AutoReplyService;
 
 import java.lang.reflect.Method;
 
-import com.example.nicholasanton.myapplication.ITelephony;
-
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.callReply;
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.drivingService;
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.inMeeting;
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.runningService;
 import static com.example.nicholasanton.myapplication.Views.ActivitesListeners.cyclingService;
 
+
+
 public class IncomingCallReceiver extends BroadcastReceiver {
     private TelephonyManager tm;
-    private ITelephony telephonyService;
+    private com.android.internal.telephony.ITelephony telephonyService;
     private DataHandler db;
     //Listener for the call
     @Override
@@ -46,7 +46,7 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                 try {
                     @SuppressLint("PrivateApi") Method m = tm.getClass().getDeclaredMethod("getITelephony");
                     m.setAccessible(true);
-                    telephonyService = (ITelephony) m.invoke(tm);
+                    telephonyService = (com.android.internal.telephony.ITelephony) m.invoke(tm);
                     if ((number != null)) {
                         //If one of the services are running then the call will end
                         if (runningService || cyclingService  || drivingService || inMeeting) {
