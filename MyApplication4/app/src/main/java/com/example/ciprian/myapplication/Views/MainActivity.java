@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final Button PasswordBtn = findViewById(R.id.ForgotPassword);
+        final Button PasswordBtn = findViewById(R.id.btnForgotPassword);
         PasswordBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 db.insertLog("Clicked Forgot Password");
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         int MY_PERMISSIONS_REQUEST_SMS_RECEIVE = 10;
         if (requestCode == MY_PERMISSIONS_REQUEST_SMS_RECEIVE) {
-            Log.i("TAG", "MY_PERMISSIONS_REQUEST_SMS_RECEIVE --> YES");
+            Log.i("MainActivity", "MY_PERMISSIONS_REQUEST_SMS_RECEIVE --> YES");
         }
     }
 }

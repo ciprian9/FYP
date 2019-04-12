@@ -328,7 +328,7 @@ public class MapActivity extends AppCompatActivity {
             }
         } catch (IllegalArgumentException e) {
             db.insertLog("Reciever is already unregistered");
-            Log.i("Receiver", "Reciver is already unregistered");
+            Log.i("MapActivity", "Reciver is already unregistered");
             receiver = null;
         }
     }
