@@ -43,7 +43,11 @@ public class AutoReplyService extends Service {
         if (isMyServiceRunning(Running_Policy_Service.class) || isMyServiceRunning(Cycling_Policy_Service.class) || isMyServiceRunning(Driving_Policy_Service.class) || inMeeting) {
             db.insertLog("Replied to Text");
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(sender, null, message, null, null);
+            if(message == null) {
+                smsManager.sendTextMessage(sender, null, "I am busy at the moment I will call you soon", null, null);
+            }else{
+                smsManager.sendTextMessage(sender, null, message, null, null);
+            }
         }
     }
 

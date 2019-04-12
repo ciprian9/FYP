@@ -31,12 +31,15 @@ public class CLocation extends Location {
     @Override
     public float distanceTo(Location dest) {
         // TODO Auto-generated method stub
-        float nDistance = super.distanceTo(dest);
-        if(this.getUseMetricUnits())
-        {
-            nDistance = nDistance * 3.28083989501312f;
+        if(dest != null) {
+            float nDistance = super.distanceTo(dest);
+            if (this.getUseMetricUnits()) {
+                nDistance = nDistance * 3.28083989501312f;
+            }
+            return nDistance;
+        }else{
+            return 0;
         }
-        return nDistance;
     }
 
     //gets accuracy of a user

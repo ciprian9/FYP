@@ -4,6 +4,7 @@ package com.example.ciprian.myapplication.Views;
  * Starting activity that lets the user login
  * */
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -65,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION,
                 android.Manifest.permission.READ_PHONE_STATE,
-                android.Manifest.permission.READ_CONTACTS
+                android.Manifest.permission.READ_CONTACTS,
+                android.Manifest.permission.SEND_SMS,
+                Manifest.permission.CALL_PHONE
         };
 
         if(!hasPermissions(this, PERMISSIONS)){

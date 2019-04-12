@@ -38,18 +38,22 @@ public class TextToSpeechService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
-        Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
-        db = new DataHandler(getApplicationContext());
-        //read the phone number and message from the intent passed to this service
-        if (intent.getStringExtra("sender") != null){
-            sender = intent.getStringExtra("sender");
-        }
+        try {
+            super.onStartCommand(intent, flags, startId);
+            Toast.makeText(this, "Service Has Started", Toast.LENGTH_SHORT).show();
+            db = new DataHandler(getApplicationContext());
+            //read the phone number and message from the intent passed to this service
+            if (intent.getStringExtra("sender") != null) {
+                sender = intent.getStringExtra("sender");
+            }
 
-        if (intent.getStringExtra("message") != null){
-            smsMessage = intent.getStringExtra("message");
+            if (intent.getStringExtra("message") != null) {
+                smsMessage = intent.getStringExtra("message");
+            }
+            speakTheText();
+        }catch(Exception e){
+            Log.e("TTS", e.getMessage());
         }
-        speakTheText();
         return START_STICKY;
     }
 
@@ -111,6 +115,14 @@ public class TextToSpeechService extends Service {
             //stop TTS
             stopSelf();
         }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        repeatTTS.shutdown();
     }
 
     //Sets some parameters required for TTS to work properly

@@ -133,6 +133,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
     private SpotifyPlayer spotifyPlayer;
     private DataHandler db;
     private int dndStatus;
+    private Button btnStop;
 
     @Inject
     HomePresenter presenter;
@@ -301,6 +302,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View view) {
+                    btnStop.callOnClick();
                     getWalkingSettings(4);
                     db.insertLog("Test Driving Started\n");
                 }
@@ -312,6 +314,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View view) {
+                    btnStop.callOnClick();
                     getWalkingSettings(3);
                     db.insertLog("Test Cycling Started\n");
                 }
@@ -323,6 +326,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View view) {
+                    btnStop.callOnClick();
                     getWalkingSettings(1);
                     db.insertLog("Test Walking Started\n");
                 }
@@ -334,12 +338,13 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View view) {
+                    btnStop.callOnClick();
                     getWalkingSettings(2);
                     db.insertLog("Test Running Started\n");
                 }
             });
 
-            Button btnStop = findViewById(R.id.btnStop);
+            btnStop = findViewById(R.id.btnStop);
             btnStop.setVisibility(View.VISIBLE);
             btnStop.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.M)
