@@ -26,7 +26,7 @@ public class Timer_Service extends Service{
         db.insertLog("Timer Service Started\n");
         Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
         //set the timer in order to check for upcoming events
-        timer.scheduleAtFixedRate(updateProfile, 0, 10000);
+        timer.scheduleAtFixedRate(updateProfile, 0, 100000);
 
     }
 

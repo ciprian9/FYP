@@ -62,14 +62,14 @@ public class IncomingCallReceiver extends BroadcastReceiver {
                 } catch (Exception e) {
                     //Will run only if there is a problem inside of the code insude abce
                     db.insertLog("Error Inside Call Code");
-                    Log.e("TEST : ", e.getMessage());
+                    Log.e("IncomingCallReceiver : ", e.getMessage());
                     System.out.print(e.toString());
                 }
             }
         } catch (Exception e) {
             //Will only run if there is a problem inside of the PHP Script
             db.insertLog("Error Inside Calling Code");
-            Log.e("TEST : ", e.getMessage());
+            Log.e("IncomingCallReceiver : ", e.getMessage());
         }
     }
 

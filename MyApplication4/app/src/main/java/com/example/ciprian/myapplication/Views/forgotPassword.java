@@ -38,6 +38,7 @@ public class forgotPassword extends AppCompatActivity {
     private String name;
     private String secAns;
     private String secQue;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,16 +80,22 @@ public class forgotPassword extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            String password = jsonObject.getString("password");
+                                try {
+                                    password = jsonObject.getString("password");
+                                }catch (Exception e){
+                                    password = "";
+                                }
                             if (password.length() > 1){
                                 Intent i = new Intent(forgotPassword.this, ChangePassword.class);
                                 i.putExtra("username", name);
                                 i.putExtra("disable", true);
                                 startActivity(i);
                                 finish();
+                            }else{
+                                Toast.makeText(getApplicationContext(), "Wrong Credentials. Please try again!", Toast.LENGTH_LONG).show();
                             }
                         }catch(JSONException e){
-                            Log.e("TEST : ", e.getMessage());
+                            Log.e("forgotpw : ", e.getMessage());
                         }
 
                     }
@@ -96,7 +103,7 @@ public class forgotPassword extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("TEST : ", error.getMessage());
+                        Log.e("forgotpw : ", error.getMessage());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }){

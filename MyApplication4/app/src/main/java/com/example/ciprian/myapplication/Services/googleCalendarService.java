@@ -91,7 +91,7 @@ public class googleCalendarService extends Service {
                             switch (anAction){
                                 //Checks if user has a token
                                 case 0:
-                                    boolean bool = jsonObject.getBoolean("exists");
+                                    boolean bool = jsonObject.getBoolean("exist");
                                     if (bool){
                                         googleCalendarConnection(GOOGLEROOTURL+"getEvents.php", 3);
                                     } else {
@@ -120,43 +120,47 @@ public class googleCalendarService extends Service {
                                     break;
                                 //Get the events of the user in the calendar
                                 case 3:
-                                    JSONArray the_json_array = jsonObject.getJSONArray("events");
-                                    int len = the_json_array.length();
-                                    for (int i = 0; i < len; i++) {
-                                        JSONObject another_json_object = the_json_array.getJSONObject(i);
+                                        if (!(jsonObject.getString("events").equals("null"))){
+                                            JSONArray the_json_array = jsonObject.getJSONArray("events");
+                                            int len = the_json_array.length();
+                                            for (int i = 0; i < len; i++) {
+                                                JSONObject another_json_object = the_json_array.getJSONObject(i);
 
-                                        String toSplit = another_json_object.getString("startTime");
-                                        String result[] = toSplit.split("T");
-                                        String returnValue = result[result.length -1];
-                                        returnValue = returnValue.replaceFirst(".$","");
-                                        String results[] = returnValue.split(":");
-                                        int hour = Integer.parseInt(results[0]);
-                                        int minute = Integer.parseInt(results[1]);
-                                        int second = Integer.parseInt(results[2]);
+                                                String toSplit = another_json_object.getString("startTime");
+                                                String result[] = toSplit.split("T");
+                                                String returnValue = result[result.length - 1];
+                                                returnValue = returnValue.replaceFirst(".$", "");
+                                                returnValue = returnValue.replaceAll("\\+", ":");
+                                                String results[] = returnValue.split(":");
+                                                int hour = Integer.parseInt(results[0]);
+                                                int minute = Integer.parseInt(results[1]);
+                                                int second = Integer.parseInt(results[2]);
 
-                                        toSplit = another_json_object.getString("endTime");
-                                        result = toSplit.split("T");
-                                        returnValue = result[result.length -1];
-                                        returnValue = returnValue.replaceFirst(".$","");
-                                        results = returnValue.split(":");
-                                        int ehour = Integer.parseInt(results[0]);
-                                        int eminute = Integer.parseInt(results[1]);
-                                        int esecond = Integer.parseInt(results[2]);
+                                                toSplit = another_json_object.getString("endTime");
+                                                result = toSplit.split("T");
+                                                returnValue = result[result.length - 1];
+                                                returnValue = returnValue.replaceFirst(".$", "");
+                                                returnValue = returnValue.replaceAll("\\+", ":");
+                                                results = returnValue.split(":");
+                                                int ehour = Integer.parseInt(results[0]);
+                                                int eminute = Integer.parseInt(results[1]);
+                                                int esecond = Integer.parseInt(results[2]);
 
-                                        Intent local = new Intent();
-                                        local.setAction("NOW");
-                                        local.putExtra("summary", another_json_object.getString("summary"));
-                                        local.putExtra("sHour", hour);
-                                        local.putExtra("sMins", minute);
-                                        local.putExtra("sSecs", second);
-                                        local.putExtra("eHour", ehour);
-                                        local.putExtra("eMins", eminute);
-                                        local.putExtra("eSecs", esecond);
-                                        getApplicationContext().sendBroadcast(local);
-                                    }
-                            }
-                        }catch(JSONException e){
-                            Log.e("TEST : ", e.getMessage());
+                                                Intent local = new Intent();
+                                                local.setAction("NOW");
+                                                local.putExtra("summary", another_json_object.getString("summary"));
+                                                local.putExtra("sHour", hour);
+                                                local.putExtra("sMins", minute);
+                                                local.putExtra("sSecs", second);
+                                                local.putExtra("eHour", ehour);
+                                                local.putExtra("eMins", eminute);
+                                                local.putExtra("eSecs", esecond);
+                                                getApplicationContext().sendBroadcast(local);
+                                            }
+                                        }
+                                }
+                            }catch(JSONException e){
+                            Log.e("CalendarService : ", e.getMessage());
                             db.insertLog("Error in google calendar code");
                         }
 
@@ -166,7 +170,7 @@ public class googleCalendarService extends Service {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         db.insertLog("Failed inside of calendar script");
-                        Log.e("TEST : ", error.getMessage());
+                        Log.e("CalendarService : ", error.getMessage());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }){

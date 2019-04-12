@@ -113,7 +113,7 @@ public class getTheWeather extends Service {
                 sendNotification(temp);
             } catch (JSONException e) {
                 //If any errors occur then it will log the error
-                Log.d("TEST : ", e.toString());
+                Log.d("getTheWeather : ", e.toString());
             }
         }
     }

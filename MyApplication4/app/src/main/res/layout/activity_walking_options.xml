@@ -48,7 +48,6 @@
         android:text="@string/swTime" />
 
     <Button
-        android:id="@+id/btnOpenMap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/swRecordRoute"
@@ -67,7 +66,6 @@
         android:text="@string/switchRecordRoute" />
 
     <Button
-        android:id="@+id/button10"
         android:layout_width="133dp"
         android:layout_height="122dp"
         android:layout_centerHorizontal="true"

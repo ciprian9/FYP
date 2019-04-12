@@ -116,14 +116,14 @@ public class TextToSpeechService extends Service {
                 if (status == TextToSpeech.SUCCESS){
                     int result = repeatTTS.setLanguage(Locale.UK);
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
-                        Log.e("tts", "Language not supported");
+                        Log.e("tts :", "Language not supported");
                     }
                     else{
                         speak();
                     }
                 }
                 else{
-                    Log.e("tts", "Initialisation Failed");
+                    Log.e("tts :", "Initialisation Failed");
                 }
             }
         });

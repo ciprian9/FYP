@@ -29,10 +29,6 @@
     <string name="btnRegister">Register</string>
     <string name="chkRememberMe">Remember Me</string>
     <string name="etPassword">Password</string>
-    <string name="btnWalking">Walking Preferences</string>
-    <string name="btnRunning">Running Preferences</string>
-    <string name="btnCycling">Cycling Preferences</string>
-    <string name="btnDriving">Driving Preferences</string>
     <string name="btnTestDriving">TEST DRIVING</string>
     <string name="btnTestWalking">TEST WALKING</string>
     <string name="btnTestCycling">TEST CYCLING</string>

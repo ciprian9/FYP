@@ -151,9 +151,10 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
 
         if (dndStatus == 0) {
             requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+            turnOffDoNotDisturb();
         }
         if (dndStatus == 1 || dndStatus == 2 || dndStatus == 3) {
-            turnOffDoNotDisturb();
+            requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
         }
 
         if (savedInstanceState == null) {
@@ -170,7 +171,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             }
         }else{
             db.insertLog("Gmail is NULL");
-            Log.d("TEST : ", "GMAIL IS NULL");
+            Log.d("Activity Gmail : ", "GMAIL IS NULL");
         }
 
         if (username.equals("local")){
@@ -186,30 +187,42 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             @SuppressLint("DefaultLocale")
             @Override
             public void onLocationChanged(final Location location) {
-                Log.d("TEST : ", "Latitude HOME: "+String.format("%.3f",loc1.getLatitude()));
+                Log.d("Activity Location : ", "Latitude HOME: "+String.format("%.3f",loc1.getLatitude()));
                 db.insertLog("Checking location");
 
                 if (workLL != null) {
                     if (location.distanceTo(workLL) < 40){
-                        Log.d("TEST : ", "Arrived to work");
+                        Log.d("Activity Location : ", "Arrived to work");
                         db.insertLog("Work found request do not disturb");
                         if (dndStatus == 0) {
                             requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+                            inMeeting = true;
+                        }else{
+                        if (dndStatus != 0){
+                            turnOffDoNotDisturb();
+                            inMeeting = false;
                         }
+                    }
                     }
                 }else{
                     if(location.distanceTo(loc1) < 40){
-                        Log.d("TEST : ", "Arrived to Work");
+                        Log.d("Activity Location : ", "Arrived to Work");
                         db.insertLog("Work found request do not disturb");
                         if (dndStatus == 0) {
                             requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
+                            inMeeting = true;
+                        }
+                    }else{
+                        if (dndStatus != 0){
+                            turnOffDoNotDisturb();
+                            inMeeting = false;
                         }
                     }
                 }
 
                 if (homeLL != null) {
                     if (location.distanceTo(homeLL) < 40){
-                        Log.d("TEST : ", "Arrived Home");
+                        Log.d("Activity Location : ", "Arrived Home");
                         db.insertLog("Arrived Home\n Turning ON WIFI");
                         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                         if (!wifiManager.isWifiEnabled()) {
@@ -384,7 +397,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
 
                     public void onConnected(SpotifyAppRemote spotifyAppRemote) {
                         mSpotifyAppRemote = spotifyAppRemote;
-                        Log.d("TEST : ", "Connected!");
+                        Log.d("Activity Spotify : ", "Connected!");
                         db.insertLog("Spotify Connected\n");
 
                         AuthenticationRequest.Builder builder =
@@ -398,7 +411,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     }
 
                     public void onFailure(Throwable throwable) {
-                        Log.e("TEST : ", throwable.getMessage(), throwable);
+                        Log.e("Activity Spotify : ", throwable.getMessage(), throwable);
                         db.insertLog("SPOTIFY ERROR CONNECTING");
                     }
                 });
@@ -557,16 +570,16 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                             JSONObject jsonObject = new JSONObject(response);
                             if (!jsonObject.getBoolean("error")) {
                                 db.insertLog("Gmail added\n");
-                                Log.e("TEST : ", jsonObject.getString("message"));
+                                Log.e("Activity Gmail : ", jsonObject.getString("message"));
                                 Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             } else {
                                 Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
-                                Log.e("TEST : ", jsonObject.getString("message"));
+                                Log.e("Activity Gmail : ", jsonObject.getString("message"));
                                 db.insertLog("Failed Adding Gmail\n");
                             }
 
                         } catch (JSONException e) {
-                            Log.e("TEST : ",e.getMessage());
+                            Log.e("Activity Gmail : ",e.getMessage());
                         }
 
                     }
@@ -575,7 +588,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         db.insertLog("Failed Using Update GMail Script\n");
-                        Log.e("TEST : ",error.getMessage());
+                        Log.e("Activity Gmail : ",error.getMessage());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -1156,6 +1169,10 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         return c.getTimeInMillis();
     }
 
+    private boolean hasGmail(){
+        return gmail != null;
+    }
+
     //gets google calendar events using gmail address
     private void getCalendarEvents() {
         IntentFilter filter = new IntentFilter();
@@ -1211,7 +1228,9 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             Intent i = new Intent(this, googleCalendarService.class);
             i.putExtra("calendarid", gmail);
             i.putExtra("username", username);
-            startService(i);
+            if(hasGmail()) {
+                startService(i);
+            }
         }
     }
 

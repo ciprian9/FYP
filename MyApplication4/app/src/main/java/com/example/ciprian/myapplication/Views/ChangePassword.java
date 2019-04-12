@@ -51,9 +51,9 @@ public class ChangePassword extends AppCompatActivity {
         }
 
         if (disable){
-            oldPswd.setEnabled(false);
+            oldPswd.setVisibility(View.GONE);
         } else {
-            oldPswd.setEnabled(true);
+            oldPswd.setVisibility(View.VISIBLE);
         }
 
         Button btnChange = findViewById(R.id.ChangePwd);
@@ -92,7 +92,7 @@ public class ChangePassword extends AppCompatActivity {
                                     break;
                             }
                         }catch(JSONException e){
-                            Log.e("TEST : ", e.getMessage());
+                            Log.e("changePw : ", e.getMessage());
                         }
 
                     }
