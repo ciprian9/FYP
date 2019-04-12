@@ -1,4 +1,4 @@
-package com.android.internal.telephony;
+package com.example.ciprian.myapplication;
 
 /**
  * Interface that has procedures for calls
