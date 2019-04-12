@@ -17,6 +17,11 @@
             app:showAsAction="never" />
 
         <item
+            android:id="@+id/HomeLocation"
+            android:title="@string/itmHLoc"
+            app:showAsAction="never" />
+
+        <item
             android:id="@+id/MapPedometer"
             android:title="@string/btnOpenMap"
             app:showAsAction="never" />

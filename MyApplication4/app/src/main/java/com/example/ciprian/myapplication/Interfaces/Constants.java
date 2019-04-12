@@ -10,7 +10,7 @@ public interface Constants {
     String AUTO_REPLY_SETTING = "autoReply";
     String CALL_REPLY_SETTING = "callReply";
     String CALL_REPLY_MESSAGE = "Sorry, I'm a bit busy.";
-    String MEETING_MESSAGE = "Sorry, I'm in a meeting now.";
+    String MEETING_MESSAGE = "Sorry, I'm at work right now, I'll call you later.";
 
     int COLUMN_USERNAME = 1;
     int COLUMN_PASSWORD = 2;

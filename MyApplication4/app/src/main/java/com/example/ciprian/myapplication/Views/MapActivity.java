@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -104,6 +105,19 @@ public class MapActivity extends AppCompatActivity {
                 dist = extras.getBoolean(Constants.DISTANCE_INTENT);
                 policyID = extras.getInt(Constants.POLICY_ID);
             }
+        }
+
+        TextView title = findViewById(R.id.tvTitle);
+        if (policyID == 1) {
+            title.setText("Walking Service");
+        } else if (policyID == 2) {
+            title.setText("Running Service");
+        } else if (policyID == 3) {
+            title.setText("Cycling Service");
+        } else if (policyID == 4) {
+            title.setText("Driving Service");
+        } else if (policyID == 5) {
+            title.setText("No Service Running");
         }
 
         receiver = new NewLocationReciever();
@@ -236,8 +250,8 @@ public class MapActivity extends AppCompatActivity {
 
                 return;
             }
-            String locationProvider = LocationManager.NETWORK_PROVIDER;
-            Location location = locationManager.getLastKnownLocation(locationProvider);
+            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(18).bearing(location.getBearing()).tilt(0).build();

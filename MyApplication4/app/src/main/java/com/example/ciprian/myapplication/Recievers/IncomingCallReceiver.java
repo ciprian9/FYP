@@ -14,7 +14,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.ciprian.myapplication.DataHandler;
-import com.example.ciprian.myapplication.ITelephony;
 import com.example.ciprian.myapplication.Interfaces.Constants;
 import com.example.ciprian.myapplication.Services.AutoReplyService;
 
@@ -25,6 +24,7 @@ import static com.example.ciprian.myapplication.Views.ActivitesListeners.driving
 import static com.example.ciprian.myapplication.Views.ActivitesListeners.inMeeting;
 import static com.example.ciprian.myapplication.Views.ActivitesListeners.runningService;
 import static com.example.ciprian.myapplication.Views.ActivitesListeners.cyclingService;
+import com.android.internal.telephony.ITelephony;
 
 
 
