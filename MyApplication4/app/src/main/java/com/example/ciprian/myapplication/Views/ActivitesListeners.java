@@ -7,6 +7,7 @@ package com.example.ciprian.myapplication.Views;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -191,18 +192,28 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 db.insertLog("Checking location");
 
                 if (workLL != null) {
-                    if (location.distanceTo(workLL) < 40){
+                    if (location.distanceTo(workLL) < 40) {
                         Log.d("Activity Location : ", "Arrived to work");
                         db.insertLog("Work found request do not disturb");
                         if (dndStatus == 0) {
                             requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
                             inMeeting = true;
-                        }else{
-                        if (dndStatus != 0){
+                            try {
+                                dndStatus = Settings.Global.getInt(getContentResolver(), "zen_mode");
+                            } catch (Settings.SettingNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }else{
+                        if (dndStatus != 0) {
                             turnOffDoNotDisturb();
                             inMeeting = false;
+                            try {
+                                dndStatus = Settings.Global.getInt(getContentResolver(), "zen_mode");
+                            } catch (Settings.SettingNotFoundException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
                     }
                 }else{
                     if(location.distanceTo(loc1) < 40){
@@ -211,11 +222,21 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                         if (dndStatus == 0) {
                             requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
                             inMeeting = true;
+                            try {
+                                dndStatus = Settings.Global.getInt(getContentResolver(), "zen_mode");
+                            } catch (Settings.SettingNotFoundException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }else{
-                        if (dndStatus != 0){
+                        if (dndStatus != 0) {
                             turnOffDoNotDisturb();
                             inMeeting = false;
+                            try {
+                                dndStatus = Settings.Global.getInt(getContentResolver(), "zen_mode");
+                            } catch (Settings.SettingNotFoundException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -227,6 +248,13 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                         if (!wifiManager.isWifiEnabled()) {
                             wifiManager.setWifiEnabled(true);
+                        }
+                    } else {
+                        Log.d("Activity Location : ", "Left Home");
+                        db.insertLog("Left Home\n Turning OFF WIFI");
+                        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                        if (wifiManager.isWifiEnabled()) {
+                            wifiManager.setWifiEnabled(false);
                         }
                     }
                 }
@@ -463,8 +491,28 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         i.putExtra(Constants.PEDOMETER_INTENT, pedometer);
         i.putExtra(Constants.TIME_INTENT, timeRecord);
         i.putExtra(Constants.DISTANCE_INTENT, dist_speed);
-        i.putExtra(Constants.POLICY_ID, 1);
+        if (isTheServiceRunning(Walking_Policy_Service.class)) {
+            i.putExtra(Constants.POLICY_ID, 1);
+        } else if (isTheServiceRunning(Running_Policy_Service.class)) {
+            i.putExtra(Constants.POLICY_ID, 2);
+        } else if (isTheServiceRunning(Cycling_Policy_Service.class)) {
+            i.putExtra(Constants.POLICY_ID, 3);
+        } else if (isTheServiceRunning(Driving_Policy_Service.class)) {
+            i.putExtra(Constants.POLICY_ID, 4);
+        } else {
+            i.putExtra(Constants.POLICY_ID, 5);
+        }
         startActivity(i);
+    }
+
+    private boolean isTheServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //Get latitude and longitude from an address
@@ -657,7 +705,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                     });
             AlertDialog alert = builder.create();
             alert.show();
-        } else if (id == R.id.School_WorkLocation){
+        } else if (id == R.id.School_WorkLocation) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Use current location or type in address?")
                     .setCancelable(false)
@@ -678,6 +726,54 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                                                 loc1.setLongitude(latlng1.longitude);
                                                 loc1.setLatitude(latlng1.latitude);
                                                 SetUpLocationwork(latlng1.latitude + "," + latlng1.longitude);
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .create();
+                            SecondDialog.show();
+                        }
+                    })
+                    .setNegativeButton("Here", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            LocationTrack locationTrack = new LocationTrack(ActivitesListeners.this);
+
+                            if (locationTrack.canGetLocation()) {
+                                double longitude = locationTrack.getLongitude();
+                                double latitude = locationTrack.getLatitude();
+
+                                loc1.setLatitude(latitude);
+                                loc1.setLongitude(longitude);
+
+                                SetUpLocationwork(loc1.getLatitude() + "," + loc1.getLongitude());
+                            } else {
+                                locationTrack.showSettingsAlert();
+                            }
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else if (id == R.id.HomeLocation){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Use current location or type in address?")
+                    .setCancelable(false)
+                    .setPositiveButton("Address", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                            final EditText taskEditText = new EditText(ActivitesListeners.this);
+                            final AlertDialog SecondDialog = new AlertDialog.Builder(ActivitesListeners.this)
+                                    .setTitle("Input Address :")
+                                    .setMessage("")
+                                    .setView(taskEditText)
+                                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            String address = taskEditText.getText().toString();
+                                            LatLng latlng1 = getLocationFromAddress(getApplicationContext(), address);
+                                            if (latlng1 != null) {
+                                                loc1.setLongitude(latlng1.longitude);
+                                                loc1.setLatitude(latlng1.latitude);
+                                                SetUpLocation(latlng1.latitude + "," + latlng1.longitude);
                                             }
                                         }
                                     })

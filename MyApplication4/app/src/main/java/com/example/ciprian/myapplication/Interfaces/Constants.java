@@ -10,7 +10,7 @@ public interface Constants {
     String AUTO_REPLY_SETTING = "autoReply";
     String CALL_REPLY_SETTING = "callReply";
     String CALL_REPLY_MESSAGE = "Sorry, I'm a bit busy.";
-    String MEETING_MESSAGE = "Sorry, I'm in a meeting now.";
+    String MEETING_MESSAGE = "Sorry, I'm at work right now, I'll call you later.";
 
     int COLUMN_USERNAME = 1;
     int COLUMN_PASSWORD = 2;
@@ -45,7 +45,7 @@ public interface Constants {
     String DB_FLAG = "status";
 
     //URLS for the user,setting and location tables
-    String ROOT_URL = "http://192.168.0.10/Android/v1/";
+    String ROOT_URL = "http://192.168.0.241/Android/v1/";
     String URL_REGISTER = ROOT_URL+"registerUser.php";
     String URL_LOGIN = ROOT_URL+"userLogin.php";
     String URL_SAVE_SETTING = ROOT_URL+"saveSetting.php";
@@ -57,7 +57,7 @@ public interface Constants {
     String URL_READ_LOCATION = ROOT_URL+"readLocation.php";
 
     //URL for the Google Calendar php files
-    String GOOGLEROOTURL = "http://192.168.0.10/Android/php/";
+    String GOOGLEROOTURL = "http://192.168.0.241/Android/php/";
 
     //Default Night Morning Routines
     String defaultMorning = "8:0";

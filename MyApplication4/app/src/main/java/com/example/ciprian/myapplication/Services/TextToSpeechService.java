@@ -8,12 +8,15 @@ import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.ciprian.myapplication.Classes.SpotifyPlayer;
 import com.example.ciprian.myapplication.DataHandler;
+import com.spotify.android.appremote.api.SpotifyAppRemote;
 
 import java.util.Locale;
 
@@ -103,6 +106,8 @@ public class TextToSpeechService extends Service {
         //once it is done speaking
         if (!repeatTTS.isSpeaking()){
             Toast.makeText(this, "Stop Talking", Toast.LENGTH_SHORT).show();
+            AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
             //stop TTS
             stopSelf();
         }
@@ -119,6 +124,8 @@ public class TextToSpeechService extends Service {
                         Log.e("tts :", "Language not supported");
                     }
                     else{
+                        AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+                        audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
                         speak();
                     }
                 }

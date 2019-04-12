@@ -46,6 +46,7 @@
     <string name="tvSpeed">Speed:</string>
     <string name="itmGmail">Change Gmail</string>
     <string name="itmSWLoc">Set School/Work Location</string>
+    <string name="itmHLoc">Set Home Address</string>
     <string name="itmConsole">Console</string>
     <string name="itmClearDB">Clear Database</string>
     <string name="itmSetMorningNight">Set Morning &amp; Night Times</string>
