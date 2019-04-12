@@ -23,7 +23,10 @@
    		public function tokenExists($username){
    			$tokenPath = $username;
 			$tokenPath = $tokenPath.'/token.json';
-   			return file_exists($tokenPath);
+			$response['exist'] = file_exists($tokenPath);
+			$response['path'] = $tokenPath;
+			$response['name'] = $username;
+   			return $response;
    		}
 
    		public function createToken($username, $tokenCode){

@@ -13,13 +13,13 @@
 			$this->con = $db->connect();
 		}
 
-		public function createUser($username, $pass, $email){
+		public function createUser($username, $pass, $email, $secQue, $secAns){
 			if($this->isUserExist($username, $email)){
 				return 0;
 			}else{
 				$password = md5($pass);
-				$stmt = $this->con->prepare("INSERT INTO `Accounts` (`id`, `Username`, `Email`, `Password`) VALUES (NULL, ?, ?, ?);");
-				$stmt->bind_param("sss", $username, $email, $password);
+				$stmt = $this->con->prepare("INSERT INTO `accounts`(`id`, `Username`, `Email`, `Password`, `secretQuestion`, `secretAnswer`) VALUES (NULL, ?, ?, ?, ?, ?);");
+				$stmt->bind_param("sssss", $username, $email, $password, $secQue, $secAns);
 				if($stmt->execute()){
 					return 1;
 				}else{
@@ -83,7 +83,7 @@
 		}
 
 		public function getSettingByFields($accountid, $policyid, $name){
-			$stmt = $this->con->prepare("SELECT * FROM setting WHERE accountid = ? AND policyid = ? AND name = ?");
+			$stmt = $this->con->prepare("SELECT * FROM setting WHERE accountid = ? AND policyid = ? AND Name = ?");
 			$stmt->bind_param("sss", $accountid, $policyid, $name);
 			$stmt->execute();
 			return $stmt->get_result()->fetch_assoc();
@@ -162,5 +162,32 @@
 			$stmt->execute();
 			return $stmt->get_result()->fetch_assoc();
 		}
-	}
 
+		public function checkPassword($userid){
+			$stmt = $this->con->prepare("SELECT username FROM accounts WHERE username = ?");
+			$stmt->bind_param("s", $userid);
+			$stmt->execute();
+			return $stmt->get_result()->fetch_assoc();
+		}
+
+		public function updatePassword($userid, $newpassword){
+			$stmt = $this->con->prepare("UPDATE `accounts` SET `password`=? WHERE username = ?");
+			if(empty($newpassword)){
+				return 0;
+			}
+			$password = md5($newpassword);
+			$stmt->bind_param("ss", $password, $userid);
+			if($stmt->execute()){
+				return 1;
+			}else{
+				return 0;
+			}
+		}
+
+		public function forgotPassword($username, $secQue, $secAns){
+			$stmt = $this->con->prepare("SELECT password FROM accounts WHERE username = ? AND secretQuestion = ? AND secretAnswer = ?");
+			$stmt->bind_param("sss", $username, $secQue, $secAns);
+			$stmt->execute();
+			return $stmt->get_result()->fetch_assoc();
+		}
+	}

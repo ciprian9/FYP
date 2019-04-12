@@ -7,7 +7,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	if(
 		isset($_POST['username']) and 
 	         isset($_POST['password']) and 
-	              isset($_POST['email']))	
+	              isset($_POST['email']) and
+	              	isset($_POST['secretQuestion']) and
+	              	  isset($_POST['secretAnswer']))
 	    {
 		
 		$db = new DbOperation();
@@ -15,7 +17,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 		$result = $db->createUser(
 			 $_POST['username'],
 			 $_POST['password'],
-			 $_POST['email']
+			 $_POST['email'],
+			 $_POST['secretQuestion'],
+			 $_POST['secretAnswer']
 			 );
 
 		if($result == 1){
@@ -25,8 +29,11 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 			$response['error'] = true;
 			$response['message'] = "Some Error occurred please try again";
 		}elseif($result == 0){
+			$response['test'] = 'test';
 			$response['error'] = true;
 			$response['message'] = "Username or Email already used.";
+			$response['name'] = $_POST['username'];
+			$response['email'] = $_POST['email'];
 		}
 	
 
@@ -38,5 +45,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	$response['error'] = true;
 	$response['message'] = "Invalid Request";
 }
+
+	$response['name'] = $_POST['username'];
+	$response['email'] = $_POST['email'];
 
 echo json_encode($response);
