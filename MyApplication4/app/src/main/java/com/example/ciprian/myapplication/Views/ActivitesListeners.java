@@ -100,10 +100,11 @@ import butterknife.ButterKnife;
 import static com.example.ciprian.myapplication.Interfaces.Constants.defaultMorning;
 import static com.example.ciprian.myapplication.Interfaces.Constants.defaultNight;
 
-public class ActivitesListeners extends AppCompatActivity implements HomeView {
+public class ActivitesListeners extends AppCompatActivity implements HomeView{
     private int accountid;
     private String username;
     private String gmail;
+    private int ThePolicyID;
     private List<String> calendarList;
     private boolean musicPlayer = false, pedometer = false, timeRecord = false,
             dist_speed = false, recordRoute = false;
@@ -302,7 +303,13 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View view) {
-                    btnStop.callOnClick();
+                    StopWalkingPolicy();
+                    StopDrivingPolicy();
+                    try {
+                        spotifyPlayer.pause();
+                    }catch (Exception e){
+
+                    }
                     getWalkingSettings(4);
                     db.insertLog("Test Driving Started\n");
                 }
@@ -314,7 +321,13 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View view) {
-                    btnStop.callOnClick();
+                    StopWalkingPolicy();
+                    StopDrivingPolicy();
+                    try {
+                        spotifyPlayer.pause();
+                    }catch (Exception e){
+
+                    }
                     getWalkingSettings(3);
                     db.insertLog("Test Cycling Started\n");
                 }
@@ -326,7 +339,13 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View view) {
-                    btnStop.callOnClick();
+                    StopWalkingPolicy();
+                    StopDrivingPolicy();
+                    try {
+                        spotifyPlayer.pause();
+                    }catch (Exception e){
+
+                    }
                     getWalkingSettings(1);
                     db.insertLog("Test Walking Started\n");
                 }
@@ -338,7 +357,13 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View view) {
-                    btnStop.callOnClick();
+                    StopWalkingPolicy();
+                    StopDrivingPolicy();
+                    try {
+                        spotifyPlayer.pause();
+                    }catch (Exception e){
+
+                    }
                     getWalkingSettings(2);
                     db.insertLog("Test Running Started\n");
                 }
@@ -496,14 +521,14 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         i.putExtra(Constants.PEDOMETER_INTENT, pedometer);
         i.putExtra(Constants.TIME_INTENT, timeRecord);
         i.putExtra(Constants.DISTANCE_INTENT, dist_speed);
-        if (isTheServiceRunning(Walking_Policy_Service.class)) {
-            i.putExtra(Constants.POLICY_ID, 1);
-        } else if (isTheServiceRunning(Running_Policy_Service.class)) {
-            i.putExtra(Constants.POLICY_ID, 2);
-        } else if (isTheServiceRunning(Cycling_Policy_Service.class)) {
-            i.putExtra(Constants.POLICY_ID, 3);
-        } else if (isTheServiceRunning(Driving_Policy_Service.class)) {
-            i.putExtra(Constants.POLICY_ID, 4);
+        if (isTheServiceRunning(Walking_Policy_Service.class) || ThePolicyID == 1) {
+            i.putExtra(Constants.POLICY_ID, ThePolicyID);
+        } else if (isTheServiceRunning(Running_Policy_Service.class) || ThePolicyID == 2) {
+            i.putExtra(Constants.POLICY_ID, ThePolicyID);
+        } else if (isTheServiceRunning(Cycling_Policy_Service.class) || ThePolicyID == 3) {
+            i.putExtra(Constants.POLICY_ID, ThePolicyID);
+        } else if (isTheServiceRunning(Driving_Policy_Service.class) || ThePolicyID == 4) {
+            i.putExtra(Constants.POLICY_ID, ThePolicyID);
         } else {
             i.putExtra(Constants.POLICY_ID, 5);
         }
@@ -1054,6 +1079,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         if (dndStatus == 0) {
             requestDoNotDisturbPermissionOrSetDoNotDisturbApi23AndUp();
         }
+        ThePolicyID = 4;
         Intent intent = new Intent(this, Driving_Policy_Service.class);
         intent.putExtra(Constants.RECORD_ROUTE, recordRoute);
         startService(intent);
@@ -1064,6 +1090,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
 
     //Will start only when the user is cycling and will perform selected options
     private void StartCyclingService() {
+        ThePolicyID = 3;
         Intent intent = new Intent(this, Cycling_Policy_Service.class);
         intent.putExtra(Constants.RECORD_ROUTE, recordRoute);
         startService(intent);
@@ -1201,6 +1228,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             i.putExtra(Constants.POLICY_ID, 1);
             startService(i);
         }
+        ThePolicyID = 1;
         Intent intent = new Intent(this, Walking_Policy_Service.class);
         intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
         intent.putExtra(Constants.MUSIC_INTENT, musicPlayer);
@@ -1233,6 +1261,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
             i.putExtra(Constants.POLICY_ID, 2);
             startService(i);
         }
+        ThePolicyID = 2;
         Intent intent = new Intent(this, Running_Policy_Service.class);
         intent.putExtra(Constants.ACCOUNTID_INTENT, accountid);
         intent.putExtra(Constants.MUSIC_INTENT, musicPlayer);
@@ -1484,3 +1513,4 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView {
         }
     }
 }
+
