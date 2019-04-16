@@ -486,17 +486,17 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView{
         String nightHour = strings[0];
         String nightMin = strings[1];
 
-        AlarmManager alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getApplicationContext(), getTheWeather.class);
-        PendingIntent alarmIntent = PendingIntent.getService(getApplicationContext(), 0, intent, 0);
+        AlarmManager alarmMgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(morningHour));
-        calendar.set(Calendar.MINUTE, Integer.valueOf(morningMin));
+        Intent intent = new Intent(this, getTheWeather.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime()+calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, alarmIntent);
+        Calendar cal= Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, Integer.valueOf(morningHour));
+        cal.set(Calendar.MINUTE, Integer.valueOf(morningMin));
+        cal.set(Calendar.SECOND, 0);
+
+        alarmMgr.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime()+cal.getTimeInMillis(), pIntent);
 
         AlarmManager alarmMgr2 = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         Intent intent2 = new Intent(getApplicationContext(), bedtimeRoutineService.class);

@@ -104,24 +104,14 @@ public class TextToSpeechService extends Service {
         //use TTS to speak out the message
         repeatTTS.speak(TextMessage, TextToSpeech.QUEUE_FLUSH, null);
         //run indefinatly while the TTS is speaking
-        while (repeatTTS.isSpeaking()){
-
-        }
-        //once it is done speaking
-        if (!repeatTTS.isSpeaking()){
-            Toast.makeText(this, "Stop Talking", Toast.LENGTH_SHORT).show();
-            AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-            audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
-            //stop TTS
-            stopSelf();
-        }
     }
 
     @Override
     public void onDestroy()
     {
         super.onDestroy();
-
+        AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+        audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
         repeatTTS.shutdown();
     }
 
