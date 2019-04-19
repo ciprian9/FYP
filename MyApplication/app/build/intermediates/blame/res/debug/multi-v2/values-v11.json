@@ -1,0 +1,26 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\Users\\Fabian\\Desktop\\FYP-master\\MASTER\\FYP\\MyApplication\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v11\\values-v11.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Fabian\\.gradle\\caches\\transforms-1\\files-1.1\\play-services-appinvite-8.4.0.aar\\d7b5b8289b5d5ce9bb932307b6a24e15\\res\\values-v11\\appinvite_styles.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "4",
+                        "startOffsets": "101",
+                        "endColumns": "117",
+                        "endOffsets": "214"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "117",
+                        "endOffsets": "168"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -11,6 +11,7 @@ import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothHeadset;
 import android.content.BroadcastReceiver;
@@ -31,6 +32,7 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,12 +42,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.ciprian.myapplication.Classes.TimePickerFragment;
 import com.example.ciprian.myapplication.DataHandler;
 import com.example.ciprian.myapplication.Enums.ActivityType;
 import com.example.ciprian.myapplication.Interfaces.Constants;
@@ -54,6 +58,8 @@ import com.example.ciprian.myapplication.Interfaces.HomeView;
 import com.example.ciprian.myapplication.Classes.HomeViewModule;
 import com.example.ciprian.myapplication.R;
 import com.example.ciprian.myapplication.Classes.RequestHandler;
+import com.example.ciprian.myapplication.Recievers.MorningReciever;
+import com.example.ciprian.myapplication.Recievers.NightReciever;
 import com.example.ciprian.myapplication.Services.Cycling_Policy_Service;
 import com.example.ciprian.myapplication.Services.Driving_Policy_Service;
 import com.example.ciprian.myapplication.Services.LocationTrack;
@@ -78,6 +84,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -100,8 +107,10 @@ import butterknife.ButterKnife;
 import static com.example.ciprian.myapplication.Interfaces.Constants.defaultMorning;
 import static com.example.ciprian.myapplication.Interfaces.Constants.defaultNight;
 
-public class ActivitesListeners extends AppCompatActivity implements HomeView{
+public class ActivitesListeners extends AppCompatActivity implements HomeView, TimePickerDialog.OnTimeSetListener {
     private int accountid;
+    private boolean mornOrDay;
+    private boolean alarmSet = false;
     private String username;
     private String gmail;
     private int ThePolicyID;
@@ -410,7 +419,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView{
         mDispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
         Start();
 
-        setMorningNightRoutine(defaultMorning, defaultNight);
+        //setMorningNightRoutine(defaultMorning, defaultNight);
 
         final ImageButton walkingOptions = findViewById(R.id.walkingOptions);
         walkingOptions.setOnClickListener(new View.OnClickListener() {
@@ -488,7 +497,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView{
 
         AlarmManager alarmMgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
 
-        Intent intent = new Intent(this, getTheWeather.class);
+        Intent intent = new Intent(this, MorningReciever.class);
         PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
         Calendar cal= Calendar.getInstance();
@@ -496,16 +505,21 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView{
         cal.set(Calendar.MINUTE, Integer.valueOf(morningMin));
         cal.set(Calendar.SECOND, 0);
 
-        alarmMgr.set(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime()+cal.getTimeInMillis(), pIntent);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            alarmMgr.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + cal.getTimeInMillis(), pIntent);
+        } else {
+            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + cal.getTimeInMillis(), pIntent);
+        }
 
         AlarmManager alarmMgr2 = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent2 = new Intent(getApplicationContext(), bedtimeRoutineService.class);
+        Intent intent2 = new Intent(getApplicationContext(), NightReciever.class);
         PendingIntent alarmIntent2 = PendingIntent.getService(getApplicationContext(), 0, intent2, 0);
 
         Calendar calendar2 = Calendar.getInstance();
         calendar2.setTimeInMillis(System.currentTimeMillis());
         calendar2.set(Calendar.HOUR_OF_DAY, Integer.valueOf(nightHour));
         calendar2.set(Calendar.MINUTE, Integer.valueOf(nightMin));
+        calendar2.set(Calendar.SECOND, 0);
 
         alarmMgr2.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime()+calendar2.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, alarmIntent2);
@@ -839,25 +853,7 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView{
         } else if (id == R.id.ClearDB){
             db.DeleteLogs();
         } else if (id == R.id.SetMorningNight){
-            final EditText taskEditText = new EditText(ActivitesListeners.this);
-            final AlertDialog SecondDialog = new AlertDialog.Builder(ActivitesListeners.this)
-                    .setTitle("Input Times ( separated by , ) :")
-                    .setMessage("")
-                    .setView(taskEditText)
-                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String newTimes = taskEditText.getText().toString();
-                            String[] strings = newTimes.split(",");
-                            String MorningTime = strings[0];
-                            String NightTime = strings[1];
-                            db.insertLog("Set Morning/night routine");
-                            setMorningNightRoutine(MorningTime, NightTime);
-                        }
-                    })
-                    .setNegativeButton("Cancel", null)
-                    .create();
-            SecondDialog.show();
+            startTimerPicks();
         } else if (id == R.id.ChangePassword){
             Intent i = new Intent(this, ChangePassword.class);
             i.putExtra("username", username);
@@ -865,6 +861,18 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView{
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startTimerPicks() {
+        if (!alarmSet) {
+            DialogFragment timePicker = new TimePickerFragment();
+            mornOrDay = true;
+            timePicker.show(getSupportFragmentManager(), "morning");
+        }else{
+            DialogFragment nightPicker = new TimePickerFragment();
+            mornOrDay = false;
+            nightPicker.show(getSupportFragmentManager(), "night");
+        }
     }
 
     //Reads the work and home location from the database and stores the values
@@ -1501,6 +1509,49 @@ public class ActivitesListeners extends AppCompatActivity implements HomeView{
         db.insertLog("TRACKING STOPPED\n");
         Log.e("TEST : ","Tracking Stopped");
         Toast.makeText(this, "Tracking Stopped", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @Override
+    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+        if (mornOrDay) {
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            c.set(Calendar.MINUTE, minute);
+            c.set(Calendar.SECOND, 0);
+            Toast.makeText(this, ("Morning Time Set is : " + DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime())), Toast.LENGTH_SHORT).show();
+            startAlarm(c, true);
+            startTimerPicks();
+        } else if (!mornOrDay){
+            Calendar c1 = Calendar.getInstance();
+            c1.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            c1.set(Calendar.MINUTE, minute);
+            c1.set(Calendar.SECOND, 0);
+            Toast.makeText(this, ("Night Time Set is : " + DateFormat.getTimeInstance(DateFormat.SHORT).format(c1.getTime())), Toast.LENGTH_SHORT).show();
+            startAlarm(c1, false);
+        }
+    }
+
+    private void startAlarm(Calendar c, boolean MorningOrNight){
+        if (MorningOrNight) {
+            alarmSet = true;
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(this, MorningReciever.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        } else {
+            alarmSet = true;
+            AlarmManager alarmManager1 = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent intent1 = new Intent(this, NightReciever.class);
+            PendingIntent pendingIntent1 = PendingIntent.getBroadcast(this, 1, intent1, 0);
+
+            alarmManager1.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent1);
+        }
     }
 
     //gets events based on a reciever every 10 seconds

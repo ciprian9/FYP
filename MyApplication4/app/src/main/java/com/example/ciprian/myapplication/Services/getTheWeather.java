@@ -18,6 +18,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.ciprian.myapplication.Classes.GetURLWeather;
+import com.example.ciprian.myapplication.Classes.NotificationHelper;
 import com.example.ciprian.myapplication.DataHandler;
 import com.example.ciprian.myapplication.R;
 
@@ -60,42 +61,10 @@ public class getTheWeather extends Service {
         task.execute(query);
     }
 
-    //Send notification with the weather
-    private void sendNotification(String Temp) {
-        db.insertLog("Build Notification");
-
-        //Will set all the settings including settings and vibration settings for the notification
-        String id = "1";
-        CharSequence name = "my Channel";
-        String description = "Description";
-        int importance = NotificationManager.IMPORTANCE_LOW;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel mChannel = new NotificationChannel(id, name,importance);
-            mChannel.setDescription(description);
-            mChannel.enableLights(true);
-            mChannel.setLightColor(Color.RED);
-            mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-
-            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.createNotificationChannel(mChannel);
-        }
-
-        //Adds the data to the notification such as the icon, title and the actual weather
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(getApplicationContext(), "111")
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Good Morning!")
-                        .setContentText("Todays Temperature is : " + Temp)
-                        .setChannelId(id);
-        NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, mBuilder.build());
-    }
-
     //Creates the class that will generate the url using the api key and the city that the user is in
     class DownloadWeather extends AsyncTask< String, Void, String > {
         protected String doInBackground(String...args) {
-            String OPEN_WEATHER_MAP_API = "cbfdb21fa1793c10b14b6b6d00fbef03";
+            String OPEN_WEATHER_MAP_API = "5792feb70f6b191424138ec6cc4aed6f";
             return GetURLWeather.excuteGet("http://api.openweathermap.org/data/2.5/weather?q=" + args[0] +
                     "&units=metric&appid=" + OPEN_WEATHER_MAP_API);
         }
@@ -110,7 +79,9 @@ public class getTheWeather extends Service {
                 JSONObject json = new JSONObject(xml);
                 JSONObject main = json.getJSONObject("main");
                 String temp = (String.format("%.2f", main.getDouble("temp")) + "°");
-                sendNotification(temp);
+                NotificationHelper notificationHelper = new NotificationHelper(getApplicationContext());
+                NotificationCompat.Builder nb = notificationHelper.getChannelNotification("Todays Weather will be : " + temp);
+                notificationHelper.getManager().notify(1, nb.build());
             } catch (JSONException e) {
                 //If any errors occur then it will log the error
                 Log.d("getTheWeather : ", e.toString());

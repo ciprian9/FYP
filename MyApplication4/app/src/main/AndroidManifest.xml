@@ -167,6 +167,14 @@
         <service android:name=".ActivityRecognizerImpl$ActivityRecognitionIntentService" />
         <service android:name=".Services.googleCalendarService" />
         <service android:name=".Services.LocationTrack" />
+        <receiver
+            android:name=".Recievers.MorningReciever"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".Recievers.NightReciever"
+            android:enabled="true"
+            android:exported="true" />
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
     </application>
 
